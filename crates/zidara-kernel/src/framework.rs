@@ -78,7 +78,7 @@ impl ProgressContext<'_> {
 
 /// A pedagogy made explicit. Data (thresholds, bands, calendars) lives in the implementation;
 /// the kernel only calls these four functions.
-pub trait Framework: Debug {
+pub trait Framework: Debug + Send + Sync {
     fn id(&self) -> FrameworkId;
     /// Judges one learner on one outcome from that outcome's evidence, oldest first.
     fn judge(&self, evidence: &[&Evidence]) -> Judgement;
@@ -89,6 +89,6 @@ pub trait Framework: Debug {
 }
 
 /// Finds frameworks by id. Shells hold the registry; the kernel only reads it.
-pub trait FrameworkRegistry: Debug {
+pub trait FrameworkRegistry: Debug + Send + Sync {
     fn get(&self, id: &FrameworkId) -> Option<&dyn Framework>;
 }

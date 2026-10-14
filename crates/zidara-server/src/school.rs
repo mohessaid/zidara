@@ -53,6 +53,7 @@ impl Clock for FixedClock {
 #[derive(Debug)]
 pub struct School {
     lessons: BTreeMap<String, Lesson>,
+    packs: BTreeMap<String, &'static str>,
     registry: Registry,
     pub policy: Policy,
 }
@@ -60,10 +61,8 @@ pub struct School {
 impl School {
     /// The demo: one lesson, both frameworks, the Cambridge calendar opening one outcome a week.
     pub fn demo() -> Self {
-        let lesson: Lesson = serde_json::from_str(include_str!(
-            "../../../content/lessons/equivalent-fractions.json"
-        ))
-        .expect("the demo lesson is valid");
+        let pack: &'static str = include_str!("../../../content/lessons/equivalent-fractions.json");
+        let lesson: Lesson = serde_json::from_str(pack).expect("the demo lesson is valid");
         let opens_at = [("F1", 0), ("F2", 1), ("F3", 2)]
             .into_iter()
             .map(|(o, week)| (OutcomeId::new(o), Timestamp(TERM_START + week * WEEK)))
@@ -73,6 +72,7 @@ impl School {
             Box::new(CambridgeStyle::primary_checkpoint(opens_at)),
         ]);
         Self {
+            packs: BTreeMap::from([(lesson.id.clone(), pack)]),
             lessons: BTreeMap::from([(lesson.id.clone(), lesson)]),
             registry,
             policy: Policy::STANDARD,
@@ -81,6 +81,11 @@ impl School {
 
     pub fn lesson(&self, id: &str) -> Option<&Lesson> {
         self.lessons.get(id)
+    }
+
+    /// The lesson pack exactly as authored, for clients to cache offline.
+    pub fn pack(&self, id: &str) -> Option<&'static str> {
+        self.packs.get(id).copied()
     }
 
     pub fn registry(&self) -> &Registry {

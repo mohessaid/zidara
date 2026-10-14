@@ -120,6 +120,47 @@ pub async fn history_with_learners(
         .collect()
 }
 
+/// A page of visible events after a `(at_ms, seq)` cursor, with each event's `seq`.
+pub async fn page(
+    tx: &mut Tx,
+    cohort: Uuid,
+    after: (i64, i64),
+    limit: i64,
+) -> Result<Vec<(i64, Event)>, ApiError> {
+    let rows: Vec<(i64, Uuid, Uuid, i64, Value, Value)> = sqlx::query_as(
+        "select seq, id, tenant_id, at_ms, actor, body from events
+         where cohort_id = $1 and (at_ms, seq) > ($2, $3) order by at_ms, seq limit $4",
+    )
+    .bind(cohort)
+    .bind(after.0)
+    .bind(after.1)
+    .bind(limit)
+    .fetch_all(&mut **tx)
+    .await?;
+    rows.into_iter()
+        .map(|(seq, id, tenant, at, actor, body)| {
+            let event = Event {
+                id: EventId(id),
+                at: Timestamp(at),
+                tenant: TenantId(tenant),
+                cohort: CohortId(cohort),
+                actor: serde_json::from_value(actor)?,
+                body: serde_json::from_value(body)?,
+            };
+            Ok((seq, event))
+        })
+        .collect()
+}
+
+/// The learners of a cohort, for teachers (RLS shows a learner only their own row).
+pub async fn roster(tx: &mut Tx, cohort: Uuid) -> Result<Vec<UserId>, sqlx::Error> {
+    let ids: Vec<Uuid> = sqlx::query_scalar("select user_id from memberships where cohort_id = $1 and role = 'learner' order by user_id")
+        .bind(cohort)
+        .fetch_all(&mut **tx)
+        .await?;
+    Ok(ids.into_iter().map(UserId).collect())
+}
+
 pub async fn history(tx: &mut Tx, cohort: Uuid) -> Result<Vec<Event>, ApiError> {
     Ok(history_with_learners(tx, cohort)
         .await?

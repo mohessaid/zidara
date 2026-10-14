@@ -15,11 +15,14 @@ sqlx = { version = "0.9", default-features = false, features = ["runtime-tokio",
 tokio = { version = "1.53", features = ["macros", "rt-multi-thread", "time", "sync"] }
 uuid = { version = "1.28", features = ["v7", "serde"] }
 reqwest = { version = "0.13", features = ["json"] }
+axum = "0.8"
 jsonwebtoken = { version = "11", default-features = false, features = ["rust_crypto"] }
 
 [dev-dependencies]
 futures.workspace = true
 wiremock = "0.6"
+tower = { version = "0.5", features = ["util"] }
+http-body-util = "0.1"
 testcontainers-modules = { version = "0.15", features = ["postgres"] }
 
 [lints]

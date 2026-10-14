@@ -2,4 +2,6 @@
 //!
 //! No I/O, no clock, no randomness. Shells pass time and ids in, and store what comes out.
 
+pub mod ids;
+pub mod locale;
 pub mod score;

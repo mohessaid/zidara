@@ -111,7 +111,7 @@ impl Framework for Gated {
             .enumerate()
             .map(|(i, o)| Availability {
                 outcome: o.id.clone(),
-                lock: (i > 0).then(|| LockReason::OpensAt { at: Timestamp(99) }),
+                lock: (i > 0).then_some(LockReason::OpensAt { at: Timestamp(99) }),
             })
             .collect()
     }

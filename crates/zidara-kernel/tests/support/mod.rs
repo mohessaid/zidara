@@ -68,3 +68,124 @@ pub fn evidence(learner: u128, outcome: &str, bp: u16) -> Evidence {
         kind: EvidenceKind::Formative,
     }
 }
+// --- appended to the support module from Task 8 ---
+
+use zidara_kernel::decide::Env;
+use zidara_kernel::framework::{
+    Availability, Band, Framework, FrameworkRegistry, Judgement, OutcomeState, ProgressContext,
+};
+use zidara_kernel::governance::Policy;
+use zidara_kernel::lesson::Lesson;
+use zidara_kernel::rules::Rule;
+
+pub const PACK: &str = include_str!("../../../../content/lessons/equivalent-fractions.json");
+
+pub fn lesson() -> Lesson {
+    serde_json::from_str(PACK).unwrap()
+}
+
+/// A deliberately simple framework: the kernel must work with any implementation.
+/// Achieved at 50% mean; remediation below 50% after 2 tries; everything open.
+#[derive(Debug)]
+pub struct TestFramework {
+    pub id: &'static str,
+    pub rules: Vec<Rule>,
+}
+
+impl TestFramework {
+    pub fn standard(id: &'static str) -> Self {
+        Self {
+            id,
+            rules: vec![
+                Rule::Remediate {
+                    below: Score::of(5_000),
+                    after_attempts: 2,
+                },
+                Rule::NotifyBelowRank { rank: 1 },
+            ],
+        }
+    }
+}
+
+impl Framework for TestFramework {
+    fn id(&self) -> FrameworkId {
+        FrameworkId::new(self.id)
+    }
+
+    fn judge(&self, evidence: &[&Evidence]) -> Judgement {
+        let scores: Vec<Score> = evidence.iter().map(|e| e.score).collect();
+        let Some(score) = Score::mean(&scores) else {
+            return Judgement::NOT_STARTED;
+        };
+        let achieved = score >= Score::of(5_000);
+        Judgement {
+            state: if achieved {
+                OutcomeState::Achieved
+            } else {
+                OutcomeState::InProgress
+            },
+            score: Some(score),
+            band: Some(Band {
+                label: "t".into(),
+                rank: u8::from(achieved),
+                of: 2,
+            }),
+            attempts: evidence.len() as u32,
+        }
+    }
+
+    fn availability(&self, ctx: &ProgressContext<'_>) -> Vec<Availability> {
+        ctx.graph
+            .iter()
+            .map(|o| Availability {
+                outcome: o.id.clone(),
+                lock: None,
+            })
+            .collect()
+    }
+
+    fn rules(&self) -> &[Rule] {
+        &self.rules
+    }
+}
+
+#[derive(Debug)]
+pub struct TestRegistry(pub Vec<TestFramework>);
+
+impl TestRegistry {
+    pub fn standard() -> Self {
+        Self(vec![
+            TestFramework::standard("test"),
+            TestFramework {
+                id: "quiet",
+                rules: vec![],
+            },
+        ])
+    }
+}
+
+impl FrameworkRegistry for TestRegistry {
+    fn get(&self, id: &FrameworkId) -> Option<&dyn Framework> {
+        self.0
+            .iter()
+            .find(|f| f.id == id.as_str())
+            .map(|f| f as &dyn Framework)
+    }
+}
+
+pub fn env<'a>(
+    lesson: &'a Lesson,
+    registry: &'a TestRegistry,
+    framework: &'a FrameworkId,
+    now: i64,
+) -> Env<'a> {
+    Env {
+        now: Timestamp(now),
+        tenant: TenantId(Uuid::from_u128(1)),
+        cohort: CohortId(Uuid::from_u128(2)),
+        lesson,
+        frameworks: registry,
+        default_framework: framework,
+        policy: Policy::STANDARD,
+    }
+}

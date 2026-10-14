@@ -3,6 +3,7 @@
 //! No I/O, no clock, no randomness. Shells pass time and ids in, and store what comes out.
 
 pub mod activity;
+pub mod decide;
 pub mod event;
 pub mod evidence;
 pub mod framework;

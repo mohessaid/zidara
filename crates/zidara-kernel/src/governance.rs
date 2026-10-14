@@ -43,7 +43,7 @@ pub fn assess(rubric: &Rubric, answer: &str) -> Assessment {
     let met: Vec<&Criterion> = rubric
         .criteria
         .iter()
-        .filter(|c| c.any_of.iter().any(|term| text.contains(&normalize(term))))
+        .filter(|c| c.any_of.iter().any(|term| matches(&text, &normalize(term))))
         .collect();
     let matched: u32 = met.iter().map(|c| u32::from(c.weight)).sum();
     let score = Score::from_fraction(matched, total).unwrap_or(Score::ZERO);
@@ -66,6 +66,25 @@ pub fn assess(rubric: &Rubric, answer: &str) -> Assessment {
         confidence,
         rationale,
     }
+}
+
+/// Latin-script terms match at a word start, so "same" misses "sesame" but "multipli" still
+/// finds "multiplied". Arabic terms match anywhere, because roots sit inside conjugated words
+/// (ضرب in نضرب); so do terms that start with a symbol, like "×".
+fn matches(text: &str, term: &str) -> bool {
+    let latin = term
+        .chars()
+        .next()
+        .is_some_and(|c| c.is_alphabetic() && c <= '\u{024F}');
+    if !latin {
+        return text.contains(term);
+    }
+    text.match_indices(term).any(|(at, _)| {
+        text[..at]
+            .chars()
+            .next_back()
+            .is_none_or(|c| !c.is_alphanumeric())
+    })
 }
 
 /// Lower case, without Arabic short vowels (U+064B–U+0652) or tatweel (U+0640).

@@ -98,3 +98,65 @@ fn the_policy_applies_only_confident_formative_marks() {
         Decision::Queue
     );
 }
+
+#[test]
+fn latin_terms_match_at_word_starts_only() {
+    let same = Rubric {
+        criteria: vec![Criterion {
+            any_of: vec!["same".into()],
+            weight: 1,
+        }],
+        min_words: 0,
+    };
+    assert_eq!(assess(&same, "I like sesame bread").score, Score::ZERO);
+    assert_eq!(assess(&same, "it is the same").score, Score::FULL);
+    assert_eq!(assess(&same, "(same) answer").score, Score::FULL);
+    let times = Rubric {
+        criteria: vec![Criterion {
+            any_of: vec!["times".into()],
+            weight: 1,
+        }],
+        min_words: 0,
+    };
+    assert_eq!(assess(&times, "sometimes it works").score, Score::ZERO);
+    // Accented Latin letters start words too.
+    let equal = Rubric {
+        criteria: vec![Criterion {
+            any_of: vec!["égal".into()],
+            weight: 1,
+        }],
+        min_words: 0,
+    };
+    assert_eq!(assess(&equal, "c'est inégal").score, Score::ZERO);
+    assert_eq!(assess(&equal, "c'est égal").score, Score::FULL);
+    // A word start, not a whole word: stems still match their longer forms.
+    assert_eq!(
+        assess(
+            &rubric(),
+            "I multiplied the top and bottom by the same number"
+        )
+        .score,
+        Score::FULL
+    );
+    assert_eq!(
+        assess(&rubric(), "on les multiplie par le même nombre").score,
+        Score::FULL
+    );
+}
+
+#[test]
+fn arabic_and_symbol_terms_still_match_inside_words() {
+    // Arabic roots sit inside conjugated words: ضرب in نضرب.
+    assert_eq!(
+        assess(&rubric(), "نضرب الاثنين في نفس العدد").score,
+        Score::FULL
+    );
+    let times = Rubric {
+        criteria: vec![Criterion {
+            any_of: vec!["×".into()],
+            weight: 1,
+        }],
+        min_words: 0,
+    };
+    assert_eq!(assess(&times, "1×2 and 2×2").score, Score::FULL);
+}

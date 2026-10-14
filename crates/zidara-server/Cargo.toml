@@ -16,6 +16,7 @@ tokio = { version = "1.53", features = ["macros", "rt-multi-thread", "time", "sy
 uuid = { version = "1.28", features = ["v7", "serde"] }
 
 [dev-dependencies]
+futures.workspace = true
 testcontainers-modules = { version = "0.15", features = ["postgres"] }
 
 [lints]

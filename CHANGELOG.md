@@ -9,7 +9,8 @@ All notable changes to Zidara are recorded here. The format follows
 
 - Rust workspace and the gauntlet: `make gauntlet` runs lint, tests, acceptance stories,
   wasm32 tests, Android and iOS checks, 100% line, function and branch coverage, and mutation
-  testing. The same steps run in CI. Mutation testing uses `cargo test`, because nextest
+  testing. A CI workflow mirrors them (unverified until the repo has a remote). Mutation
+  testing uses `cargo test`, because nextest
   cannot list the cucumber binary.
 - `Score`: scores as integers in basis points, with fractions and means rounded half up.
 - The kernel (`zidara-kernel`): outcomes as a prerequisite graph, activities and quiz marking

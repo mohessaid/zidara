@@ -108,17 +108,17 @@ building the kernel for `wasm32-unknown-unknown`, `aarch64-linux-android` and `a
 | Block | Kernel type | Notes |
 |---|---|---|
 | Outcomes | `OutcomeGraph` (ids, titles per locale, prerequisites) | imported from CASE-shaped JSON; cycles rejected |
-| Activities | `Activity { kind: Video \| Reading \| Quiz \| OpenResponse, outcomes }` | content is data |
-| Evidence | `Evidence { learner, outcome, activity, score: Score, kind: Formative \| Summative, actor, at }` | append-only; exported as xAPI statements |
-| Judgement | `Framework::judge(outcome, &[Evidence]) -> Judgement` | `Score` is an integer in basis points (0–10 000): no floats, deterministic everywhere |
-| Progression | `Framework::progression(&ProgressContext) -> Vec<Unlock>` | mastery gates or calendar |
-| Roles | `Role` + `Permission`; `Actor = Human(UserId) \| Agent(AgentId) \| System` | one permission check for people and agents |
+| Activities | `Activity { id, title, outcomes, role: Core \| Remediation, kind: Video \| Reading \| Quiz \| OpenResponse }` | content is data; the kernel marks quizzes (`mark`) |
+| Evidence | `Evidence { learner, outcome, activity, score: Score, kind: Formative \| Summative }`; who and when live on the event | append-only; exported as xAPI statements |
+| Judgement | `Framework::judge(&[&Evidence]) -> Judgement { state, score, band, attempts }` | `Score` is an integer in basis points (0–10 000): no floats, deterministic everywhere |
+| Progression | `Framework::availability(&ProgressContext) -> Vec<Availability { outcome, lock }>` | mastery gates or calendar |
+| Roles | `Role` + `Permission`; `Actor = Human { user, role } \| Agent { agent, role } \| System` | one permission table for people and agents |
 
 ```rust
-pub trait Framework {
+pub trait Framework: Debug {
     fn id(&self) -> FrameworkId;
-    fn judge(&self, outcome: &Outcome, evidence: &[Evidence]) -> Judgement;
-    fn progression(&self, ctx: &ProgressContext) -> Vec<Unlock>;
+    fn judge(&self, evidence: &[&Evidence]) -> Judgement;      // one learner, one outcome
+    fn availability(&self, ctx: &ProgressContext<'_>) -> Vec<Availability>;
     fn rules(&self) -> &[Rule];
 }
 ```
@@ -135,12 +135,15 @@ Thresholds, boundaries and calendars are configuration data; the logic is compil
 ### 3.3 Events and automation
 
 Everything that happens is an `Event` with an actor, a tenant, a cohort and a time:
-`EvidenceRecorded`, `ActivityAssigned`, `TeacherNotified`, `ProposalMade`, `ProposalApplied`,
-`ProposalQueued`, `ProposalDecided`, `Undone { target }`. State is a fold over events.
-Undo never deletes: it appends `Undone`, and folds skip undone events.
+`QuizSubmitted`, `AnswerSubmitted`, `EvidenceRecorded`, `ActivityAssigned`, `TeacherNotified`,
+`ProposalMade { proposal }` (which carries the policy's decision: apply or queue),
+`ProposalDecided`, `FrameworkChanged`, `Undone { target }`. State is a fold over events.
+Undo never deletes: it appends `Undone`, and folds skip undone events. Only evidence and
+assignments can be undone.
 
-The rules engine is a pure function `(rules, new event, state) -> Vec<Action>`. Actions become
-events by the actor `System`.
+The rules engine is a pure function `evaluate(rules, judgement) -> Vec<Action>`, run after
+each piece of evidence. Actions become events by the actor `System`, once per learner and
+outcome.
 
 ### 3.4 The governed assessment agent
 
@@ -182,9 +185,10 @@ an API key is set). The agent's governance is the innovation; the model is repla
   `SET LOCAL` inside its transaction; policies read them with `current_setting`.
 - Sign-in for the prototype: seeded demo users and a server-signed token. OIDC is out of scope
   and named as such.
-- API (data only, JSON): `GET /api/me`, `GET /api/packs/:id`, `POST /api/events` (batch sync),
-  `GET /api/learner/view`, `GET /api/studio`, `POST /api/proposals/:id/decision`,
-  `POST /api/events/:id/undo`, `PUT /api/cohorts/:id/framework`, `GET /api/xapi/statements`.
+- API (data only, JSON): `GET /api/me`, `GET /api/packs/:id`,
+  `POST /api/commands` (one or many `Envelope`s: every change, online or synced from offline),
+  `GET /api/learner/view`, `GET /api/studio`, `GET /api/xapi/statements`. Clients never post
+  events; deciding a proposal, undoing and switching frameworks are commands too.
 
 ### 3.7 Web shell and experiences
 
@@ -223,7 +227,7 @@ an API key is set). The agent's governance is the innovation; the model is repla
 | Coverage | `cargo-llvm-cov --branch` (nightly) | 100% lines and branches for kernel and frameworks; server and shell gates set from the first measurement, never lowered |
 | Portability | `wasm-bindgen-test`; `cargo check --target` | the kernel suite passes on wasm32; kernel type-checks for Android and iOS |
 | Quality | Playwright on the economy profile; Lighthouse | Quest map holds 60 fps with no long task over 50 ms during a level transition; Lighthouse performance ≥ 90 and accessibility = 100 |
-| Load | k6 | p95 latency of `GET /api/learner/view` and `POST /api/events` on a 2-vCPU limit; recorded, not gated |
+| Load | k6 | p95 latency of `GET /api/learner/view` and `POST /api/commands` on a 2-vCPU limit; recorded, not gated |
 
 Toolchain facts proven on 14 October (throwaway probe): the same tests pass natively and on
 `wasm32-unknown-unknown` under `wasm-bindgen-test-runner` 0.2.129 in Node; the kernel type-checks

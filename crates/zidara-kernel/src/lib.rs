@@ -4,4 +4,5 @@
 
 pub mod ids;
 pub mod locale;
+pub mod outcome;
 pub mod score;

@@ -1,0 +1,3 @@
+# Every mutant must be caught. An exclusion needs a reason on the line above it.
+test_tool = "nextest"
+exclude_re = []

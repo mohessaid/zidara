@@ -191,3 +191,99 @@ fn only_evidence_becomes_a_statement() {
     };
     assert_eq!(statement(&event(body), "l"), None);
 }
+
+mod assessor_parts {
+    use serde_json::json;
+    use zidara_kernel::governance::{Criterion, MIXED, Rubric};
+    use zidara_kernel::score::Score;
+    use zidara_server::assessor::{OpenItem, fallback, read_reply, request_body, uses_fallbacks};
+
+    fn rubric() -> Rubric {
+        Rubric {
+            criteria: vec![Criterion {
+                any_of: vec!["multiply".into(), "times".into()],
+                weight: 2,
+            }],
+            min_words: 1,
+        }
+    }
+
+    #[test]
+    fn only_models_with_server_fallbacks_ask_for_them() {
+        for model in [
+            "claude-opus-5-5",
+            "claude-opus-5",
+            "claude-fable-5-1",
+            "claude-sonnet-5-5",
+        ] {
+            assert!(uses_fallbacks(model), "{model}");
+        }
+        for model in ["claude-haiku-5-5", "claude-sonnet-5", "anything"] {
+            assert!(!uses_fallbacks(model), "{model}");
+        }
+        let r = rubric();
+        let item = OpenItem {
+            prompt: "Q?",
+            rubric: &r,
+        };
+        assert!(
+            request_body("claude-haiku-5-5", &item, "a")
+                .get("fallbacks")
+                .is_none()
+        );
+        let body = request_body("claude-opus-5-5", &item, "my answer");
+        assert_eq!(body["fallbacks"], "default");
+        assert_eq!(body["output_config"]["effort"], "low");
+        let content = body["messages"][0]["content"].as_str().unwrap();
+        assert!(content.contains("Question:\nQ?"), "{content}");
+        assert!(
+            content.contains("- weight 2: multiply | times"),
+            "{content}"
+        );
+        assert!(
+            content.contains("<answer>\nmy answer\n</answer>"),
+            "{content}"
+        );
+    }
+
+    fn text(t: &str) -> serde_json::Value {
+        json!({ "stop_reason": "end_turn", "content": [ { "type": "text", "text": t } ] })
+    }
+
+    #[test]
+    fn replies_are_validated() {
+        let good = read_reply(&text(
+            r#"{"score_bp":0,"confidence_bp":10000,"rationale":"r"}"#,
+        ))
+        .unwrap();
+        assert_eq!(
+            (good.score, good.confidence, good.rationale.as_str()),
+            (Score::ZERO, Score::FULL, "r")
+        );
+        for bad in [
+            json!({ "stop_reason": "end_turn" }),
+            json!({ "stop_reason": "end_turn", "content": [ { "type": "thinking", "thinking": "" } ] }),
+            text(r#"{"score_bp":-1,"confidence_bp":1,"rationale":"r"}"#),
+            text(r#"{"score_bp":70000,"confidence_bp":1,"rationale":"r"}"#),
+            text(r#"{"score_bp":1,"confidence_bp":10001,"rationale":"r"}"#),
+            text(r#"{"score_bp":1,"confidence_bp":1}"#),
+        ] {
+            assert_eq!(read_reply(&bad), None, "{bad}");
+        }
+    }
+
+    #[test]
+    fn fallbacks_keep_the_score_and_cap_confidence() {
+        let r = rubric();
+        let unsure = fallback(&r, "you multiply", "down");
+        assert_eq!((unsure.score, unsure.confidence), (Score::FULL, MIXED));
+        assert!(
+            unsure.rationale.starts_with("rubric fallback (down): "),
+            "{}",
+            unsure.rationale
+        );
+        // Already below the cap: kept as it is.
+        let short = fallback(&Rubric { min_words: 5, ..r }, "multiply", "down");
+        assert!(short.confidence < MIXED);
+    }
+}

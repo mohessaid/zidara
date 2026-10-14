@@ -31,4 +31,4 @@ coverage:
 	scripts/branch-gate.sh target/lcov.info
 
 mutants:
-	cargo mutants $(KERNEL) --test-workspace=true
+	cargo mutants $(KERNEL) --test-workspace=true -j 4

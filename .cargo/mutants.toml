@@ -1,3 +1,4 @@
 # Every mutant must be caught. An exclusion needs a reason on the line above it.
-test_tool = "nextest"
+# cargo test, not nextest: nextest cannot list the cucumber binary (harness = false).
+test_tool = "cargo"
 exclude_re = []

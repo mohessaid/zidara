@@ -38,6 +38,5 @@ need. Stop the stack after a session.
 
 ## Skills
 
-Project skills live in `.claude/skills/`: Postgres and RLS, property-based and mutation
-testing, Rust testing, Svelte 5, PixiJS, WCAG 2.2, game UI, art bible, playtest and balance
-checks, technical video scripts.
+One project skill, `.claude/skills/zidara/`, covers how we build, test, design and record work
+here. When a third-party skill helps, distil what applies into it and remove the original.

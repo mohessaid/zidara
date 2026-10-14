@@ -247,9 +247,9 @@ Tests are written first (TDD). Code review is not the proof; the gauntlet is.
   event-sourced evidence, agent policy, RLS with `SET LOCAL`).
 - `AGENTS.md`: ground rules for anyone, human or agent, working in the repo.
 - Commit messages are short and plain, with no AI attribution lines.
-- Project skills in `.claude/skills/` guide the work: Postgres and RLS (Supabase), property-based
-  and mutation testing (Trail of Bits), Rust testing, Svelte 5, PixiJS, WCAG 2.2, game UI,
-  art bible, playtest and balance checks (game studio), technical video script.
+- The project skill `.claude/skills/zidara/` guides the work. It is compiled from the useful parts
+  of thirteen third-party skills (Postgres and RLS, property and mutation testing, Rust testing,
+  Svelte 5, PixiJS, WCAG 2.2, game UI, art bible, balance, playtests, video scripts).
 
 ## 6. Milestones
 

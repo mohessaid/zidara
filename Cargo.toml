@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/zidara-kernel"] # frameworks and acceptance join in Tasks 11-12
+members = ["crates/zidara-kernel", "crates/zidara-frameworks"] # acceptance joins in Task 12
 
 [workspace.package]
 edition = "2024"

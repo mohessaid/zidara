@@ -537,6 +537,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "zidara-frameworks"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "thiserror",
+ "wasm-bindgen-test",
+ "zidara-kernel",
+]
+
+[[package]]
 name = "zidara-kernel"
 version = "0.1.0"
 dependencies = [

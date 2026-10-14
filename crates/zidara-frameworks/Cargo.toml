@@ -1,0 +1,17 @@
+[package]
+name = "zidara-frameworks"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+publish = false
+
+[dependencies]
+zidara-kernel.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+wasm-bindgen-test.workspace = true
+
+[lints]
+workspace = true

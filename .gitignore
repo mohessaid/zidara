@@ -1,0 +1,26 @@
+# Rust
+/target/
+**/*.rs.bk
+/mutants.out*/
+lcov.info
+
+# Node / web shell
+node_modules/
+dist/
+pkg/
+playwright-report/
+test-results/
+
+# Pitch film: renders and caches are rebuilt by HyperFrames
+pitch/film/renders/
+pitch/film/.old-voice/
+pitch/film/.waveform-cache/
+pitch/film/.thumbnails/
+pitch/film/.hyperframes/
+pitch/film/snapshots/
+*.mp4
+
+# Local
+.env
+*.log
+!pitch/film/*.log

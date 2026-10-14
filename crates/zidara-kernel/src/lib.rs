@@ -4,9 +4,12 @@
 
 pub mod activity;
 pub mod evidence;
+pub mod framework;
 pub mod governance;
 pub mod ids;
+pub mod lesson;
 pub mod locale;
 pub mod outcome;
 pub mod roles;
+pub mod rules;
 pub mod score;

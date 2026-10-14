@@ -1,0 +1,89 @@
+//! The demo school: one tenant, two cohorts that must never see each other's data, their
+//! learners and teachers, and the assessment agent that serves both.
+
+use sqlx::PgPool;
+use uuid::Uuid;
+
+/// Fixed ids, so demos and tests can name people.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Seed {
+    pub tenant: Uuid,
+    pub a: Uuid,
+    pub b: Uuid,
+    pub amina: Uuid,
+    pub yacine: Uuid,
+    pub sara: Uuid,
+    pub karim: Uuid,
+    pub nadia: Uuid,
+    pub agent: Uuid,
+}
+
+impl Seed {
+    pub const DEMO: Seed = Seed {
+        tenant: Uuid::from_u128(0x7e4a_0001),
+        a: Uuid::from_u128(0xc0_0a),
+        b: Uuid::from_u128(0xc0_0b),
+        amina: Uuid::from_u128(0x1e_a001),
+        yacine: Uuid::from_u128(0x1e_a002),
+        sara: Uuid::from_u128(0x1e_b001),
+        karim: Uuid::from_u128(0x7e_a001),
+        nadia: Uuid::from_u128(0x7e_b001),
+        agent: Uuid::from_u128(0xa6_0001),
+    };
+}
+
+/// Inserts the demo school. Run as the owner.
+pub async fn seed(owner: &PgPool) -> Result<Seed, sqlx::Error> {
+    let s = Seed::DEMO;
+    let mut tx = owner.begin().await?;
+    sqlx::query("insert into tenants (id, name) values ($1, 'Demo school')")
+        .bind(s.tenant)
+        .execute(&mut *tx)
+        .await?;
+    for (id, name) in [(s.a, "Class 4 A"), (s.b, "Class 4 B")] {
+        sqlx::query("insert into cohorts (id, tenant_id, name, lesson_id, framework) values ($1, $2, $3, 'equivalent-fractions', 'mastery')")
+            .bind(id)
+            .bind(s.tenant)
+            .bind(name)
+            .execute(&mut *tx)
+            .await?;
+    }
+    let people = [
+        (s.amina, "Amina", "person"),
+        (s.yacine, "Yacine", "person"),
+        (s.sara, "Sara", "person"),
+        (s.karim, "Karim", "person"),
+        (s.nadia, "Nadia", "person"),
+        (s.agent, "assessor", "agent"),
+    ];
+    for (id, name, kind) in people {
+        sqlx::query(
+            "insert into users (id, tenant_id, display_name, kind) values ($1, $2, $3, $4)",
+        )
+        .bind(id)
+        .bind(s.tenant)
+        .bind(name)
+        .bind(kind)
+        .execute(&mut *tx)
+        .await?;
+    }
+    let memberships = [
+        (s.amina, s.a, "learner"),
+        (s.yacine, s.a, "learner"),
+        (s.sara, s.b, "learner"),
+        (s.karim, s.a, "teacher"),
+        (s.nadia, s.b, "teacher"),
+        (s.agent, s.a, "assessment_agent"),
+        (s.agent, s.b, "assessment_agent"),
+    ];
+    for (user, cohort, role) in memberships {
+        sqlx::query("insert into memberships (user_id, cohort_id, role) values ($1, $2, $3)")
+            .bind(user)
+            .bind(cohort)
+            .bind(role)
+            .execute(&mut *tx)
+            .await?;
+    }
+    tx.commit().await?;
+    Ok(s)
+}

@@ -18,7 +18,8 @@ proposal's claims true and checkable:
 | Works offline, low bandwidth | The learner finishes a lesson with the network off; evidence syncs later without conflicts |
 | Isolation is a data rule | PostgreSQL row-level security; tests show no query, screen or agent crosses a cohort |
 | AI agents are governed actors | An assessment agent proposes; policy applies or queues; every action logged and undoable |
-| Proven by tests, not trusted | The six-part gauntlet, run by one command, with numbers in the README |
+| Proven by tests, not trusted | The gauntlet (section 4), run by one command, with numbers in the README |
+| Quality on the devices people have | Frame-rate and Lighthouse gates on an economy-class device profile |
 
 Success means: on 30 October the demo runs end to end on a laptop and a phone, `make gauntlet`
 is green, and the numbers (coverage, mutants, wasm size, latency under load) are recorded.
@@ -26,7 +27,7 @@ is green, and the numbers (coverage, mutants, wasm size, latency under load) are
 ## 2. Demo setting
 
 Primary maths, fractions, learners aged 9–11. Arabic first (right to left), French and English.
-Offline-first on a low-cost Android phone. Fractions read the same in every language and every
+Offline-first, with quality, on an economy-class phone (see 2.1). Fractions read the same in every language and every
 curriculum, so one lesson serves the whole story.
 
 The lesson, "Equivalent fractions", has three outcomes in a small graph:
@@ -37,7 +38,22 @@ The lesson, "Equivalent fractions", has three outcomes in a small graph:
 Activities: one short video (≤ 60 s), one reading with audio, one quiz (multiple choice and
 numeric), and one "explain your answer" free-text item that the assessment agent pre-marks.
 
-### Gamification is the framework, rendered
+### 2.1 Target devices: economy class, with quality
+
+Most devices in use today are capable. The prototype targets the economy class and does not
+trade quality away for the low end:
+
+| Profile | Stands for | Used by |
+|---|---|---|
+| Economy (the target) | a 2022 mid-range Android: 4 GB RAM, WebGL2, Chrome; 4× CPU throttle and "fast 4G" in Playwright | quality gates in the gauntlet |
+| Low end (future) | 2 GB RAM, no reliable WebGL, 3G | a separate "Lite" experience, not a constraint on Quest |
+
+This is the separation the design exists for: a low-end audience gets its own experience on the
+same kernel, built when it is needed. **Design rule: the experience layer's technology can be
+swapped per audience; the kernel's view-intent contract is what stays fixed.** With AI-assisted
+iteration, changing a client technology is a contained job, not a rewrite.
+
+### 2.2 Gamification is the framework, rendered
 
 Points and badges are usually bolted on. Here the game map is the framework's Progression
 block and stars are its Judgement block, so rewards come only from evidence of learning, never
@@ -167,22 +183,21 @@ an API key is set). The agent's governance is the innovation; the model is repla
 
 - Vite + TypeScript + Svelte 5, installable PWA. Calls the kernel only through the wasm bridge
   and the server only through the API.
-- The Quest map is drawn with PixiJS v8 (WebGL, Canvas fallback); motion with GSAP; text, RTL
-  and accessibility stay in the DOM. Engines weighed and rejected for this audience: Godot web
-  export (about 40 MB runtime before content; Rust via gdext on the web is experimental) and
-  Bevy (10–20 MB wasm; text shaping and kids' UI are slow to build), and raylib (small and
-  fast, but it draws glyphs without shaping or bidi, so Arabic would need HarfBuzz and FriBidi
-  compiled in; a canvas is invisible to screen readers; and it needs the Emscripten target,
-  a second wasm toolchain beside wasm-bindgen). Raylib stays a candidate for a native shell
-  after Solve. Budget: the whole shell,
-  wasm kernel included, under 1.5 MB compressed before media, so a lesson pack caches on a
-  slow, metered connection.
+- The Quest map is drawn with PixiJS v8 (WebGL); motion with GSAP; text, RTL and accessibility
+  stay in the DOM. The deciding reasons are the audience's, not download size: Arabic needs
+  real shaping and bidi, which the browser's text engine gives for free and canvas engines do
+  not (raylib draws glyphs without shaping; Godot and Bevy need their own shaping set up), and
+  a canvas-only screen is invisible to screen readers. Raylib also needs the Emscripten target,
+  a second wasm toolchain beside wasm-bindgen. Godot, Bevy and raylib stay candidates for later
+  experiences or native shells; the design rule in 2.1 allows it.
 - Bridge types are generated from the Rust types (`ts-rs`), so the contract cannot drift.
 - The kernel returns **view intents** ("F2 in progress at 64%, F3 locked until F2 mastered"); it
   never says how to draw them. Experiences render intents:
   - **Quest** (ages 9–11): a path map, levels, stars, a mascot nudge.
   - **Grid** (older learners): a dense outcome-by-evidence mastery grid.
   - **Teacher studio**: who is stuck on which outcome, the agent queue, undo, framework switch.
+  - **Lite** (future, named so the N + M list is honest): DOM only, no WebGL, for low-end
+    devices. Not built for Solve.
 - Design tokens; Arabic first with `dir="rtl"`; French and English. WCAG 2.2 AA is the floor.
 
 ## 4. Testing: the gauntlet
@@ -200,7 +215,19 @@ an API key is set). The agent's governance is the innovation; the model is repla
 | Mutation | `cargo-mutants`; Stryker on shell logic | every mutant killed in kernel, frameworks, server domain code; exclusions listed with a reason |
 | Coverage | `cargo-llvm-cov --branch` (nightly) | 100% lines and branches for kernel and frameworks; server and shell gates set from the first measurement, never lowered |
 | Portability | `wasm-bindgen-test`; `cargo check --target` | the kernel suite passes on wasm32; kernel type-checks for Android and iOS |
+| Quality | Playwright on the economy profile; Lighthouse | Quest map holds 60 fps with no long task over 50 ms during a level transition; Lighthouse performance ≥ 90 and accessibility = 100 |
 | Load | k6 | p95 latency of `GET /api/learner/view` and `POST /api/events` on a 2-vCPU limit; recorded, not gated |
+
+Toolchain facts proven on 14 October (throwaway probe): the same tests pass natively and on
+`wasm32-unknown-unknown` under `wasm-bindgen-test-runner` 0.2.129 in Node; the kernel type-checks
+for `aarch64-linux-android` and `aarch64-apple-ios`. Two traps: `uuid` with `v7` does not build
+for plain wasm32 (generating ids needs a clock and randomness, so the kernel uses `uuid` as a
+type only and adapters generate ids), and `proptest` needs `getrandom` with `wasm_js` on wasm32.
+Acceptance stories (`cucumber`) run natively only; unit and property tests run on both.
+
+Server choices: sqlx with runtime-checked queries (`query_as` + `FromRow`), so the code builds
+without a database and the integration tests on real PostgreSQL prove every query. The app
+connects as a non-owner role `zidara_app`, and every table also has `FORCE ROW LEVEL SECURITY`.
 
 Tests are written first (TDD). Code review is not the proof; the gauntlet is.
 

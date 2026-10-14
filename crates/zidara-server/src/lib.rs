@@ -2,6 +2,7 @@
 
 pub mod agent;
 pub mod assessor;
+pub mod auth;
 pub mod commands;
 pub mod error;
 pub mod ids;

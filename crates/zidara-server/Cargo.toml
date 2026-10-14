@@ -15,6 +15,7 @@ sqlx = { version = "0.9", default-features = false, features = ["runtime-tokio",
 tokio = { version = "1.53", features = ["macros", "rt-multi-thread", "time", "sync"] }
 uuid = { version = "1.28", features = ["v7", "serde"] }
 reqwest = { version = "0.13", features = ["json"] }
+jsonwebtoken = { version = "11", default-features = false, features = ["rust_crypto"] }
 
 [dev-dependencies]
 futures.workspace = true

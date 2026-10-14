@@ -287,3 +287,51 @@ mod assessor_parts {
         assert!(short.confidence < MIXED);
     }
 }
+
+mod auth_tokens {
+    use uuid::Uuid;
+    use zidara_kernel::ids::Timestamp;
+    use zidara_server::auth::{AuthError, Keys, TOKEN_LIFETIME_MS, issue, verify};
+
+    const NOW: i64 = 1_791_158_400_000;
+
+    #[test]
+    fn a_token_names_its_user_until_it_expires() {
+        let keys = Keys::from_secret(b"a test secret that is long enough");
+        let user = Uuid::from_u128(7);
+        let token = issue(&keys, user, Timestamp(NOW));
+        assert_eq!(verify(&keys, &token, Timestamp(NOW)), Ok(user));
+        assert_eq!(
+            verify(&keys, &token, Timestamp(NOW + TOKEN_LIFETIME_MS - 1_000)),
+            Ok(user)
+        );
+        assert_eq!(
+            verify(&keys, &token, Timestamp(NOW + TOKEN_LIFETIME_MS)),
+            Err(AuthError::Expired)
+        );
+        assert_eq!(TOKEN_LIFETIME_MS, 12 * 60 * 60 * 1000);
+    }
+
+    #[test]
+    fn forged_and_broken_tokens_are_refused() {
+        let keys = Keys::from_secret(b"a test secret that is long enough");
+        let token = issue(&keys, Uuid::from_u128(7), Timestamp(NOW));
+        let other = Keys::from_secret(b"another secret, also long enough");
+        assert_eq!(
+            verify(&other, &token, Timestamp(NOW)),
+            Err(AuthError::Invalid)
+        );
+        let mut tampered = token.clone();
+        let last = tampered.pop().unwrap();
+        tampered.push(if last == 'A' { 'B' } else { 'A' });
+        assert_eq!(
+            verify(&keys, &tampered, Timestamp(NOW)),
+            Err(AuthError::Invalid)
+        );
+        assert_eq!(
+            verify(&keys, "not a token", Timestamp(NOW)),
+            Err(AuthError::Invalid)
+        );
+        assert!(!format!("{keys:?}").contains("secret"));
+    }
+}

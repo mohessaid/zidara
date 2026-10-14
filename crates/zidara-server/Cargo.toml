@@ -12,7 +12,7 @@ serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
 sqlx = { version = "0.9", default-features = false, features = ["runtime-tokio", "postgres", "uuid", "json", "migrate", "macros"] }
-tokio = { version = "1.53", features = ["macros", "rt-multi-thread", "time", "sync"] }
+tokio = { version = "1.53", features = ["macros", "rt-multi-thread", "time", "sync", "net"] }
 uuid = { version = "1.28", features = ["v7", "serde"] }
 reqwest = { version = "0.13", features = ["json"] }
 axum = "0.8"

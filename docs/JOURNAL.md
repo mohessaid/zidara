@@ -4,6 +4,77 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-10-15 — The server goes live on a real database
+
+**What happened.** G2: an axum server on PostgreSQL 16, running the kernel for every change.
+Then the real binary was started against a Docker database and driven with curl.
+**Numbers.**
+- A learner's quiz is applied; her view comes back in Arabic, with F2 unlocked by mastering F1.
+- The teacher's studio shows "1 of 2 achieved".
+- A learner from the other cohort, and a learner trying the studio, both get 403.
+- The median learner view takes 9 ms, on a debug build.
+**Lesson.** The kernel did not change shape to get there; only one line in its contract did
+(frameworks must be `Send + Sync` to be shared across server threads).
+
+## 2026-10-15 — The database, not the server, decides who sees what
+
+**What happened.** The spec had the server tell PostgreSQL which cohorts a request could
+touch. A ten-minute probe proved a stronger design: the server says only *who* is asking
+(`app.user_id`), and policies derive everything else from memberships.
+**The problem.** A pooled connection remembers an *empty* setting after a transaction, so the
+naive cast of the setting to a uuid would crash the next request. And a policy on
+memberships that reads memberships recurses forever.
+**What we did.** `nullif(..., '')` makes an empty setting mean "nobody". Two tiny
+`security definer` functions read memberships for the policies. Learners now see only their
+own events and their own name: no classmates' list, which matters for minors.
+**Numbers.** 9 isolation tests. Sabotage (make the app role the table owner): 5 of the 9 fail.
+**Lesson.** Put the rule where the data is. A server bug can now at worst act as the wrong
+person; it cannot widen what anyone sees.
+
+## 2026-10-15 — A race test that passed when it should have failed
+
+**What happened.** The test for "two weak attempts at once assign remediation only once"
+passed. With the lock that guarantees it deliberately removed, it still passed 2 runs out of 3.
+**What we did.** Eight concurrent attempts instead of two caught it 2 runs out of 3; still not
+proof. So we added a deterministic test of the mechanism itself: hold the cohort lock in
+another transaction, assert that a command waits, release it, and assert that it completes.
+Without the lock it fails every time.
+**Lesson.** Concurrency bugs hide from tests that hope to hit them. Test the mechanism, not
+the luck.
+
+## 2026-10-15 — Mutation testing found a date that will never exist
+
+**What happened.** The xAPI export formats timestamps with a classic days-to-date algorithm,
+tested against six dates checked independently in Python. Mutation testing changed one `+`
+in the century correction, and no test noticed.
+**The problem.** None of the six dates fell where that correction matters: the first day after
+a skipped century leap day. With the mutation, the code prints **2100-02-29**, a date the
+calendar does not have.
+**What we did.** Added 2100-03-01 and 2400-02-29 as test vectors. The mutant now fails.
+**Lesson.** Hand-picked examples cluster around the dates we think about. Mutants go looking
+where we didn't.
+
+## 2026-10-15 — The advisor saved the Arabic answers
+
+**What happened.** A deferred fix said: stop "same" matching "sesame" by matching rubric terms
+at word starts only. Reviewing the plan, the advisor pointed out that this would break Arabic.
+Roots sit *inside* conjugated words: `ضرب` (multiply) in `نضرب` (we multiply).
+**What we did.** Word starts for Latin-script terms only. Arabic terms and symbols keep matching
+anywhere. Then the first implementation treated `×` as a Latin letter, because it sits in the
+Latin-1 code block; a test caught it.
+**Lesson.** "Word" is not a universal unit. Ask the language before applying a rule.
+
+## 2026-10-15 — Scripted edits that went wrong
+
+**What happened.** Two scripted edits failed silently. `cargo fmt` had reflowed a function, so
+a patch matched nothing. And a slice that should have held the Makefile's mutants section was
+empty, because the end marker came earlier in the file. Replacing an empty string inserted
+the new text between every character.
+**What we did.** Restored the Makefile from git and wrote it out whole. The skill now says:
+assert that the old text exists, never replace an empty string, and rewrite whole functions
+instead of patching them.
+**Lesson.** The cheapest edit to make is the most expensive one to trust.
+
 ## 2026-10-14 — M1: the kernel is proven
 
 **What happened.** The kernel and both frameworks went green on every gate, on the day the

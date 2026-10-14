@@ -74,4 +74,10 @@ Tooling traps already met (details in `docs/JOURNAL.md`):
   count results.
 - `pkill -f <pattern>` can match your own shell command line. Use `pgrep -fa` first and kill by PID.
 - `cargo fmt` reflows lines. A `sed` written against the old text silently matches nothing,
-  so check that the edit landed before trusting what follows.
+  so check that the edit landed before trusting what follows. In scripted edits, `assert old in s`
+  and never replace an empty string (an empty slice inserted text between every character of
+  the Makefile once). For whole functions or files, rewrite them instead of patching.
+- A race test that fails only sometimes under sabotage is a weak guard. Add a deterministic
+  test of the mechanism too (e.g. hold the lock, assert the command waits).
+- Another session may be running `cargo mutants` or Docker on this machine. Touch only what
+  you started (by PID or by the `org.zidara.test` label).

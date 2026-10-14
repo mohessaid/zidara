@@ -30,8 +30,8 @@ Solve before using it.
 ## Status
 
 - Design: written.
-- Prototype: the kernel is done (M1, 14 October 2026): two frameworks, a governed agent and
-  offline sync, proven by 109 tests natively and on wasm32, 17 user stories, 100% of lines and
-  branches, and every mutant caught. Next: the server (M2), the web shell (M3) and the demo (M4).
-  Solve does not accept concept-stage ideas, so it must run by 2 November 2026.
+- Prototype: the kernel (M1, 14 October) and the server (M2, 15 October) are done. Two
+  frameworks, a governed agent and offline sync run on PostgreSQL with row-level security;
+  `make serve` runs it locally. Next: the wasm bridge and the web shell (G3, G4). Goals and
+  dates: `docs/GOALS.md`.
 - Name: chosen; trademark and domain checks to do.

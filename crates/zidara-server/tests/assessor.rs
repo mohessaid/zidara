@@ -283,3 +283,58 @@ async fn models_without_server_fallbacks_send_no_beta_header() {
     let sent = &server.received_requests().await.unwrap()[0];
     assert!(sent.headers.get("anthropic-beta").is_none());
 }
+
+#[tokio::test]
+async fn the_agent_skips_answers_it_cannot_mark_and_needs_a_lesson() {
+    let db = db().await;
+    let (school, clock) = (School::demo(), FixedClock::at(NOW));
+    // An answer recorded against a quiz (possible only by writing to the log directly) is skipped.
+    let body = serde_json::to_value(EventBody::AnswerSubmitted {
+        learner: zidara_kernel::ids::UserId(db.seed.amina),
+        activity: ActivityId::new("quiz-f1"),
+        answer: "x".into(),
+    })
+    .unwrap();
+    sqlx::query("insert into events (id, tenant_id, cohort_id, learner_id, at_ms, actor, body) values ($1, $2, $3, $4, $5, '{\"kind\":\"system\"}', $6)")
+        .bind(Uuid::now_v7())
+        .bind(db.seed.tenant)
+        .bind(db.seed.a)
+        .bind(db.seed.amina)
+        .bind(NOW)
+        .bind(body)
+        .execute(&db.owner)
+        .await
+        .unwrap();
+    assert_eq!(
+        mark_pending(
+            &db.app,
+            &school,
+            &clock,
+            &Assessor::Rubric,
+            db.seed.agent,
+            db.seed.a
+        )
+        .await
+        .unwrap(),
+        0
+    );
+    sqlx::query("update cohorts set lesson_id = 'gone' where id = $1")
+        .bind(db.seed.a)
+        .execute(&db.owner)
+        .await
+        .unwrap();
+    let err = mark_pending(
+        &db.app,
+        &school,
+        &clock,
+        &Assessor::Rubric,
+        db.seed.agent,
+        db.seed.a,
+    )
+    .await
+    .unwrap_err();
+    assert!(
+        matches!(err, zidara_server::error::ApiError::UnknownLesson(_)),
+        "{err:?}"
+    );
+}

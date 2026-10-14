@@ -318,3 +318,24 @@ async fn the_agent_runs_after_an_answer() {
     }
     panic!("the agent never proposed a mark");
 }
+
+#[tokio::test]
+async fn a_misconfigured_cohort_is_a_server_error_not_a_crash() {
+    let api = api(true).await;
+    let s = api.db.seed;
+    sqlx::query("update cohorts set lesson_id = 'gone' where id = $1")
+        .bind(s.a)
+        .execute(&api.db.owner)
+        .await
+        .unwrap();
+    let (status, body) = api
+        .call(
+            "GET",
+            &format!("/api/cohorts/{}/learner-view", s.a),
+            Some(s.amina),
+            None,
+        )
+        .await;
+    assert_eq!(status, StatusCode::INTERNAL_SERVER_ERROR);
+    assert_eq!(body["error"], "the cohort's lesson \"gone\" is not loaded");
+}

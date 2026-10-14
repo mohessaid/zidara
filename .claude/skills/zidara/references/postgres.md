@@ -13,21 +13,16 @@ access), applied to Zidara's design. Before writing schema or SQL, check every r
   ```
 - The app connects as `zidara_app`, a non-owner login role without `BYPASSRLS`. Migrations
   run as a separate owner role. Never connect the app as owner or superuser.
-- Each request opens a transaction and sets its context with `SET LOCAL` (it dies with the
-  transaction, so a pooled connection cannot leak it):
-  ```sql
-  select set_config('app.tenant_id', $1, true),
-         set_config('app.cohort_ids', $2, true),   -- comma-separated uuids
-         set_config('app.user_id', $3, true);
-  ```
-- Write policies so the settings are read once per query, not once per row: wrap them in a
-  scalar subquery.
-  ```sql
-  create policy events_cohort on events for all to zidara_app
-    using (tenant_id = (select current_setting('app.tenant_id', true)::uuid)
-       and cohort_id = any ((select string_to_array(current_setting('app.cohort_ids', true), ',')::uuid[])));
-  ```
-  A missing setting must yield **no rows**, never all rows. Integration tests prove it.
+- Each request opens a transaction acting as one user: `store::begin_as(pool, user)` runs
+  `select set_config('app.user_id', $1, true)`. That is the **only** setting. Policies derive
+  cohorts from `memberships` through `private.my_cohorts()` and
+  `private.overseen_cohorts()` (`security definer`, `search_path = ''`), so the memberships
+  policy does not recurse and a server bug cannot widen what a user sees (ADR 0006).
+- Read settings as `nullif(current_setting('app.user_id', true), '')::uuid`: a pooled
+  connection keeps an *empty* setting after `SET LOCAL` ends, and casting `''` errors.
+  Wrap them in a scalar subquery so they are evaluated once per query, not per row.
+- A missing setting must yield **no rows**, never all rows. `tests/isolation.rs` proves it,
+  and making the app role the table owner fails 5 of its 9 tests (sabotage check).
 - Least privilege: on `events`, `zidara_app` gets `SELECT, INSERT` only, with no `UPDATE`
   or `DELETE`. The log is append-only in the database too.
 
@@ -72,3 +67,19 @@ access), applied to Zidara's design. Before writing schema or SQL, check every r
 - Replaying the same envelope twice appends once.
 - Use `testcontainers` or the Compose service. The container stops when the tests end, with
   no restart policy.
+
+## Proven in this repo (M2)
+
+- Commands: per-cohort `pg_advisory_xact_lock(hashtextextended(cohort::text, 0))`, then the
+  envelope ledger, then history at READ COMMITTED (it sees the previous command's commit).
+  `commands_wait_for_the_cohort_lock` proves the lock deterministically; a race test alone
+  caught a missing lock only 1 run in 3.
+- `at` is clamped between the sender's latest event and server now.
+- sqlx 0.9 refuses `format!` SQL at compile time; wrap audited dynamic SQL in
+  `sqlx::AssertSqlSafe(...)` (only for identifiers from a fixed list, never user input).
+- Insert many rows with one `unnest($1::uuid[], ...)` statement.
+- Tests: `tests/support` starts one `postgres:16` container per test binary (label
+  `org.zidara.test=1`) and creates a fresh database per test. testcontainers 0.27 has no
+  reaper, so `make test` removes labelled containers afterwards.
+- The role is created in the migration with `exception when duplicate_object` (parallel test
+  databases share one cluster); its password is set outside migrations.

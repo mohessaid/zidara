@@ -267,6 +267,7 @@ mod assessor_parts {
             text(r#"{"score_bp":70000,"confidence_bp":1,"rationale":"r"}"#),
             text(r#"{"score_bp":1,"confidence_bp":10001,"rationale":"r"}"#),
             text(r#"{"score_bp":1,"confidence_bp":1}"#),
+            json!({ "stop_reason": "end_turn", "content": [ { "type": "text", "text": 5 } ] }),
         ] {
             assert_eq!(read_reply(&bad), None, "{bad}");
         }
@@ -333,5 +334,117 @@ mod auth_tokens {
             Err(AuthError::Invalid)
         );
         assert!(!format!("{keys:?}").contains("secret"));
+    }
+}
+
+mod config {
+    use std::collections::BTreeMap;
+
+    use zidara_server::config::{AssessorConfig, Config};
+
+    fn env(pairs: &[(&str, &str)]) -> impl Fn(&str) -> Option<String> {
+        let map: BTreeMap<String, String> = pairs
+            .iter()
+            .map(|(k, v)| ((*k).to_owned(), (*v).to_owned()))
+            .collect();
+        move |key| map.get(key).cloned()
+    }
+
+    #[test]
+    fn the_minimum_is_a_database_and_a_secret() {
+        let config = Config::from_env(env(&[
+            ("DATABASE_URL", "postgres://x"),
+            ("ZIDARA_SECRET", "s3cret-s3cret-s3cret-s3cret-s3cret"),
+        ]))
+        .unwrap();
+        assert_eq!(config.database_url, "postgres://x");
+        assert_eq!(config.addr, "127.0.0.1:8080");
+        assert!(!config.demo_login);
+        assert_eq!(config.assessor, AssessorConfig::Rubric);
+        assert_eq!(config.agent, zidara_server::seed::Seed::DEMO.agent);
+    }
+
+    #[test]
+    fn missing_or_weak_settings_are_errors() {
+        assert_eq!(
+            Config::from_env(env(&[(
+                "ZIDARA_SECRET",
+                "s3cret-s3cret-s3cret-s3cret-s3cret"
+            )]))
+            .unwrap_err(),
+            "DATABASE_URL is not set"
+        );
+        assert_eq!(
+            Config::from_env(env(&[("DATABASE_URL", "x")])).unwrap_err(),
+            "ZIDARA_SECRET is not set"
+        );
+        assert_eq!(
+            Config::from_env(env(&[("DATABASE_URL", "x"), ("ZIDARA_SECRET", "short")]))
+                .unwrap_err(),
+            "ZIDARA_SECRET must be at least 32 bytes"
+        );
+        assert_eq!(
+            Config::from_env(env(&[
+                ("DATABASE_URL", "x"),
+                ("ZIDARA_SECRET", "s3cret-s3cret-s3cret-s3cret-s3cret"),
+                ("ZIDARA_AGENT_ID", "nope")
+            ]))
+            .unwrap_err(),
+            "ZIDARA_AGENT_ID is not a UUID"
+        );
+    }
+
+    #[test]
+    fn claude_is_used_when_a_key_is_set() {
+        let config = Config::from_env(env(&[
+            ("DATABASE_URL", "x"),
+            ("ZIDARA_SECRET", "s3cret-s3cret-s3cret-s3cret-s3cret"),
+            ("ANTHROPIC_API_KEY", "k"),
+            ("ZIDARA_ASSESSOR_MODEL", "claude-haiku-5-5"),
+            ("ZIDARA_DEMO_LOGIN", "1"),
+            ("ZIDARA_ADDR", "0.0.0.0:9000"),
+            ("ZIDARA_AGENT_ID", "00000000-0000-0000-0000-000000000007"),
+        ]))
+        .unwrap();
+        assert_eq!(
+            config.assessor,
+            AssessorConfig::Claude {
+                base_url: "https://api.anthropic.com".into(),
+                api_key: "k".into(),
+                model: "claude-haiku-5-5".into()
+            }
+        );
+        assert!(config.demo_login);
+        assert_eq!(config.addr, "0.0.0.0:9000");
+        assert_eq!(config.agent, uuid::Uuid::from_u128(7));
+        let default_model = Config::from_env(env(&[
+            ("DATABASE_URL", "x"),
+            ("ZIDARA_SECRET", "s3cret-s3cret-s3cret-s3cret-s3cret"),
+            ("ANTHROPIC_API_KEY", "k"),
+        ]))
+        .unwrap();
+        assert!(
+            matches!(default_model.assessor, AssessorConfig::Claude { ref model, .. } if model == "claude-opus-5-5")
+        );
+        assert!(
+            !format!("{config:?}").contains("s3cret") && !format!("{config:?}").contains("\"k\"")
+        );
+    }
+}
+
+mod clock_and_debug {
+    use zidara_server::config::AssessorConfig;
+    use zidara_server::school::{Clock, SystemClock};
+
+    #[test]
+    fn the_system_clock_reads_real_time() {
+        let now = SystemClock.now().0;
+        // After 1 January 2026 and before 2100: the clock is wired to real time, in milliseconds.
+        assert!(now > 1_767_225_600_000 && now < 4_102_444_800_000, "{now}");
+    }
+
+    #[test]
+    fn the_rubric_assessor_prints_its_name() {
+        assert_eq!(format!("{:?}", AssessorConfig::Rubric), "Rubric");
     }
 }

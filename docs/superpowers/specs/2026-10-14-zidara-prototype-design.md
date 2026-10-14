@@ -180,9 +180,12 @@ an API key is set). The agent's governance is the innovation; the model is repla
 - PostgreSQL 16 in Docker (Compose file with no restart policy; started only for work and tests).
 - Tables: `tenants`, `cohorts`, `users`, `memberships`, `class_settings` (framework per cohort),
   `content`, `events` (append-only: no UPDATE or DELETE grants).
-- Every row carries `tenant_id` and `cohort_id`. The app connects as a non-owner role with RLS
-  forced. Each request sets `app.user_id`, `app.tenant_id` and `app.cohort_ids` with
-  `SET LOCAL` inside its transaction; policies read them with `current_setting`.
+- Every row carries `tenant_id` and `cohort_id`. The app connects as `zidara_app`: a non-owner
+  role without `BYPASSRLS`, with RLS forced on every table. Each request sets only
+  `app.user_id` with `SET LOCAL`; policies derive cohorts from `memberships` (ADR 0006).
+  Learners see their own events and cohort-wide ones; teachers and the agent see their cohorts.
+- Each command takes a per-cohort advisory lock, records its envelope id, and runs `decide` on
+  the visible history in one short transaction. The model is never called inside one.
 - Sign-in for the prototype: seeded demo users and a server-signed token. OIDC is out of scope
   and named as such.
 - API (data only, JSON): `GET /api/me`, `GET /api/packs/:id`,

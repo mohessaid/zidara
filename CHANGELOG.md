@@ -7,6 +7,22 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- The server (`zidara-server`), an axum shell around the kernel:
+  - PostgreSQL schema with row-level security forced on every table. The app role sets
+    only who is asking; the database derives what they see from memberships. Learners see
+    their own events and name only; teachers and the agent see their cohorts; nobody sees
+    another cohort. The event log is append-only for the app.
+  - One write path, `POST /api/cohorts/{id}/commands`, for online work and offline sync:
+    a per-cohort lock, an idempotent envelope ledger, `decide`, and one insert, in a short
+    transaction. Envelope times are clamped between the sender's latest event and now.
+  - `GET /api/me`, `/api/packs/{id}`, `/api/cohorts/{id}/events` (keyset pages),
+    `/learner-view`, `/studio` (teachers) and `/xapi` (xAPI statements, teachers).
+  - The assessment agent marks open answers after the request returns, outside any
+    transaction, and proposes through the same command path. Claude (Messages API,
+    structured output, refusal fallbacks) when `ANTHROPIC_API_KEY` is set; any model failure
+    falls back to the rubric with confidence capped, so a teacher reviews it.
+  - Demo sign-in tokens, `zidara-server migrate | seed | serve`, `compose.yaml` and
+    `make serve` for a local run; the demo school seed (two isolated cohorts).
 - Rust workspace and the gauntlet: `make gauntlet` runs lint, tests, acceptance stories,
   wasm32 tests, Android and iOS checks, 100% line, function and branch coverage, and mutation
   testing. A CI workflow mirrors them (unverified until the repo has a remote). Mutation
@@ -31,3 +47,10 @@ All notable changes to Zidara are recorded here. The format follows
   third-party skills.
 - Design spec, M0–M1 implementation plan, ground rules (`AGENTS.md`), decision records and
   the project journal.
+
+### Changed
+
+- Rubric marking matches Latin-script terms at word starts ("same" no longer matches
+  "sesame"); Arabic roots and symbols still match inside words.
+- The `Framework` and `FrameworkRegistry` traits require `Send + Sync`, so a school's
+  frameworks can be shared across server threads.

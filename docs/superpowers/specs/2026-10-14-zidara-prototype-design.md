@@ -71,10 +71,10 @@ Approach A: a shared Rust core with a thin shell per platform (the HEY model).
 
 ```
 crates/
-  zidara-kernel       pure Rust, no I/O: six blocks, Framework trait, events, rules,
-                      governance, view intents; ports (traits) for store, clock, ids, assessor
+  zidara-kernel       pure Rust, no I/O: six blocks, Framework trait, events, decide/fold,
+                      rules, governance, view intents
   zidara-frameworks   Cambridge-style and mastery, each behind the Framework trait
-  zidara-store-mem    in-memory store (tests, wasm)
+  zidara-acceptance   executable user stories (cucumber) over the kernel
   zidara-server       axum + sqlx on PostgreSQL 16, row-level security, JSON API, sync,
                       Claude assessor
   zidara-wasm         wasm-bindgen bridge; exports the kernel to the web shell
@@ -86,15 +86,19 @@ features/             executable user stories (Gherkin) run against the kernel
 ### 3.1 The kernel rule
 
 `zidara-kernel` and `zidara-frameworks` depend on no database, async runtime, network or system
-clock. Everything outside goes through ports:
+clock. The kernel is a pure core with two functions; shells do all I/O around them:
 
 ```rust
-pub trait EventStore { fn append(&mut self, e: Event) -> Result<(), StoreError>;
-                       fn events_for(&self, scope: &Scope) -> Vec<Event>; }
-pub trait Clock { fn now(&self) -> Timestamp; }
-pub trait IdGen { fn next(&mut self) -> Id; }          // UUIDv7 on server and client
-pub trait Assessor { fn assess(&self, item: &OpenItem, answer: &str) -> Assessment; }
+pub fn decide(actor: &Actor, command: Command, history: &[Event], env: &Env, ids: &mut dyn IdGen)
+    -> Result<Vec<Event>, KernelError>;              // what happens next, or why not
+pub fn fold(events: &[Event]) -> CohortState;        // what is true now
 ```
+
+`Env` carries the time, tenant, cohort, lesson, frameworks and agent policy. `IdGen` is the only
+trait a shell implements (UUIDv7 on server and client; a counter in tests). Stores stay in the
+shells, so the async server and the IndexedDB client never need a sync storage trait. The
+assessment model is not called by the kernel either: the agent is an actor that sends a
+`ProposeAssessment` command, like any person.
 
 If the database leaks into the kernel, the offline client cannot exist; CI enforces the rule by
 building the kernel for `wasm32-unknown-unknown`, `aarch64-linux-android` and `aarch64-apple-ios`.
@@ -150,18 +154,21 @@ events by the actor `System`.
 4. The teacher studio lists queued proposals; the teacher accepts, edits or rejects; any applied
    agent action can be undone.
 
-Assessors: `RubricAssessor` (deterministic, keyword-and-number rubric; used in all tests and
-in CI) and `ClaudeAssessor` on the server (Claude Haiku 5.5, `claude-haiku-5-5`, enabled when
+Assessors: the kernel's `assess` (deterministic keyword rubric, Arabic diacritics ignored; used
+in all tests and in CI) and `ClaudeAssessor` on the server (Claude Haiku 5.5, `claude-haiku-5-5`, enabled when
 an API key is set). The agent's governance is the innovation; the model is replaceable.
 
 ### 3.5 Offline and sync
 
 - The lesson pack (content, quiz, strings, video) is cached by a service worker.
-- Offline, the web shell records events in IndexedDB through the wasm kernel; judgement and the
-  game map update locally.
-- Back online, the shell posts unsynced events in a batch. The server re-runs the permission
-  check per event and appends what passes; ids are client-made UUIDv7, so a retry is idempotent.
-- Evidence is append-only, so merging is set union; judgement is recomputed, never merged.
+- Offline, the web shell runs commands through the wasm kernel against its local history in
+  IndexedDB; judgement and the game map update locally, and each command goes to an outbox.
+- Back online, the shell posts the outbox. Each command travels in an `Envelope { id, at,
+  command }`. The server replays it through the same `decide`, with the same permission checks.
+  A client can send commands but never events, so it cannot forge evidence. The envelope id is
+  a client-made UUIDv7; the server stores applied ids, so a retry is harmless.
+- `at` is when the learner acted, capped at the server's clock. Folds order events by `at`, so
+  late-synced work lands where it happened. Judgement is recomputed, never merged.
   Offline edits of shared records (the hard case in the proposal) are out of scope.
 - Agent pre-marking of offline answers happens at sync time on the server.
 

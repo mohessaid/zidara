@@ -170,7 +170,11 @@ an API key is set). The agent's governance is the innovation; the model is repla
 - The Quest map is drawn with PixiJS v8 (WebGL, Canvas fallback); motion with GSAP; text, RTL
   and accessibility stay in the DOM. Engines weighed and rejected for this audience: Godot web
   export (about 40 MB runtime before content; Rust via gdext on the web is experimental) and
-  Bevy (10–20 MB wasm; text shaping and kids' UI are slow to build). Budget: the whole shell,
+  Bevy (10–20 MB wasm; text shaping and kids' UI are slow to build), and raylib (small and
+  fast, but it draws glyphs without shaping or bidi, so Arabic would need HarfBuzz and FriBidi
+  compiled in; a canvas is invisible to screen readers; and it needs the Emscripten target,
+  a second wasm toolchain beside wasm-bindgen). Raylib stays a candidate for a native shell
+  after Solve. Budget: the whole shell,
   wasm kernel included, under 1.5 MB compressed before media, so a lesson pack caches on a
   slow, metered connection.
 - Bridge types are generated from the Rust types (`ts-rs`), so the contract cannot drift.

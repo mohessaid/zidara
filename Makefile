@@ -8,13 +8,13 @@ WASM_RUNNER := CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUNNER=wasm-bindgen-test-runn
 # crates/zidara-wasm/tests/shell.rs under `make wasm`.
 COVERAGE_SCOPE := --ignore-filename-regex 'zidara-acceptance|tests/|zidara-server/src/main.rs|zidara-wasm/src/shell.rs'
 
-.PHONY: gauntlet lint test acceptance wasm targets bridge coverage mutants clean-containers db-up db-down serve
+.PHONY: gauntlet lint test acceptance wasm targets types bridge coverage mutants clean-containers db-up db-down serve
 
-gauntlet: lint test acceptance wasm targets bridge coverage mutants
+gauntlet: lint test acceptance wasm targets types bridge coverage mutants
 
 lint:
 	cargo fmt --all --check
-	cargo clippy --workspace --all-targets -- -D warnings
+	cargo clippy --workspace --all-targets --all-features -- -D warnings
 
 test:
 	cargo nextest run --workspace --exclude zidara-acceptance; status=$$?; $(MAKE) -s clean-containers; exit $$status
@@ -28,6 +28,13 @@ wasm:
 targets:
 	cargo check $(PORTABLE) --target aarch64-linux-android
 	cargo check $(PORTABLE) --target aarch64-apple-ios
+
+# The web shell's TypeScript types, generated from the kernel; fails if the committed ones are stale.
+types:
+	rm -rf web/src/lib/kernel/types
+	cargo test -q -p zidara-kernel --features ts --lib export_bindings > /dev/null
+	git add -N web/src/lib/kernel/types
+	git diff --exit-code --stat -- web/src/lib/kernel/types
 
 # The optimised wasm build, replayed in Node against the golden session.
 bridge:

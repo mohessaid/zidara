@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 
 /// Text keyed by BCP 47 language tag (`ar`, `fr`, `en`).
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(transparent)]
 pub struct Localized(pub BTreeMap<String, String>);
 

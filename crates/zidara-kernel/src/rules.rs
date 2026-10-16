@@ -6,6 +6,7 @@ use crate::framework::Judgement;
 use crate::score::Score;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum Rule {
     /// Below `below` after `after_attempts` tries: offer remediation and tell the teacher.
@@ -15,6 +16,7 @@ pub enum Rule {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "snake_case")]
 pub enum NotifyReason {
     Struggling,

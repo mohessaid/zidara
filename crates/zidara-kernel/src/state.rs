@@ -12,6 +12,7 @@ use crate::roles::Actor;
 use crate::rules::NotifyReason;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "snake_case")]
 pub enum ProposalStatus {
     Applied,

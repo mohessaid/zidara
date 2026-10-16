@@ -1,0 +1,5 @@
+[env]
+# ts-rs: where `make types` writes the kernel's TypeScript types, and i64 as `number`
+# (timestamps in milliseconds stay exact up to 2^53).
+TS_RS_EXPORT_DIR = { value = "web/src/lib/kernel/types", relative = true }
+TS_RS_LARGE_INT = "number"

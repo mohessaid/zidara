@@ -4,6 +4,8 @@ use serde::{Deserialize, Serialize};
 
 /// A score from 0 (nothing) to 10 000 (everything), in basis points.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
+#[cfg_attr(feature = "ts", ts(type = "number"))]
 #[serde(try_from = "u16", into = "u16")]
 pub struct Score(u16);
 

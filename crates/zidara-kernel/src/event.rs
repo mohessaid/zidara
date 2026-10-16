@@ -12,6 +12,7 @@ use crate::roles::Actor;
 use crate::rules::NotifyReason;
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Event {
     pub id: EventId,
     pub at: Timestamp,
@@ -22,6 +23,7 @@ pub struct Event {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum EventBody {
     QuizSubmitted {

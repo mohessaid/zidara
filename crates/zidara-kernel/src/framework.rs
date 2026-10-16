@@ -13,6 +13,7 @@ use crate::score::Score;
 
 /// Where a learner stands on one outcome. Experiences decide how to draw it.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "snake_case")]
 pub enum OutcomeState {
     NotStarted,
@@ -23,6 +24,7 @@ pub enum OutcomeState {
 
 /// A named level. `rank` counts from 0 (lowest) to `of - 1`; a label is a translation key.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Band {
     pub label: String,
     pub rank: u8,
@@ -30,6 +32,7 @@ pub struct Band {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Judgement {
     pub state: OutcomeState,
     pub score: Option<Score>,
@@ -48,6 +51,7 @@ impl Judgement {
 
 /// Why an outcome is not open yet.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum LockReason {
     Prerequisite { outcome: OutcomeId },
@@ -55,6 +59,7 @@ pub enum LockReason {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Availability {
     pub outcome: OutcomeId,
     pub lock: Option<LockReason>,

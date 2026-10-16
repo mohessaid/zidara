@@ -38,6 +38,7 @@ metadata:
 - `serde-compat` (default) honours `rename`, `rename_all`, `rename_all_fields`, `tag`, `content`, `untagged`, `skip`, `skip_serializing(_if)` (only with `#[serde(default)]`), `flatten` and `default`. `skip_deserializing` is ignored; use `#[ts(skip)]`.
 - Types that don't implement `TS`, or serialize differently from their shape (`try_from`/`into`): `#[ts(type = "..")]` or `#[ts(as = "..")]`.
 - Features: `uuid-impl`, `serde-json-impl`, `format`.
+- Verified here: ts-rs warns "failed to parse serde attribute: transparent" but already renders a one-field newtype as its inner type (`OutcomeId = string`); `macro_rules!`-generated types need the derive inside the macro; Zidara exports via `make types` to `web/src/lib/kernel/types` (`.cargo/config.toml` `[env]`).
 
 ## Record
 After each deliverable, run the taste context's `made` command with its defining choices.

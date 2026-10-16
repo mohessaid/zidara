@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::ids::{AgentId, UserId};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "snake_case")]
 pub enum Role {
     Learner,
@@ -14,6 +15,7 @@ pub enum Role {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "snake_case")]
 pub enum Permission {
     SubmitWork,
@@ -42,6 +44,7 @@ pub fn allows(role: Role, permission: Permission) -> bool {
 
 /// Whoever caused an event.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(tag = "kind", rename_all = "snake_case")]
 pub enum Actor {
     Human { user: UserId, role: Role },

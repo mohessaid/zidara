@@ -8,6 +8,7 @@ use crate::score::Score;
 
 /// One thing a good answer mentions; any of the terms counts.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Criterion {
     pub any_of: Vec<String>,
     pub weight: u16,
@@ -15,6 +16,7 @@ pub struct Criterion {
 
 /// What a teacher looks for in an open answer.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Rubric {
     pub criteria: Vec<Criterion>,
     pub min_words: u16,
@@ -22,6 +24,7 @@ pub struct Rubric {
 
 /// A mark with how sure the marker is.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Assessment {
     pub score: Score,
     pub confidence: Score,
@@ -96,6 +99,7 @@ fn normalize(text: &str) -> String {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "snake_case")]
 pub enum Decision {
     Apply,
@@ -104,6 +108,7 @@ pub enum Decision {
 
 /// When an agent's mark may be applied without a person.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Policy {
     pub auto_apply_at: Score,
 }
@@ -125,6 +130,7 @@ impl Policy {
 
 /// An agent's mark for one answer, with what the policy decided.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Proposal {
     pub answer: EventId,
     pub learner: UserId,

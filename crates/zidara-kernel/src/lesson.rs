@@ -29,8 +29,9 @@ pub enum LessonError {
 }
 
 /// A lesson pack as stored in `content/lessons/*.json`, before it is checked.
-#[derive(Deserialize)]
-struct LessonPack {
+#[derive(Debug, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
+pub struct LessonPack {
     id: String,
     title: Localized,
     outcomes: Vec<Outcome>,

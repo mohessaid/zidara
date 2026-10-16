@@ -10,6 +10,7 @@ use crate::score::Score;
 
 /// The right answer to a question.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum Expected {
     Choice {
@@ -24,6 +25,7 @@ pub enum Expected {
 
 /// A learner's answer to a question.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum Response {
     Choice { index: u32 },
@@ -46,6 +48,7 @@ impl Expected {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Question {
     pub id: String,
     pub outcome: OutcomeId,
@@ -55,6 +58,7 @@ pub struct Question {
 
 /// Core activities are the lesson; remediation is offered when a learner struggles.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "snake_case")]
 pub enum ActivityRole {
     #[default]
@@ -63,6 +67,7 @@ pub enum ActivityRole {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum ActivityKind {
     Video {
@@ -87,6 +92,7 @@ pub enum ActivityKind {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Activity {
     pub id: ActivityId,
     pub title: Localized,

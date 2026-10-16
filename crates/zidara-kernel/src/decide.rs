@@ -20,6 +20,7 @@ use crate::score::Score;
 use crate::state::{CohortState, ProposalStatus, fold};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum Command {
     SubmitQuiz {
@@ -55,6 +56,7 @@ pub enum Command {
 
 /// A command as a shell sends it. `id` makes a retry harmless; `at` is when the person acted.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Envelope {
     pub id: Uuid,
     pub at: Timestamp,
@@ -74,6 +76,7 @@ pub struct Env<'a> {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, thiserror::Error, Serialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum KernelError {
     #[error("{role:?} may not {permission:?}")]

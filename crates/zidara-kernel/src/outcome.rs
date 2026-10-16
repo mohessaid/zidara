@@ -9,6 +9,7 @@ use crate::locale::Localized;
 
 /// One outcome, in the shape CASE frameworks use (id, title, what it builds on).
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Outcome {
     pub id: OutcomeId,
     pub title: Localized,

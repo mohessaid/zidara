@@ -8,6 +8,7 @@ macro_rules! text_id {
         $(#[$doc])*
         #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
         #[serde(transparent)]
+        #[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
         pub struct $name(String);
 
         impl $name {
@@ -27,6 +28,7 @@ macro_rules! uuid_id {
         $(#[$doc])*
         #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
         #[serde(transparent)]
+        #[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
         pub struct $name(pub Uuid);
     };
 }
@@ -50,6 +52,7 @@ uuid_id!(/// A tenant: a school or organisation.
 
 /// Milliseconds since the Unix epoch, UTC.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 #[serde(transparent)]
 pub struct Timestamp(pub i64);
 

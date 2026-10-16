@@ -15,6 +15,7 @@ use crate::rules::NotifyReason;
 use crate::state::{ProposalStatus, fold};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct OutcomeView {
     pub outcome: OutcomeId,
     pub title: String,
@@ -23,6 +24,7 @@ pub struct OutcomeView {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct LearnerView {
     pub framework: FrameworkId,
     pub outcomes: Vec<OutcomeView>,
@@ -90,6 +92,7 @@ pub fn learner_view(
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct OutcomeSummary {
     pub outcome: OutcomeId,
     pub title: String,
@@ -99,6 +102,7 @@ pub struct OutcomeSummary {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct QueuedProposal {
     pub id: EventId,
     pub proposal: Proposal,
@@ -106,6 +110,7 @@ pub struct QueuedProposal {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct Flag {
     pub learner: UserId,
     pub outcome: OutcomeId,
@@ -113,6 +118,7 @@ pub struct Flag {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct AgentAction {
     pub id: EventId,
     pub agent: AgentId,
@@ -120,6 +126,7 @@ pub struct AgentAction {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
 pub struct StudioView {
     pub framework: FrameworkId,
     pub outcomes: Vec<OutcomeSummary>,

@@ -9,6 +9,11 @@ publish = false
 serde.workspace = true
 uuid.workspace = true
 thiserror.workspace = true
+ts-rs = { version = "12.0.1", optional = true, features = ["uuid-impl"] }
+
+[features]
+# TypeScript types for the web shell: `make types`.
+ts = ["dep:ts-rs"]
 
 [dev-dependencies]
 proptest.workspace = true

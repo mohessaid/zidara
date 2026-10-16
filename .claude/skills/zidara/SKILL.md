@@ -1,6 +1,6 @@
 ---
 name: zidara
-description: The Zidara project's own skill: how to build, test, design and record work in this repository. Use for ANY work in the Zidara repo - kernel and frameworks (Rust), the server (axum, sqlx, PostgreSQL row-level security), the web shell (Svelte 5, PixiJS, PWA, Arabic RTL), accessibility, gamification and game UI, playtests, the Solve pitch video and lesson videos, and the project record (changelog, journal, ADRs).
+description: "The Zidara project's own skill: how to build, test, design and record work in this repository. Use for ANY work in the Zidara repo - kernel and frameworks (Rust), the server (axum, sqlx, PostgreSQL row-level security), the web shell (Svelte 5, PixiJS, PWA, Arabic RTL), accessibility, gamification and game UI, playtests, the Solve pitch video and lesson videos, and the project record (changelog, journal, ADRs)."
 ---
 
 # Zidara

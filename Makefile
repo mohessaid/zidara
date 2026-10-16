@@ -50,7 +50,7 @@ coverage:
 # Split so the Docker-backed server suite never runs once per mutant.
 mutants:
 	cargo mutants $(KERNEL) --test-package zidara-kernel,zidara-frameworks,zidara-acceptance -j 4
-	cargo mutants -p zidara-server -f 'crates/zidara-server/src/{visibility,xapi,assessor,auth,config}.rs' -j 4 -- --test pure
+	cargo mutants -p zidara-server -f 'crates/zidara-server/src/{visibility,xapi,assessor,auth,config}.rs' -j 4 -- --test pure --test claude
 
 clean-containers:
 	docker ps -aq --filter label=org.zidara.test=1 | xargs -r docker rm -f > /dev/null

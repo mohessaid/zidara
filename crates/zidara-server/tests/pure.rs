@@ -333,7 +333,7 @@ mod auth_tokens {
             verify(&keys, "not a token", Timestamp(NOW)),
             Err(AuthError::Invalid)
         );
-        assert!(!format!("{keys:?}").contains("secret"));
+        assert_eq!(format!("{keys:?}"), "Keys(..)");
     }
 }
 

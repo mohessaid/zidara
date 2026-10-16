@@ -2,36 +2,72 @@
 
 A learning platform that knows how teaching works: one kernel, many pedagogies, an experience
 for every audience, and AI agents that act only inside rules people approve. The core is
-written in Rust and runs on the server, in the offline web client and inside the native apps.
+written in Rust and runs on the server, in the offline web client and (by design) inside native
+apps.
 
-This folder prepares an entry to the [MIT Solve 2027 Global Learning
+This repository is the working prototype for the [MIT Solve 2027 Global Learning
 Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (deadline
-2 November 2026).
+2 November 2026, 12:00 pm ET).
+
+## What works today
+
+- **One lesson, two pedagogies.** "Equivalent fractions" for ages 9–11, under mastery learning
+  (decaying average, 80%) or Cambridge-style teaching (scheme-of-work calendar, grade
+  boundaries). A teacher switches the class's framework and every learner's path redraws from
+  the same evidence.
+- **Arabic first**, right to left, with French and English. A lesson film in all three.
+- **Offline-first.** After one visit the app opens and the lesson works with no network; work
+  syncs later, and the phone and the server compute the same result.
+- **AI that drafts, teachers who decide.** The assessor marks open answers (Claude, or a
+  rubric). Only confident formative marks apply; summative marks are impossible for an agent.
+  Every agent action can be undone.
+- **Isolation in the database.** Row-level security: learners see only their own work and
+  name; classes never see each other.
+- **Fair practice.** Quiz versions rotate per learner, enforced by the kernel; recovery after
+  remediation counts.
+
+## The numbers (from `make gauntlet`, 16 October 2026)
+
+| Gate | Result |
+|---|---|
+| Kernel and frameworks | 121 tests, also run on wasm32 |
+| Coverage | 100% of lines and functions, 180/180 branches (kernel, frameworks, server, wasm core) |
+| Mutation testing | 358 mutants (241 core, 117 server): every viable one caught |
+| User stories | 18 scenarios in plain language (`features/`) |
+| Server, on real PostgreSQL | 57 tests, including 9 isolation tests |
+| Phone = server | one golden session, identical natively, in Node (wasm) and on the server |
+| Web | 21 unit tests; 9 browser tests on the real server |
+| Accessibility | zero WCAG violations (axe, every screen); Lighthouse accessibility 100 |
+| Performance | Lighthouse mobile 100; map median 60 fps at 4× CPU throttle; kernel 146 KB gzipped |
+| Load (2 CPU cores, 300 learners in 10 classes) | p95 16 ms reads, 33 ms writes at 150 views/s + 50 answers/s; capacity ~690 requests/s |
+
+## Run it
+
+```bash
+make serve                  # PostgreSQL in Docker + the server on :8080 (demo sign-in)
+cd web && pnpm install && npx vite   # the app on :5173, proxied to the server
+make gauntlet               # every proof (Docker, Node, k6 and the Rust nightly needed)
+```
+
+Deploying: `docs/deploy.md` (one binary serves the API and the app).
 
 ## What is here
 
 | Path | What it is |
 |---|---|
-| `crates/` | The Rust kernel, the two frameworks and the acceptance stories (`make gauntlet`) |
-| `features/` | The user stories, readable by anyone |
-| `content/` | The demo lesson pack (Arabic, French, English) |
-| `CHANGELOG.md`, `docs/JOURNAL.md`, `docs/adr/` | What changed, the story behind it, and why |
-| `docs/proposal.md` | The design: the three axes plus automation, architecture, why Rust, standards, proof |
-| `docs/solve-2027.md` | The challenge, how the design answers each focus area and criterion, gaps, next steps |
-| `docs/naming.md` | Why "Zidara": David Placek's Diamond questions, sound, linguistic checks, alternatives |
-| `docs/discussion-2026-10.md` | The original discussion, word for word |
-| `pitch/film/` | The HyperFrames pitch film project (`npx hyperframes preview` to edit) |
-| `pitch/deliverables/` | The rendered pitch: voice cut, silent cut with subtitles, 25-slide PDF |
-| `pitch/archive/` | The first Manim draft and the first storyboard |
-
-The pitch film was made for one manager, in the context of an earlier project. Re-cut it for
-Solve before using it.
+| `crates/zidara-kernel` | The six building blocks of a pedagogy, as pure functions (no I/O) |
+| `crates/zidara-frameworks` | Mastery and Cambridge-style, behind one trait |
+| `crates/zidara-server` | axum + PostgreSQL with row-level security; the assessor agent |
+| `crates/zidara-wasm` | The kernel for the browser |
+| `crates/zidara-acceptance`, `features/` | Executable user stories |
+| `web/` | The offline-first app (Svelte 5, PixiJS) |
+| `content/` | The lesson pack and credits |
+| `docs/` | Design (`proposal.md`), spec and plans, decisions (`adr/`), `JOURNAL.md` (the story, mistakes included), `GOALS.md`, `solve-evidence.md` |
+| `pitch/` | The Solve pitch video and the recorded demo |
+| `tools/` | Video and load tooling |
 
 ## Status
 
-- Design: written.
-- Prototype: the kernel (M1, 14 October) and the server (M2, 15 October) are done. Two
-  frameworks, a governed agent and offline sync run on PostgreSQL with row-level security;
-  `make serve` runs it locally. Next: the wasm bridge and the web shell (G3, G4). Goals and
-  dates: `docs/GOALS.md`.
-- Name: chosen; trademark and domain checks to do.
+Prototype (Solve's definition: a working version, not yet with users). Before submitting:
+`docs/GOALS.md` lists what only the team can supply: a partner school, the application in
+the team's own words, name checks, hosting, and a voice.

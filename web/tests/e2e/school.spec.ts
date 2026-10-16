@@ -80,9 +80,24 @@ test("a retake shows another version of the quiz", async ({ page }) => {
 
 test("a learner of another class sees none of it", async ({ page }) => {
   await signIn(page, "sara");
-  await expect(stone(page, "F1")).toHaveAttribute("data-state", "not_started");
-  const response = await page.request.get("/api/cohorts/00000000-0000-0000-0000-00000000c00a/learner-view");
-  expect(response.status()).toBe(401);
+  await expect(stone(page, "F1")).toBeVisible();
+  // Sara's own sign-in, from her device: the server still refuses class A's data.
+  const token = await page.evaluate(
+    () =>
+      new Promise<string>((resolve) => {
+        const open = indexedDB.open("zidara");
+        open.onsuccess = () => {
+          const get = open.result.transaction("session").objectStore("session").get("current");
+          get.onsuccess = () => resolve(get.result.token);
+        };
+      }),
+  );
+  const classA = "/api/cohorts/00000000-0000-0000-0000-00000000c00a";
+  for (const path of ["/learner-view", "/events", "/studio"]) {
+    const response = await page.request.get(classA + path, { headers: { authorization: `Bearer ${token}` } });
+    expect(response.status(), path).toBe(403);
+  }
+  expect((await page.request.get(classA + "/learner-view")).status()).toBe(401);
 });
 
 test("an unsure answer waits for the teacher, who accepts it", async ({ page, browser }) => {

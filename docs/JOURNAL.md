@@ -4,6 +4,30 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-10-16 — The whole gauntlet, start to finish
+
+**What happened.** Every gate ran in sequence on the final code, timed: lint, tests,
+stories, wasm, Android and iOS, types, bridge, web, browser, Lighthouse, load, coverage and
+mutation. It took about 75 minutes, and the disk was watched the whole time.
+**What it caught.** Two failures, both real gaps in the tests rather than the product.
+- **Two tests coupled through one learner.** The isolation test assumed Sara had done nothing,
+  but the frame-rate test (which runs first) uses Sara. The isolation test now takes Sara's own
+  sign-in token and checks that the server refuses class A's data with it (403), which tests
+  the rule itself.
+- **One line no test reached.** "Answers arrived during a marking pass, run one more" was never
+  exercised. A new test holds the one-pass gate, sends a second answer, then releases it.
+**Numbers.**
+- 121 core tests (also on wasm32), 18 stories, 57 server tests, 21 web unit tests and 9 browser
+  tests, all green.
+- Coverage: 100% of lines and functions, 180/180 branches.
+- Mutation: 358 mutants, every viable one caught.
+- Lighthouse 100/100.
+- Load: p95 16 ms reads and 33 ms writes for 300 learners on 2 cores.
+- No temporary copies left behind.
+
+**Lesson.** Run everything together, in order, sometimes. Each gate passing alone does not prove
+the gates don't interfere.
+
 ## 2026-10-16 — From 39 to 686 requests a second, one measurement at a time
 
 **What happened.** The first load test of the release server, pinned to 2 CPU cores, gave

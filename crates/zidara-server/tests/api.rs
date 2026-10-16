@@ -23,11 +23,13 @@ struct Api {
     router: Router,
     keys: Keys,
     db: TestDb,
+    passes: Arc<zidara_server::agent::Passes>,
 }
 
 async fn api(demo_login: bool) -> Api {
     let db = db().await;
     let keys = Keys::from_secret(b"api test secret, long enough to sign");
+    let passes: Arc<zidara_server::agent::Passes> = Default::default();
     let state = AppState {
         pool: db.app.clone(),
         school: Arc::new(School::demo()),
@@ -35,13 +37,14 @@ async fn api(demo_login: bool) -> Api {
         keys: keys.clone(),
         assessor: Arc::new(Assessor::Rubric),
         agent: db.seed.agent,
-        passes: Default::default(),
+        passes: passes.clone(),
         demo_login,
     };
     Api {
         router: app(state),
         keys,
         db,
+        passes,
     }
 }
 
@@ -401,4 +404,38 @@ async fn the_server_can_serve_the_web_app_too() {
     assert!(!body.contains("<!doctype"));
     assert_eq!(get("/api/me").await.0, StatusCode::UNAUTHORIZED);
     std::fs::remove_dir_all(dir).unwrap();
+}
+
+#[tokio::test]
+async fn answers_that_arrive_during_a_marking_pass_get_one_more_pass() {
+    let api = api(true).await;
+    let s = api.db.seed;
+    let answer = |text: &str| json!({ "id": Uuid::now_v7(), "at": NOW, "command": { "type": "submit_answer", "activity": "explain-f2", "answer": text } });
+    // Hold the gate: the first answer's pass is started but must wait.
+    let held = api.passes.gate.acquire().await.unwrap();
+    api.call(
+        "POST",
+        &format!("/api/cohorts/{}/commands", s.a),
+        Some(s.amina),
+        Some(json!([answer("it is the same")])),
+    )
+    .await;
+    // This answer arrives during that pass: it asks for one more pass instead of its own.
+    api.call(
+        "POST",
+        &format!("/api/cohorts/{}/commands", s.a),
+        Some(s.yacine),
+        Some(json!([answer("same again")])),
+    )
+    .await;
+    drop(held);
+    let studio = format!("/api/cohorts/{}/studio", s.a);
+    for _ in 0..80 {
+        let (_, view) = api.call("GET", &studio, Some(s.karim), None).await;
+        if view["queue"].as_array().is_some_and(|q| q.len() == 2) {
+            return;
+        }
+        tokio::time::sleep(Duration::from_millis(50)).await;
+    }
+    panic!("both answers should be marked");
 }

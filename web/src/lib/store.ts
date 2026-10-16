@@ -14,6 +14,7 @@ interface Schema extends DBSchema {
   session: { key: string; value: Session };
   logs: { key: string; value: Event[] };
   outbox: { key: string; value: Outgoing; indexes: { cohort: string } };
+  packs: { key: string; value: unknown };
 }
 
 export type Store = Awaited<ReturnType<typeof openStore>>;
@@ -24,6 +25,7 @@ export async function openStore(name = "zidara") {
       db.createObjectStore("session");
       db.createObjectStore("logs");
       db.createObjectStore("outbox", { keyPath: "id" }).createIndex("cohort", "cohort");
+      db.createObjectStore("packs");
     },
   });
   const inCohort = (cohort: string) => db.getAllFromIndex("outbox", "cohort", cohort);
@@ -41,6 +43,8 @@ export async function openStore(name = "zidara") {
     pending: async (cohort: string) =>
       (await inCohort(cohort)).filter((o) => !o.refused).sort((a, b) => a.envelope.at - b.envelope.at),
     refused: async (cohort: string) => (await inCohort(cohort)).filter((o) => o.refused),
+    pack: (id: string) => db.get("packs", id),
+    savePack: async (id: string, pack: unknown) => void (await db.put("packs", pack, id)),
     remove: (id: string) => db.delete("outbox", id),
     markRefused: async (item: Outgoing, error: KernelError) => void (await db.put("outbox", { ...item, refused: error })),
   };

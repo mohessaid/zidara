@@ -86,6 +86,13 @@ test("a learner of another class sees none of it", async ({ page }) => {
 });
 
 test("an unsure answer waits for the teacher, who accepts it", async ({ page, browser }) => {
+  // The teacher's studio is already open when the answer arrives: her local kernel has not
+  // seen the agent's proposal yet, and accepting it must still work.
+  const teacher = await browser.newContext();
+  const studio = await teacher.newPage();
+  await signIn(studio, "karim");
+  await expect(studio.getByRole("heading", { name: "إجابات تنتظر قرارك" })).toBeVisible();
+
   await signIn(page, "yacine");
   await stone(page, "F1").click();
   await passQuizF1(page);
@@ -97,14 +104,11 @@ test("an unsure answer waits for the teacher, who accepts it", async ({ page, br
   await page.getByRole("button", { name: "أرسل إلى معلّمي" }).click();
   await expect(page.getByRole("status").filter({ hasText: "وصلت إجابتك" })).toBeVisible();
 
-  const teacher = await browser.newContext();
-  const studio = await teacher.newPage();
-  await signIn(studio, "karim");
   const proposal = studio.getByTestId("proposal").filter({ hasText: "هو نفس الشيء" });
   await expect(proposal).toBeVisible({ timeout: 20_000 });
   await expectAccessible(studio, "studio");
   await proposal.getByRole("button", { name: "اقبل" }).click();
-  await expect(proposal).toHaveCount(0);
+  await expect(proposal).toHaveCount(0, { timeout: 10_000 });
   await teacher.close();
 });
 

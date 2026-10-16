@@ -26,10 +26,17 @@
     }
   }
 
+  let refusal: string | undefined = $state();
+
+  // The list on screen comes from the server; the command runs through this device's kernel
+  // first. Sync before acting, so the kernel knows what the teacher is looking at (a proposal
+  // the agent made after she opened the studio, for example).
   async function command(c: Command) {
     busy = true;
-    await app.run(c);
+    refusal = undefined;
     await app.syncNow();
+    const result = await app.run(c);
+    if (result.status === "refused") refusal = t(app.locale, "error.generic");
     await refresh();
     busy = false;
   }
@@ -48,6 +55,7 @@
 <Header title={t(app.locale, "studio.title")} />
 
 <main class="studio" data-framework={studio?.framework}>
+  {#if refusal}<p role="alert" class="state-needs_support">{refusal}</p>{/if}
   {#if studio}
     <section class="card" aria-labelledby="progress">
       <h2 id="progress">{t(app.locale, "studio.progress")}</h2>

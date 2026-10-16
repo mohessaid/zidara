@@ -25,3 +25,6 @@ pitch/film/snapshots/
 *.log
 !pitch/film/*.log
 .superpowers/
+
+# Vitest
+.vitest/

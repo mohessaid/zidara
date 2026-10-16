@@ -5,14 +5,12 @@ use std::fmt::Debug;
 use std::sync::atomic::{AtomicI64, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use zidara_frameworks::{Registry, cambridge::CambridgeStyle, mastery::Mastery};
+use zidara_frameworks::Registry;
 use zidara_kernel::governance::Policy;
-use zidara_kernel::ids::{OutcomeId, Timestamp};
+use zidara_kernel::ids::Timestamp;
 use zidara_kernel::lesson::Lesson;
 
-/// Monday 5 October 2026, 00:00 UTC: the demo term starts.
-pub const TERM_START: i64 = 1_791_158_400_000;
-const WEEK: i64 = 7 * 24 * 60 * 60 * 1000;
+pub use zidara_frameworks::TERM_START;
 
 pub trait Clock: Send + Sync + Debug {
     fn now(&self) -> Timestamp;
@@ -63,14 +61,7 @@ impl School {
     pub fn demo() -> Self {
         let pack: &'static str = include_str!("../../../content/lessons/equivalent-fractions.json");
         let lesson: Lesson = serde_json::from_str(pack).expect("the demo lesson is valid");
-        let opens_at = [("F1", 0), ("F2", 1), ("F3", 2)]
-            .into_iter()
-            .map(|(o, week)| (OutcomeId::new(o), Timestamp(TERM_START + week * WEEK)))
-            .collect();
-        let registry = Registry::new(vec![
-            Box::new(Mastery::standard()),
-            Box::new(CambridgeStyle::primary_checkpoint(opens_at)),
-        ]);
+        let registry = zidara_frameworks::demo_registry();
         Self {
             packs: BTreeMap::from([(lesson.id.clone(), pack)]),
             lessons: BTreeMap::from([(lesson.id.clone(), lesson)]),

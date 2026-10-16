@@ -26,3 +26,26 @@ impl FrameworkRegistry for Registry {
             .map(|f| f.as_ref())
     }
 }
+
+/// Monday 5 October 2026, 00:00 UTC: the demo term starts.
+pub const TERM_START: i64 = 1_791_158_400_000;
+/// One week in milliseconds.
+pub const WEEK: i64 = 7 * 24 * 60 * 60 * 1000;
+
+/// The demo school's frameworks, identical on server and phone: mastery, and Cambridge-style
+/// with the scheme of work opening one outcome a week from the start of term.
+pub fn demo_registry() -> Registry {
+    let opens_at = [("F1", 0), ("F2", 1), ("F3", 2)]
+        .into_iter()
+        .map(|(o, week)| {
+            (
+                zidara_kernel::ids::OutcomeId::new(o),
+                zidara_kernel::ids::Timestamp(TERM_START + week * WEEK),
+            )
+        })
+        .collect();
+    Registry::new(vec![
+        Box::new(mastery::Mastery::standard()),
+        Box::new(cambridge::CambridgeStyle::primary_checkpoint(opens_at)),
+    ])
+}

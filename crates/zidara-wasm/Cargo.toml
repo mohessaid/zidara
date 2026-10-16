@@ -1,0 +1,24 @@
+[package]
+name = "zidara-wasm"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+publish = false
+description = "The Zidara kernel for JavaScript: a stateful shell over JSON."
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+zidara-kernel.workspace = true
+zidara-frameworks.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+uuid.workspace = true
+wasm-bindgen = "=0.2.129"
+
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+wasm-bindgen-test.workspace = true
+
+[lints]
+workspace = true

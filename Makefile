@@ -1,9 +1,12 @@
 # The gauntlet. Each target is one proof; `make gauntlet` runs them all.
 # Server tests start labelled PostgreSQL containers (Docker required); they are removed after.
 KERNEL := -p zidara-kernel -p zidara-frameworks
+PORTABLE := $(KERNEL) -p zidara-wasm
 WASM_RUNNER := CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUNNER=wasm-bindgen-test-runner
 # main.rs is CLI wiring, verified by running the binary (make serve).
-COVERAGE_SCOPE := --ignore-filename-regex 'zidara-acceptance|tests/|zidara-server/src/main.rs'
+# shell.rs is the wasm-bindgen face; JsError exists only on wasm32, so it is proven by
+# crates/zidara-wasm/tests/shell.rs under `make wasm`.
+COVERAGE_SCOPE := --ignore-filename-regex 'zidara-acceptance|tests/|zidara-server/src/main.rs|zidara-wasm/src/shell.rs'
 
 .PHONY: gauntlet lint test acceptance wasm targets coverage mutants clean-containers db-up db-down serve
 
@@ -20,11 +23,11 @@ acceptance:
 	cargo test -p zidara-acceptance --test acceptance
 
 wasm:
-	$(WASM_RUNNER) cargo test $(KERNEL) --target wasm32-unknown-unknown
+	$(WASM_RUNNER) cargo test $(PORTABLE) --target wasm32-unknown-unknown
 
 targets:
-	cargo check $(KERNEL) --target aarch64-linux-android
-	cargo check $(KERNEL) --target aarch64-apple-ios
+	cargo check $(PORTABLE) --target aarch64-linux-android
+	cargo check $(PORTABLE) --target aarch64-apple-ios
 
 coverage:
 	cargo +nightly llvm-cov --workspace --branch $(COVERAGE_SCOPE) \

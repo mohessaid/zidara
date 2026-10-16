@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/zidara-kernel", "crates/zidara-frameworks", "crates/zidara-acceptance", "crates/zidara-server"]
+members = ["crates/zidara-kernel", "crates/zidara-frameworks", "crates/zidara-acceptance", "crates/zidara-server", "crates/zidara-wasm"]
 
 [workspace.package]
 edition = "2024"

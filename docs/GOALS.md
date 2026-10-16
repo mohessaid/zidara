@@ -39,7 +39,7 @@ Deferred minors found later:
   studio. It should be a structured result the studio translates.
 
 Deferred minors from the M1 review (fold into the goal that touches the code):
-- Undoing a remediation assignment is re-assigned on the next weak attempt (G4: decide with the studio UX).
-- A rejected proposal's answer can never be re-proposed (G4: decide with the studio UX).
+- ~~Undoing a remediation assignment is re-assigned on the next weak attempt~~: done 16 Oct, the teacher's undo stays (story "Help the teacher removed is not given again").
+- A rejected proposal's answer can never be re-proposed: kept on purpose, the teacher decided.
 - After undoing agent evidence, its proposal still reads "applied" (G2/G4: studio view).
 - ~~The rubric matches substrings ("same" in "sesame")~~: done 15 Oct (Latin word starts; Arabic unchanged).

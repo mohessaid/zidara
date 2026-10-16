@@ -521,6 +521,28 @@ fn is_given(class: &mut Class, name: String, activity: String) {
     );
 }
 
+#[when(expr = "{word} removes the help given to {word}")]
+fn removes_help(class: &mut Class, teacher: String, learner: String) {
+    let user = class.user(&learner);
+    let state = fold(&class.server);
+    let (id, _) = state
+        .assignments
+        .iter()
+        .find(|(_, (l, _, _))| *l == user)
+        .expect("help was given");
+    let id = *id;
+    class.run(&teacher, Command::Undo { target: id });
+}
+
+#[then(expr = "{word} has been given no help")]
+fn no_help(class: &mut Class, name: String) {
+    assert!(
+        class.view(&name).assigned.is_empty(),
+        "{:?}",
+        class.view(&name).assigned
+    );
+}
+
 #[then(expr = "{word} has been given {word} exactly once")]
 fn given_once(class: &mut Class, name: String, activity: String) {
     let user = class.user(&name);

@@ -31,3 +31,11 @@ Feature: Mastery learning
     And Amina answers quiz-f2 with 0 of 3 right
     And Amina answers quiz-f2 with 0 of 3 right
     Then Amina has been given remedial-f2 exactly once
+
+  Scenario: Help the teacher removed is not given again
+    Given Amina answers quiz-f1 with 2 of 2 right
+    And Amina answers quiz-f2 with 0 of 3 right
+    And Amina answers quiz-f2 with 0 of 3 right
+    When Karim removes the help given to Amina
+    And Amina answers quiz-f2 with 0 of 3 right
+    Then Amina has been given no help

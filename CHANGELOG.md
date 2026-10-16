@@ -86,6 +86,7 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Changed
 
+- Remediation a teacher undid is not assigned again by the rules: the teacher has the last word.
 - Server load: one agent marking pass per class at a time, proposals applied in batches of 8,
   marking on the blocking pool behind a one-pass gate, and `apply_batch` for a phone's whole
   outbox (one lock and one history read). The kernel folds borrowed events (`fold_refs`).

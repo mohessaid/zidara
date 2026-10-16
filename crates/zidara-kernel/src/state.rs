@@ -37,6 +37,8 @@ pub struct CohortState {
     pub proposals: BTreeMap<EventId, (Proposal, ProposalStatus)>,
     pub assignments: BTreeMap<EventId, (UserId, OutcomeId, ActivityId)>,
     pub notifications: BTreeSet<(UserId, OutcomeId, NotifyReason)>,
+    /// Assignments a teacher undid: the rules do not assign them again.
+    pub dismissed: BTreeSet<(UserId, OutcomeId, ActivityId)>,
 }
 
 impl CohortState {
@@ -78,6 +80,18 @@ pub fn fold_refs<'a>(events: impl IntoIterator<Item = &'a Event>) -> CohortState
         })
         .collect();
     let mut state = CohortState::default();
+    for event in ordered.iter().filter(|e| undone.contains(&e.id)) {
+        if let EventBody::ActivityAssigned {
+            learner,
+            outcome,
+            activity,
+        } = &event.body
+        {
+            state
+                .dismissed
+                .insert((*learner, outcome.clone(), activity.clone()));
+        }
+    }
     for event in ordered.into_iter().filter(|e| !undone.contains(&e.id)) {
         match &event.body {
             EventBody::EvidenceRecorded { evidence } => {

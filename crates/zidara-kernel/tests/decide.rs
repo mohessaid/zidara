@@ -751,3 +751,29 @@ fn old_commands_without_a_version_mean_the_first() {
         }
     );
 }
+
+/// The teacher has the last word: remediation she undid is not assigned again by the rules.
+#[test]
+fn remediation_the_teacher_undid_stays_undone() {
+    let mut class = Class::new();
+    class.quiz_f2(0);
+    let assigned = class
+        .quiz_f2(0)
+        .into_iter()
+        .find(|e| matches!(e.body, EventBody::ActivityAssigned { .. }))
+        .expect("two weak tries bring remediation");
+    class.ok(
+        &teacher(),
+        Command::Undo {
+            target: assigned.id,
+        },
+    );
+    let third = class.quiz_f2(0);
+    assert!(
+        !third
+            .iter()
+            .any(|e| matches!(e.body, EventBody::ActivityAssigned { .. })),
+        "{third:?}"
+    );
+    assert!(fold(&class.log).assignments.is_empty());
+}

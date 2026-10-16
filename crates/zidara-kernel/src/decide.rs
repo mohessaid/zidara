@@ -211,6 +211,11 @@ impl Batch<'_, '_> {
                 Action::Remediate => {
                     if let Some(activity) = self.env.lesson.remediation_for(&outcome)
                         && !state.is_assigned(learner, &outcome, &activity.id)
+                        && !state.dismissed.contains(&(
+                            learner,
+                            outcome.clone(),
+                            activity.id.clone(),
+                        ))
                     {
                         let activity = activity.id.clone();
                         self.push(

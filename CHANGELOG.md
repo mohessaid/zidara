@@ -7,6 +7,12 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- `tools/load/`: k6 load and capacity tests against a release server pinned to 2 cores.
+- The one-minute demo of the real app (`web/tests/demo`, `scripts/compose-demo.py` →
+  `pitch/demo/zidara-demo.mp4`).
+- The lesson film "What is a fraction?" in Arabic, French and English, drawn from code
+  (`tools/video`), with a transcript as its text alternative; `content/CREDITS.md`.
+- `docs/solve-evidence.md`: the facts behind each Solve question, for the owner to write from.
 - Quiz versions: each practice quiz has three versions; the kernel rotates them per learner and
   activity and refuses any other (`WrongVariant`), so retakes are not memory tests. Exposed as
   `next_variant` / `nextVariant` to the phone; the web shell shows the version due.
@@ -80,6 +86,13 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Changed
 
+- Server load: one agent marking pass per class at a time, proposals applied in batches of 8,
+  marking on the blocking pool behind a one-pass gate, and `apply_batch` for a phone's whole
+  outbox (one lock and one history read). The kernel folds borrowed events (`fold_refs`).
+  At 150 views/s and 50 answers/s across 300 learners on 2 cores: p95 30 ms (read), 70 ms
+  (write); capacity 686 requests/s (`make load`).
+- The teacher studio syncs before acting, so proposals that arrived after it was opened can be
+  accepted; refusals are shown instead of ignored.
 - Mastery judges on a decaying average (65% on each newest try) instead of the mean of the last
   three tries, so recovery after remediation shows (ADR 0007).
 - Mutation testing builds with a slim `mutants` profile (no debug info, no incremental state).

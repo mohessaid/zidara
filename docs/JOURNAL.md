@@ -4,6 +4,40 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-10-16 — From 39 to 686 requests a second, one measurement at a time
+
+**What happened.** The first load test of the release server, pinned to 2 CPU cores, gave
+39 requests/s and a p95 of 4.2 s. No errors, just slow. Each fix below was justified by a
+measurement, and two of the measurements were themselves wrong first.
+- **Separate the suspects.** Reads alone: 622/s, p95 93 ms, so writes were the problem. Writes
+  with the AI agent off: 162/s. So the agent was about 4× of the cost.
+- **The agent storm.** Every answer spawned a marking pass that rescanned *every* answer in the
+  class (O(n²)), all fighting over the class lock. Now one pass per class runs at a time, and
+  answers that arrive during it trigger exactly one more pass.
+- **A fix that made it worse.** Batching all the agent's proposals into one transaction doubled
+  p95: it held the class lock for the whole batch and every learner queued behind it. Batches
+  of 8 kept the savings without the queue.
+- **The kernel copied the whole log on every command.** `decide` cloned every event to fold
+  them. It now folds borrowed events, proven equal by a property test.
+- **The test was not a school.** Two learners posting 25 answers a second is not a classroom.
+  The test now models 10 classes of 30 learners.
+- **A gate that passed with no data.** A refactor broke the write script, and k6 marked the write
+  gate ✓ with zero samples. Gates now require at least 1 000 writes and 3 000 reads.
+- **A gate that measured itself.** Closed-loop readers always saturate the server, so their
+  latency just reflects queue depth (Little's law). The gate is now open loop at a stated load:
+  150 view loads/s and 50 answers/s. Capacity is recorded separately.
+- **The tail.** With all of that, p95 was still 250–390 ms. `perf` needs root on this machine, so
+  we ran an A/B instead: with the agent off, p95 fell to 30–48 ms. Marking folds a class's
+  history synchronously, and on a 2-core runtime that takes over one of two request workers.
+  Marking now runs on the blocking pool, one pass at a time.
+
+**Numbers.** Open loop, 300 learners in 10 classes, agent on: read p95 **30–32 ms**, write p95
+**67–71 ms**, 0 failures, and every one of 1 501 answers marked. Capacity: **686 requests/s** on
+2 cores.
+**Lesson.** Before trusting a number, ask what it measures, how much data is behind it, and
+whether the test resembles the world. Three of our wrong turns were in the instrument, not the
+code.
+
 ## 2026-10-16 — We filled the owner's disk
 
 **What happened.** A mutation run died with "No space left on device". The laptop had 98 GB

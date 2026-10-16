@@ -21,6 +21,12 @@ Needs the owner (cannot be done by an agent):
 - The assessor model: Claude Opus 5.5 by default (`ZIDARA_ASSESSOR_MODEL`); Claude Haiku 5.5 costs
   about 40× less per token. The kernel's policy gates either.
 
+Balance questions for G5:
+- Under mastery, full marks after two weak tries still reads "needs support" (the mean of the
+  last three is 5 555 < 6 000). It may need two more good tries, or a recovery rule (e.g. the
+  latest try counts double, or a perfect try after remediation clears support). Found by the
+  G3 golden session.
+
 Deferred minors from the M1 review (fold into the goal that touches the code):
 - Undoing a remediation assignment is re-assigned on the next weak attempt (G4: decide with the studio UX).
 - A rejected proposal's answer can never be re-proposed (G4: decide with the studio UX).

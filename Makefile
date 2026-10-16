@@ -8,9 +8,9 @@ WASM_RUNNER := CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUNNER=wasm-bindgen-test-runn
 # crates/zidara-wasm/tests/shell.rs under `make wasm`.
 COVERAGE_SCOPE := --ignore-filename-regex 'zidara-acceptance|tests/|zidara-server/src/main.rs|zidara-wasm/src/shell.rs'
 
-.PHONY: gauntlet lint test acceptance wasm targets coverage mutants clean-containers db-up db-down serve
+.PHONY: gauntlet lint test acceptance wasm targets bridge coverage mutants clean-containers db-up db-down serve
 
-gauntlet: lint test acceptance wasm targets coverage mutants
+gauntlet: lint test acceptance wasm targets bridge coverage mutants
 
 lint:
 	cargo fmt --all --check
@@ -28,6 +28,11 @@ wasm:
 targets:
 	cargo check $(PORTABLE) --target aarch64-linux-android
 	cargo check $(PORTABLE) --target aarch64-apple-ios
+
+# The optimised wasm build, replayed in Node against the golden session.
+bridge:
+	scripts/build-wasm.sh
+	node --test web/tests/bridge.test.mjs
 
 coverage:
 	cargo +nightly llvm-cov --workspace --branch $(COVERAGE_SCOPE) \

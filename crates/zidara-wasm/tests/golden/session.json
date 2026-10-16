@@ -1,0 +1,913 @@
+{
+  "learner": "00000000-0000-0000-0000-0000001ea001",
+  "setup": {
+    "cohort": "00000000-0000-0000-0000-00000000c00a",
+    "framework": "mastery",
+    "lesson": {
+      "activities": [
+        {
+          "id": "video-intro",
+          "kind": {
+            "seconds": 60,
+            "src": "media/fractions-intro.mp4",
+            "type": "video"
+          },
+          "outcomes": [
+            "F1"
+          ],
+          "title": {
+            "ar": "ما هو الكسر؟",
+            "en": "What is a fraction?",
+            "fr": "Qu'est-ce qu'une fraction ?"
+          }
+        },
+        {
+          "id": "reading-halves",
+          "kind": {
+            "audio": "media/halves.mp3",
+            "body": {
+              "ar": "إذا قسمنا البيتزا إلى قطعتين متساويتين، فكل قطعة نصف. وإذا قسمنا كل نصف إلى قطعتين، صار عندنا أربعة أرباع، وقطعتان منها تساويان النصف.",
+              "en": "Cut a pizza into two equal parts and each part is a half. Cut each half in two and you get four quarters; two quarters make a half.",
+              "fr": "Si on coupe une pizza en deux parts égales, chaque part est une moitié. Si on coupe chaque moitié en deux, on obtient quatre quarts, et deux quarts font une moitié."
+            },
+            "type": "reading"
+          },
+          "outcomes": [
+            "F1",
+            "F2"
+          ],
+          "title": {
+            "ar": "أنصاف وأرباع",
+            "en": "Halves and quarters",
+            "fr": "Moitiés et quarts"
+          }
+        },
+        {
+          "id": "quiz-f1",
+          "kind": {
+            "evidence": "formative",
+            "questions": [
+              {
+                "expected": {
+                  "correct": 0,
+                  "options": [
+                    {
+                      "en": "1/4"
+                    },
+                    {
+                      "en": "1/3"
+                    },
+                    {
+                      "en": "4/1"
+                    }
+                  ],
+                  "type": "choice"
+                },
+                "id": "f1-q1",
+                "outcome": "F1",
+                "prompt": {
+                  "ar": "قُسّمت بيتزا إلى 4 قطع متساوية وأكلنا قطعة واحدة. ما الكسر الذي أكلناه؟",
+                  "en": "A pizza is cut into 4 equal slices and one is eaten. What fraction was eaten?",
+                  "fr": "Une pizza est coupée en 4 parts égales et on en mange une. Quelle fraction a-t-on mangée ?"
+                }
+              },
+              {
+                "expected": {
+                  "den": 8,
+                  "num": 3,
+                  "type": "exactly"
+                },
+                "id": "f1-q2",
+                "outcome": "F1",
+                "prompt": {
+                  "ar": "اكتب الكسر: 3 أجزاء ملوّنة من 8 أجزاء متساوية.",
+                  "en": "Write the fraction: 3 shaded parts out of 8 equal parts.",
+                  "fr": "Écris la fraction : 3 parts coloriées sur 8 parts égales."
+                }
+              }
+            ],
+            "type": "quiz"
+          },
+          "outcomes": [
+            "F1"
+          ],
+          "title": {
+            "ar": "تمرين: أجزاء من كلّ",
+            "en": "Practice: parts of a whole",
+            "fr": "Exercice : des parts d'un tout"
+          }
+        },
+        {
+          "id": "quiz-f2",
+          "kind": {
+            "evidence": "formative",
+            "questions": [
+              {
+                "expected": {
+                  "den": 4,
+                  "num": 2,
+                  "type": "exactly"
+                },
+                "id": "f2-q1",
+                "outcome": "F2",
+                "prompt": {
+                  "ar": "أكمل: 1/2 = ؟/4",
+                  "en": "Complete: 1/2 = ?/4",
+                  "fr": "Complète : 1/2 = ?/4"
+                }
+              },
+              {
+                "expected": {
+                  "den": 6,
+                  "num": 4,
+                  "type": "exactly"
+                },
+                "id": "f2-q2",
+                "outcome": "F2",
+                "prompt": {
+                  "ar": "أكمل: 2/3 = ؟/6",
+                  "en": "Complete: 2/3 = ?/6",
+                  "fr": "Complète : 2/3 = ?/6"
+                }
+              },
+              {
+                "expected": {
+                  "den": 4,
+                  "num": 3,
+                  "type": "equivalent_to"
+                },
+                "id": "f2-q3",
+                "outcome": "F2",
+                "prompt": {
+                  "ar": "اكتب كسرًا يساوي 3/4",
+                  "en": "Write a fraction equal to 3/4",
+                  "fr": "Écris une fraction égale à 3/4"
+                }
+              }
+            ],
+            "type": "quiz"
+          },
+          "outcomes": [
+            "F2"
+          ],
+          "title": {
+            "ar": "تمرين: كسور متكافئة",
+            "en": "Practice: equivalent fractions",
+            "fr": "Exercice : fractions équivalentes"
+          }
+        },
+        {
+          "id": "explain-f2",
+          "kind": {
+            "evidence": "formative",
+            "outcome": "F2",
+            "prompt": {
+              "ar": "كيف نحصل على كسر يساوي 1/2؟",
+              "en": "How do you make a fraction equal to 1/2?",
+              "fr": "Comment obtenir une fraction égale à 1/2 ?"
+            },
+            "rubric": {
+              "criteria": [
+                {
+                  "any_of": [
+                    "multiply",
+                    "times",
+                    "×",
+                    "ضرب",
+                    "multipli",
+                    "fois"
+                  ],
+                  "weight": 1
+                },
+                {
+                  "any_of": [
+                    "same",
+                    "both",
+                    "نفس",
+                    "كليهما",
+                    "même",
+                    "les deux"
+                  ],
+                  "weight": 1
+                }
+              ],
+              "min_words": 3
+            },
+            "type": "open_response"
+          },
+          "outcomes": [
+            "F2"
+          ],
+          "title": {
+            "ar": "اشرح بكلماتك",
+            "en": "Explain in your own words",
+            "fr": "Explique avec tes mots"
+          }
+        },
+        {
+          "id": "quiz-f3",
+          "kind": {
+            "evidence": "formative",
+            "questions": [
+              {
+                "expected": {
+                  "correct": 0,
+                  "options": [
+                    {
+                      "en": "2/3"
+                    },
+                    {
+                      "en": "3/5"
+                    }
+                  ],
+                  "type": "choice"
+                },
+                "id": "f3-q1",
+                "outcome": "F3",
+                "prompt": {
+                  "ar": "أيّهما أكبر؟",
+                  "en": "Which is bigger?",
+                  "fr": "Laquelle est la plus grande ?"
+                }
+              },
+              {
+                "expected": {
+                  "correct": 0,
+                  "options": [
+                    {
+                      "en": "1/4"
+                    },
+                    {
+                      "en": "1/3"
+                    }
+                  ],
+                  "type": "choice"
+                },
+                "id": "f3-q2",
+                "outcome": "F3",
+                "prompt": {
+                  "ar": "أيّهما أصغر؟",
+                  "en": "Which is smaller?",
+                  "fr": "Laquelle est la plus petite ?"
+                }
+              }
+            ],
+            "type": "quiz"
+          },
+          "outcomes": [
+            "F3"
+          ],
+          "title": {
+            "ar": "تمرين: المقارنة",
+            "en": "Practice: comparing",
+            "fr": "Exercice : comparer"
+          }
+        },
+        {
+          "id": "checkpoint",
+          "kind": {
+            "evidence": "summative",
+            "questions": [
+              {
+                "expected": {
+                  "den": 5,
+                  "num": 2,
+                  "type": "exactly"
+                },
+                "id": "cp-q1",
+                "outcome": "F1",
+                "prompt": {
+                  "ar": "اكتب الكسر: جزءان من 5 أجزاء متساوية.",
+                  "en": "Write the fraction: 2 parts out of 5 equal parts.",
+                  "fr": "Écris la fraction : 2 parts sur 5 parts égales."
+                }
+              },
+              {
+                "expected": {
+                  "den": 5,
+                  "num": 2,
+                  "type": "equivalent_to"
+                },
+                "id": "cp-q2",
+                "outcome": "F2",
+                "prompt": {
+                  "ar": "اكتب كسرًا يساوي 2/5",
+                  "en": "Write a fraction equal to 2/5",
+                  "fr": "Écris une fraction égale à 2/5"
+                }
+              },
+              {
+                "expected": {
+                  "correct": 1,
+                  "options": [
+                    {
+                      "en": "3/8"
+                    },
+                    {
+                      "en": "1/2"
+                    }
+                  ],
+                  "type": "choice"
+                },
+                "id": "cp-q3",
+                "outcome": "F3",
+                "prompt": {
+                  "ar": "أيّهما أكبر؟",
+                  "en": "Which is bigger?",
+                  "fr": "Laquelle est la plus grande ?"
+                }
+              }
+            ],
+            "type": "quiz"
+          },
+          "outcomes": [
+            "F1",
+            "F2",
+            "F3"
+          ],
+          "title": {
+            "ar": "اختبار نهاية الدرس",
+            "en": "End-of-lesson checkpoint",
+            "fr": "Évaluation de fin de leçon"
+          }
+        },
+        {
+          "id": "remedial-f2",
+          "kind": {
+            "body": {
+              "ar": "خذ الكسر 1/2. اضرب البسط والمقام في 2: تحصل على 2/4. الكسران متساويان لأنك ضربت الاثنين في نفس العدد.",
+              "en": "Take 1/2. Multiply the top and the bottom by 2: you get 2/4. They are equal because you multiplied both by the same number.",
+              "fr": "Prends 1/2. Multiplie le haut et le bas par 2 : tu obtiens 2/4. Les deux fractions sont égales car tu as multiplié les deux par le même nombre."
+            },
+            "type": "reading"
+          },
+          "outcomes": [
+            "F2"
+          ],
+          "role": "remediation",
+          "title": {
+            "ar": "لنجرّب بطريقة أخرى",
+            "en": "Let's try another way",
+            "fr": "Essayons autrement"
+          }
+        }
+      ],
+      "id": "equivalent-fractions",
+      "outcomes": [
+        {
+          "id": "F1",
+          "title": {
+            "ar": "أتعرّف على الكسر كأجزاء من كلّ",
+            "en": "Recognise a fraction as parts of a whole",
+            "fr": "Reconnaître une fraction comme des parts d'un tout"
+          }
+        },
+        {
+          "id": "F2",
+          "prerequisites": [
+            "F1"
+          ],
+          "title": {
+            "ar": "أجد كسورًا متكافئة",
+            "en": "Find equivalent fractions",
+            "fr": "Trouver des fractions équivalentes"
+          }
+        },
+        {
+          "id": "F3",
+          "prerequisites": [
+            "F2"
+          ],
+          "title": {
+            "ar": "أقارن بين الكسور",
+            "en": "Compare fractions",
+            "fr": "Comparer des fractions"
+          }
+        }
+      ],
+      "title": {
+        "ar": "الكسور المتكافئة",
+        "en": "Equivalent fractions",
+        "fr": "Fractions équivalentes"
+      }
+    },
+    "tenant": "00000000-0000-0000-0000-000007e40001"
+  },
+  "steps": [
+    {
+      "actor": {
+        "kind": "human",
+        "role": "learner",
+        "user": "00000000-0000-0000-0000-0000001ea001"
+      },
+      "envelope": {
+        "at": 1791162000000,
+        "command": {
+          "activity": "quiz-f1",
+          "responses": [
+            {
+              "index": 0,
+              "type": "choice"
+            },
+            {
+              "den": 8,
+              "num": 3,
+              "type": "fraction"
+            }
+          ],
+          "type": "submit_quiz"
+        },
+        "id": "0193b000-0000-7000-8000-000000000001"
+      },
+      "events": 2
+    },
+    {
+      "actor": {
+        "kind": "human",
+        "role": "learner",
+        "user": "00000000-0000-0000-0000-0000001ea001"
+      },
+      "envelope": {
+        "at": 1791162300000,
+        "command": {
+          "activity": "quiz-f2",
+          "responses": [
+            {
+              "den": 4,
+              "num": 2,
+              "type": "fraction"
+            },
+            {
+              "den": 1,
+              "num": 0,
+              "type": "fraction"
+            },
+            {
+              "den": 1,
+              "num": 0,
+              "type": "fraction"
+            }
+          ],
+          "type": "submit_quiz"
+        },
+        "id": "0193b000-0000-7000-8000-000000000002"
+      },
+      "events": 2
+    },
+    {
+      "actor": {
+        "kind": "human",
+        "role": "learner",
+        "user": "00000000-0000-0000-0000-0000001ea001"
+      },
+      "envelope": {
+        "at": 1791162540000,
+        "command": {
+          "activity": "quiz-f2",
+          "responses": [
+            {
+              "den": 4,
+              "num": 2,
+              "type": "fraction"
+            },
+            {
+              "den": 1,
+              "num": 0,
+              "type": "fraction"
+            },
+            {
+              "den": 1,
+              "num": 0,
+              "type": "fraction"
+            }
+          ],
+          "type": "submit_quiz"
+        },
+        "id": "0193b000-0000-7000-8000-000000000003"
+      },
+      "events": 4
+    },
+    {
+      "actor": {
+        "kind": "human",
+        "role": "learner",
+        "user": "00000000-0000-0000-0000-0000001ea001"
+      },
+      "envelope": {
+        "at": 1791162720000,
+        "command": {
+          "activity": "explain-f2",
+          "answer": "نضرب البسط والمقام في نفس العدد",
+          "type": "submit_answer"
+        },
+        "id": "0193b000-0000-7000-8000-000000000004"
+      },
+      "events": 1
+    },
+    {
+      "actor": {
+        "kind": "human",
+        "role": "learner",
+        "user": "00000000-0000-0000-0000-0000001ea001"
+      },
+      "envelope": {
+        "at": 1791163200000,
+        "command": {
+          "activity": "quiz-f2",
+          "responses": [
+            {
+              "den": 4,
+              "num": 2,
+              "type": "fraction"
+            },
+            {
+              "den": 6,
+              "num": 4,
+              "type": "fraction"
+            },
+            {
+              "den": 12,
+              "num": 9,
+              "type": "fraction"
+            }
+          ],
+          "type": "submit_quiz"
+        },
+        "id": "0193b000-0000-7000-8000-000000000005"
+      },
+      "events": 2
+    },
+    {
+      "actor": {
+        "kind": "human",
+        "role": "teacher",
+        "user": "00000000-0000-0000-0000-0000007ea001"
+      },
+      "envelope": {
+        "at": 1791163800000,
+        "command": {
+          "framework": "cambridge-style",
+          "type": "change_framework"
+        },
+        "id": "0193b000-0000-7000-8000-000000000006"
+      },
+      "events": 1
+    }
+  ],
+  "studio_fr": {
+    "now": 1791163860000,
+    "roster": [
+      "00000000-0000-0000-0000-0000001ea001"
+    ],
+    "view": {
+      "agent_actions": [],
+      "flags": [
+        {
+          "learner": "00000000-0000-0000-0000-0000001ea001",
+          "outcome": "F2",
+          "reason": "struggling"
+        }
+      ],
+      "framework": "cambridge-style",
+      "outcomes": [
+        {
+          "achieved": 0,
+          "needs_support": 0,
+          "of": 1,
+          "outcome": "F1",
+          "title": "Reconnaître une fraction comme des parts d'un tout"
+        },
+        {
+          "achieved": 0,
+          "needs_support": 0,
+          "of": 1,
+          "outcome": "F2",
+          "title": "Trouver des fractions équivalentes"
+        },
+        {
+          "achieved": 0,
+          "needs_support": 0,
+          "of": 1,
+          "outcome": "F3",
+          "title": "Comparer des fractions"
+        }
+      ],
+      "queue": []
+    }
+  },
+  "views_ar": [
+    {
+      "assigned": [],
+      "framework": "mastery",
+      "next": "F2",
+      "outcomes": [
+        {
+          "judgement": {
+            "attempts": 1,
+            "band": {
+              "label": "mastery.mastered",
+              "of": 3,
+              "rank": 2
+            },
+            "score": 10000,
+            "state": "achieved"
+          },
+          "lock": null,
+          "outcome": "F1",
+          "title": "أتعرّف على الكسر كأجزاء من كلّ"
+        },
+        {
+          "judgement": {
+            "attempts": 0,
+            "band": null,
+            "score": null,
+            "state": "not_started"
+          },
+          "lock": null,
+          "outcome": "F2",
+          "title": "أجد كسورًا متكافئة"
+        },
+        {
+          "judgement": {
+            "attempts": 0,
+            "band": null,
+            "score": null,
+            "state": "not_started"
+          },
+          "lock": {
+            "outcome": "F2",
+            "type": "prerequisite"
+          },
+          "outcome": "F3",
+          "title": "أقارن بين الكسور"
+        }
+      ]
+    },
+    {
+      "assigned": [],
+      "framework": "mastery",
+      "next": "F2",
+      "outcomes": [
+        {
+          "judgement": {
+            "attempts": 1,
+            "band": {
+              "label": "mastery.mastered",
+              "of": 3,
+              "rank": 2
+            },
+            "score": 10000,
+            "state": "achieved"
+          },
+          "lock": null,
+          "outcome": "F1",
+          "title": "أتعرّف على الكسر كأجزاء من كلّ"
+        },
+        {
+          "judgement": {
+            "attempts": 1,
+            "band": {
+              "label": "mastery.not_yet",
+              "of": 3,
+              "rank": 0
+            },
+            "score": 3333,
+            "state": "in_progress"
+          },
+          "lock": null,
+          "outcome": "F2",
+          "title": "أجد كسورًا متكافئة"
+        },
+        {
+          "judgement": {
+            "attempts": 0,
+            "band": null,
+            "score": null,
+            "state": "not_started"
+          },
+          "lock": {
+            "outcome": "F2",
+            "type": "prerequisite"
+          },
+          "outcome": "F3",
+          "title": "أقارن بين الكسور"
+        }
+      ]
+    },
+    {
+      "assigned": [
+        "remedial-f2"
+      ],
+      "framework": "mastery",
+      "next": "F2",
+      "outcomes": [
+        {
+          "judgement": {
+            "attempts": 1,
+            "band": {
+              "label": "mastery.mastered",
+              "of": 3,
+              "rank": 2
+            },
+            "score": 10000,
+            "state": "achieved"
+          },
+          "lock": null,
+          "outcome": "F1",
+          "title": "أتعرّف على الكسر كأجزاء من كلّ"
+        },
+        {
+          "judgement": {
+            "attempts": 2,
+            "band": {
+              "label": "mastery.not_yet",
+              "of": 3,
+              "rank": 0
+            },
+            "score": 3333,
+            "state": "needs_support"
+          },
+          "lock": null,
+          "outcome": "F2",
+          "title": "أجد كسورًا متكافئة"
+        },
+        {
+          "judgement": {
+            "attempts": 0,
+            "band": null,
+            "score": null,
+            "state": "not_started"
+          },
+          "lock": {
+            "outcome": "F2",
+            "type": "prerequisite"
+          },
+          "outcome": "F3",
+          "title": "أقارن بين الكسور"
+        }
+      ]
+    },
+    {
+      "assigned": [
+        "remedial-f2"
+      ],
+      "framework": "mastery",
+      "next": "F2",
+      "outcomes": [
+        {
+          "judgement": {
+            "attempts": 1,
+            "band": {
+              "label": "mastery.mastered",
+              "of": 3,
+              "rank": 2
+            },
+            "score": 10000,
+            "state": "achieved"
+          },
+          "lock": null,
+          "outcome": "F1",
+          "title": "أتعرّف على الكسر كأجزاء من كلّ"
+        },
+        {
+          "judgement": {
+            "attempts": 2,
+            "band": {
+              "label": "mastery.not_yet",
+              "of": 3,
+              "rank": 0
+            },
+            "score": 3333,
+            "state": "needs_support"
+          },
+          "lock": null,
+          "outcome": "F2",
+          "title": "أجد كسورًا متكافئة"
+        },
+        {
+          "judgement": {
+            "attempts": 0,
+            "band": null,
+            "score": null,
+            "state": "not_started"
+          },
+          "lock": {
+            "outcome": "F2",
+            "type": "prerequisite"
+          },
+          "outcome": "F3",
+          "title": "أقارن بين الكسور"
+        }
+      ]
+    },
+    {
+      "assigned": [
+        "remedial-f2"
+      ],
+      "framework": "mastery",
+      "next": "F2",
+      "outcomes": [
+        {
+          "judgement": {
+            "attempts": 1,
+            "band": {
+              "label": "mastery.mastered",
+              "of": 3,
+              "rank": 2
+            },
+            "score": 10000,
+            "state": "achieved"
+          },
+          "lock": null,
+          "outcome": "F1",
+          "title": "أتعرّف على الكسر كأجزاء من كلّ"
+        },
+        {
+          "judgement": {
+            "attempts": 3,
+            "band": {
+              "label": "mastery.not_yet",
+              "of": 3,
+              "rank": 0
+            },
+            "score": 5555,
+            "state": "needs_support"
+          },
+          "lock": null,
+          "outcome": "F2",
+          "title": "أجد كسورًا متكافئة"
+        },
+        {
+          "judgement": {
+            "attempts": 0,
+            "band": null,
+            "score": null,
+            "state": "not_started"
+          },
+          "lock": {
+            "outcome": "F2",
+            "type": "prerequisite"
+          },
+          "outcome": "F3",
+          "title": "أقارن بين الكسور"
+        }
+      ]
+    },
+    {
+      "assigned": [
+        "remedial-f2"
+      ],
+      "framework": "cambridge-style",
+      "next": "F1",
+      "outcomes": [
+        {
+          "judgement": {
+            "attempts": 1,
+            "band": {
+              "label": "cambridge.excelling",
+              "of": 4,
+              "rank": 3
+            },
+            "score": 10000,
+            "state": "in_progress"
+          },
+          "lock": null,
+          "outcome": "F1",
+          "title": "أتعرّف على الكسر كأجزاء من كلّ"
+        },
+        {
+          "judgement": {
+            "attempts": 3,
+            "band": {
+              "label": "cambridge.developing",
+              "of": 4,
+              "rank": 1
+            },
+            "score": 5555,
+            "state": "in_progress"
+          },
+          "lock": {
+            "at": 1791763200000,
+            "type": "opens_at"
+          },
+          "outcome": "F2",
+          "title": "أجد كسورًا متكافئة"
+        },
+        {
+          "judgement": {
+            "attempts": 0,
+            "band": null,
+            "score": null,
+            "state": "not_started"
+          },
+          "lock": {
+            "at": 1792368000000,
+            "type": "opens_at"
+          },
+          "outcome": "F3",
+          "title": "أقارن بين الكسور"
+        }
+      ]
+    }
+  ]
+}

@@ -29,3 +29,4 @@ pitch/film/snapshots/
 # Vitest
 .vitest/
 !web/public/media/*.mp4
+!pitch/demo/*.mp4

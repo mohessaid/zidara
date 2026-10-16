@@ -9,8 +9,8 @@ done only when that test passes and the record (changelog, journal) is updated. 
 | G2 | **Server** (M2): PostgreSQL with row-level security, `POST /api/commands`, sync, the assessor agent | 19 Oct | integration tests on real PostgreSQL prove: no cross-cohort reads (API, raw SQL, agent), learners see only their own events, the log is append-only, a replayed envelope applies once, concurrent commands stay consistent; the Claude assessor is tested against a fake API | done 16 Oct (tag `m2-server`) |
 | G3 | **Bridge** (M3a): the kernel in the browser via wasm, typed with generated TypeScript | 21 Oct | the same command run in Node (wasm) and on the server gives the same view; `.wasm` size measured | done 16 Oct (tag `g3-bridge`): golden session matches in native, Node and server; 143 KB gzipped |
 | G4 | **Web shell** (M3b): Quest (PixiJS map), Grid, Teacher studio; offline PWA; Arabic, French, English | 26 Oct | Playwright: offline lesson then sync, teacher accepts a queued answer, framework switch redraws the map, cohort isolation in the UI, RTL; axe 0 violations; 60 fps and Lighthouse ≥ 90 on the economy profile | done 16 Oct (tag `g4-web`): 8 Playwright tests, axe clean, median 58–59 fps, Lighthouse 94–100 / 100 |
-| G5 | **Content and fairness**: question variants (no memorised retakes), the lesson video, audio, art | 28 Oct | balance check passes (no degenerate strategy); every asset licensed and credited | |
-| G6 | **Demo**: seeded classes, load numbers, a public link if it helps, the ≤ 2 min video | 30 Oct | k6 numbers recorded; demo script rehearsed; video passes the audio-only check | |
+| G5 | **Content and fairness**: question variants (no memorised retakes), the lesson video, audio, art | 28 Oct | balance check passes (no degenerate strategy); every asset licensed and credited | done 16 Oct: quiz versions enforced by the kernel, decaying-average recovery (ADR 0007), the lesson film in 3 languages (240 KB each), credits; narration waits for a licensed voice |
+| G6 | **Demo**: seeded classes, load numbers, a public link if it helps, the ≤ 2 min video | 30 Oct | k6 numbers recorded; demo script rehearsed; video passes the audio-only check | in progress: the 1-minute demo of the real app is recorded and composed (`pitch/demo/zidara-demo.mp4`); load numbers and public hosting next |
 | G7 | **Application**: Solve text from `docs/solve-2027.md`, evidence, submission | 1 Nov | every criterion answered with evidence; submitted before the deadline | |
 
 Needs the owner (cannot be done by an agent):
@@ -33,6 +33,10 @@ Balance questions for G5:
 - ~~Under mastery, full marks after two weak tries still read "needs support"~~: done 16 Oct,
   decaying average (ADR 0007).
 - ~~Memorised retakes~~: done 16 Oct, quiz versions rotated and enforced by the kernel.
+
+Deferred minors found later:
+- The rubric's rationale is English text ("met 1 of 2 criteria in 3 words"), even in the Arabic
+  studio. It should be a structured result the studio translates.
 
 Deferred minors from the M1 review (fold into the goal that touches the code):
 - Undoing a remediation assignment is re-assigned on the next weak attempt (G4: decide with the studio UX).

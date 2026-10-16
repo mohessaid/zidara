@@ -10,6 +10,7 @@ test("Zidara in one minute", async ({ browser }) => {
   const video = { dir: "test-results/demo", size: { width: 412, height: 915 } };
   const learner = await browser.newContext({ recordVideo: video, viewport: video.size, locale: "ar" });
   const amina = await learner.newPage();
+  const startedAt = Date.now();
 
   // 1. Arabic first: a learner signs in and sees her path.
   await signIn(amina, "amina");
@@ -42,6 +43,7 @@ test("Zidara in one minute", async ({ browser }) => {
   // 5. The teacher: who is where, and the assistant's draft waiting for a human decision.
   const studio = await browser.newContext({ recordVideo: video, viewport: video.size, locale: "ar" });
   const karim = await studio.newPage();
+  const teacherAt = (Date.now() - startedAt) / 1000;
   await signIn(karim, "karim");
   const proposal = karim.getByTestId("proposal").first();
   await expect(proposal).toBeVisible({ timeout: 20_000 });
@@ -62,4 +64,7 @@ test("Zidara in one minute", async ({ browser }) => {
   await expect(stone(amina, "F1")).toHaveAttribute("data-state", "in_progress", { timeout: 15_000 });
   await pause(3000);
   await learner.close();
+  // Where the teacher's recording starts on the learner's timeline, for compose-demo.sh.
+  const { writeFileSync } = await import("node:fs");
+  writeFileSync("test-results/demo/timeline.json", JSON.stringify({ teacherAt, learner: await amina.video()!.path(), teacher: await karim.video()!.path() }));
 });

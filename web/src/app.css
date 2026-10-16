@@ -1,0 +1,40 @@
+/* Tokens from docs/art-bible.md. Contrast ratios are recorded there. */
+:root {
+  --paper: #fff8ec;
+  --surface: #ffffff;
+  --ink: #1f2a44;
+  --achieved: #1e7b4f;
+  --in-progress: #1f5fad;
+  --needs-support: #b23b2e;
+  --locked: #5b6475;
+  --agent: #6b3fa0;
+  --star: #b07a00;
+  --focus: #0b57d0;
+  --radius: 16px;
+  --radius-studio: 8px;
+  font-family: "Noto Sans Arabic", system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { min-height: 48px; min-width: 48px; border-radius: var(--radius); border: 3px solid var(--ink); background: var(--surface); padding: 0.4rem 1rem; cursor: pointer; }
+button.primary { background: var(--in-progress); border-color: var(--in-progress); color: #fff; font-weight: 700; }
+button:disabled { opacity: 0.6; cursor: default; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+main { max-width: 960px; margin: 0 auto; padding: 1rem; }
+h1 { font-size: 28px; margin: 0.5rem 0; }
+h2 { font-size: 24px; margin: 1rem 0 0.5rem; }
+.card { background: var(--surface); border-radius: var(--radius); padding: 1rem; border: 1px solid #e6dcc8; }
+.row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+.state-achieved { color: var(--achieved); }
+.state-in_progress { color: var(--in-progress); }
+.state-needs_support { color: var(--needs-support); }
+.state-not_started, .state-locked { color: var(--locked); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

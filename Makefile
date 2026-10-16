@@ -8,9 +8,9 @@ WASM_RUNNER := CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUNNER=wasm-bindgen-test-runn
 # crates/zidara-wasm/tests/shell.rs under `make wasm`.
 COVERAGE_SCOPE := --ignore-filename-regex 'zidara-acceptance|tests/|zidara-server/src/main.rs|zidara-wasm/src/shell.rs'
 
-.PHONY: gauntlet lint test acceptance wasm targets types bridge coverage mutants clean-containers db-up db-down serve
+.PHONY: gauntlet lint test acceptance wasm targets types bridge web e2e coverage mutants clean-containers db-up db-down serve
 
-gauntlet: lint test acceptance wasm targets types bridge coverage mutants
+gauntlet: lint test acceptance wasm targets types bridge web e2e coverage mutants
 
 lint:
 	cargo fmt --all --check
@@ -40,6 +40,17 @@ types:
 bridge:
 	scripts/build-wasm.sh
 	node --test web/tests/bridge.test.mjs
+
+# The web shell: types, unit tests, production build.
+web: bridge
+	cd web && pnpm install --frozen-lockfile --silent
+	cd web && npx svelte-check --tsconfig ./tsconfig.json --fail-on-warnings
+	cd web && npx vitest run
+	cd web && npx vite build
+
+# The whole story in a browser, against the real server on a fresh database. Stops the database after.
+e2e: web
+	cd web && npx playwright test; status=$$?; docker compose stop db > /dev/null; exit $$status
 
 coverage:
 	cargo +nightly llvm-cov --workspace --branch $(COVERAGE_SCOPE) \

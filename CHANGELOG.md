@@ -7,6 +7,17 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- The kernel in the browser (`zidara-wasm`): `Core` runs the same `decide` as the server over
+  a local log, with a JSON contract; `Shell` exposes it to JavaScript through wasm-bindgen.
+  Event ids derive from the envelope id, and time comes from the shell, so offline sessions
+  are deterministic. 446 KB, 143 KB gzipped, after wasm-opt.
+- A golden session, recorded by the native kernel and replayed through the wasm build in Node
+  and through the server on PostgreSQL; every learner view must match (`make bridge`,
+  `cargo test -p zidara-server --test golden`).
+- TypeScript types for the web shell, generated from the kernel by ts-rs (`make types`, which
+  fails if the committed types are stale).
+- `zidara_frameworks::demo_registry()`: one definition of the demo frameworks and their
+  calendar, shared by server and phone.
 - The server (`zidara-server`), an axum shell around the kernel:
   - PostgreSQL schema with row-level security forced on every table. The app role sets
     only who is asking; the database derives what they see from memberships. Learners see

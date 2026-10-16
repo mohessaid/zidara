@@ -65,3 +65,18 @@ Distilled from the Svelte 5 best-practices skill and the official PixiJS v8 skil
 - The Quest map must hold 60 fps, with no long task over 50 ms during a level transition.
 - Lighthouse performance ≥ 90 and accessibility = 100.
 - Every screen must pass axe with 0 WCAG 2.2 AA violations (`references/accessibility.md`).
+
+## The bridge (G3, proven)
+
+- Build: `scripts/build-wasm.sh` → `web/src/lib/kernel/pkg` (`--target web`) and
+  `target/wasm-node` (`--target nodejs`, for tests). Load with the web target's `init()`.
+- `new Shell(JSON.stringify({ lesson, framework, tenant, cohort }))`; `run(actorJson,
+  envelopeJson)` → `{status: "applied", events} | {status: "duplicate"} | {status: "refused",
+  error}`; `learnerView(user, locale, nowMs)`; `studioView(rosterJson, locale, nowMs)`;
+  `events()`; `load(eventsJson)` after a sync. Errors throw.
+- Envelope ids come from `crypto.randomUUID()`; the shell keeps the outbox in IndexedDB and,
+  after posting it, replaces its log with the server's (`/events`) via `load`.
+- Pass the device clock as `nowMs` (Cambridge calendar locks depend on it).
+- Types: import from `web/src/lib/kernel/types/` (generated; never edit; `make types`).
+- Queued agent proposals carry the learner's id; the Quest must not show them (only the
+  studio does).

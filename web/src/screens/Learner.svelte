@@ -24,9 +24,14 @@
   {#if view}
     {#if selected}
       <OutcomePanel {view} outcome={selected} onclose={() => (selected = undefined)} />
-    {:else if experience === "quest"}
+    {/if}
+    <!-- The map stays mounted, and keeps running, while a panel is open. Re-creating the WebGL
+         renderer on every return cost a 350-405 ms long task on the economy profile; pausing
+         or slowing its ticker while hidden moved a 50-80 ms GPU upload into the first frame back. -->
+    <div hidden={selected !== undefined || experience !== "quest"}>
       <Quest {view} onopen={(id) => (selected = id)} />
-    {:else}
+    </div>
+    {#if !selected && experience === "grid"}
       <Grid {view} onopen={(id) => (selected = id)} />
     {/if}
   {/if}

@@ -103,6 +103,7 @@
     void app.locale;
     draw();
   });
+
 </script>
 
 <section aria-label={t(app.locale, "quest.map")}>

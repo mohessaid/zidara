@@ -29,13 +29,20 @@ class App {
   api: Api | undefined;
   kernel: Kernel | undefined;
 
+  /** The wasm kernel (143 KB) is fetched once someone needs it: a returning learner at once,
+   *  a new visitor after sign-in or two seconds after the sign-in screen settles. Fetching it
+   *  during first paint put it on the critical path (Lighthouse LCP 3.9 s). */
+  #kernelReady: Promise<void> | undefined;
+  #kernel = () => (this.#kernelReady ??= loadKernel(wasmUrl));
+
   async start() {
-    await loadKernel(wasmUrl);
     this.store = await openStore();
     const session = await this.store.session();
     if (session) {
       this.api = new Api(session.token);
       await this.#enter(session.cohorts[0]?.id).catch(() => this.signOut());
+    } else {
+      setTimeout(() => void this.#kernel(), 2_000);
     }
     addEventListener("online", () => {
       this.sync.online = true;
@@ -117,7 +124,8 @@ class App {
     this.me = me ?? (await this.api!.me().catch(() => undefined)) ?? (session && { id: session.user, display_name: session.displayName, cohorts: session.cohorts as Cohort[] });
     this.cohort = this.me?.cohorts.find((c) => c.id === cohortId) ?? this.me?.cohorts[0];
     if (!this.cohort) return;
-    this.pack = await this.api!.pack(this.cohort.lesson_id, store);
+    const [pack] = await Promise.all([this.api!.pack(this.cohort.lesson_id, store), this.#kernel()]);
+    this.pack = pack;
     this.kernel = new Kernel({ lesson: this.pack, framework: this.cohort.framework, tenant: this.cohort.tenant_id, cohort: this.cohort.id });
     // The saved log already holds offline work (act saves the kernel's whole log), so the
     // outbox is not replayed here: that would count every offline answer twice.

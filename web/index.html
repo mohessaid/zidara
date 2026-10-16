@@ -6,9 +6,19 @@
     <meta name="theme-color" content="#FFF8EC" />
     <meta name="description" content="Zidara: a learning path that knows how teaching works." />
     <title>زيدارا · Zidara</title>
+    <style>
+      body { margin: 0; background: #fff8ec; color: #1f2a44; font-family: system-ui, sans-serif; }
+      .splash { min-height: 100vh; display: grid; place-content: center; justify-items: center; gap: 0.5rem; font-size: 28px; font-weight: 700; }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <!-- Painted before any JavaScript runs; the app replaces it on mount. -->
+      <div class="splash">
+        <img src="/icon.svg" width="160" height="160" alt="" />
+        <p lang="ar">زيدارا</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

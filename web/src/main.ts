@@ -4,4 +4,6 @@ import "./app.css";
 import { mount } from "svelte";
 import App from "./App.svelte";
 
-mount(App, { target: document.getElementById("app")! });
+const target = document.getElementById("app")!;
+target.replaceChildren();
+mount(App, { target });

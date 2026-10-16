@@ -8,9 +8,9 @@ WASM_RUNNER := CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUNNER=wasm-bindgen-test-runn
 # crates/zidara-wasm/tests/shell.rs under `make wasm`.
 COVERAGE_SCOPE := --ignore-filename-regex 'zidara-acceptance|tests/|zidara-server/src/main.rs|zidara-wasm/src/shell.rs'
 
-.PHONY: gauntlet lint test acceptance wasm targets types bridge web e2e coverage mutants clean-containers db-up db-down serve
+.PHONY: gauntlet lint test acceptance wasm targets types bridge web e2e lighthouse coverage mutants clean-containers db-up db-down serve
 
-gauntlet: lint test acceptance wasm targets types bridge web e2e coverage mutants
+gauntlet: lint test acceptance wasm targets types bridge web e2e lighthouse coverage mutants
 
 lint:
 	cargo fmt --all --check
@@ -51,6 +51,10 @@ web: bridge
 # The whole story in a browser, against the real server on a fresh database. Stops the database after.
 e2e: web
 	cd web && npx playwright test; status=$$?; docker compose stop db > /dev/null; exit $$status
+
+# Lighthouse, mobile profile: performance >= 90, accessibility = 100.
+lighthouse: web
+	scripts/lighthouse.sh
 
 coverage:
 	cargo +nightly llvm-cov --workspace --branch $(COVERAGE_SCOPE) \

@@ -10,7 +10,7 @@ export default defineConfig({
     svelte(),
     VitePWA({
       registerType: "autoUpdate",
-      injectRegister: "auto",
+      injectRegister: "script-defer",
       includeAssets: ["icon.svg"],
       manifest: {
         name: "Zidara",

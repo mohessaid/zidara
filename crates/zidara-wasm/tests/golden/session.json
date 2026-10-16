@@ -826,12 +826,12 @@
           "judgement": {
             "attempts": 3,
             "band": {
-              "label": "mastery.not_yet",
+              "label": "mastery.developing",
               "of": 3,
-              "rank": 0
+              "rank": 1
             },
-            "score": 5555,
-            "state": "needs_support"
+            "score": 7667,
+            "state": "in_progress"
           },
           "lock": null,
           "outcome": "F2",

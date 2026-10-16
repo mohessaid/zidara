@@ -17,19 +17,20 @@ pub struct Mastery {
     /// Below this after `support_after` tries, a learner needs support.
     pub support_below: Score,
     pub support_after: u32,
-    /// How many recent tries count.
-    pub window: usize,
+    /// The weight of each newest try in a decaying average (the rest goes to everything before).
+    pub recent_weight: Score,
     rules: Vec<Rule>,
 }
 
 impl Mastery {
-    /// 80% over the last three tries; support and remediation below 60% after two.
+    /// 80% on a decaying average (65% on each newest try); support and remediation below 60%
+    /// after two tries. ADR 0007.
     pub fn standard() -> Self {
         Self {
             threshold: Score::of(8_000),
             support_below: Score::of(6_000),
             support_after: 2,
-            window: 3,
+            recent_weight: Score::of(6_500),
             rules: vec![Rule::Remediate {
                 below: Score::of(6_000),
                 after_attempts: 2,
@@ -45,15 +46,21 @@ impl Framework for Mastery {
 
     fn judge(&self, evidence: &[&Evidence]) -> Judgement {
         let attempts = evidence.len() as u32;
-        let recent: Vec<Score> = evidence
-            .iter()
-            .rev()
-            .take(self.window)
-            .map(|e| e.score)
-            .collect();
-        let Some(score) = Score::mean(&recent) else {
+        let mut tries = evidence.iter().map(|e| u64::from(e.score.bp()));
+        let Some(first) = tries.next() else {
             return Judgement::NOT_STARTED;
         };
+        let (recent, earlier) = (
+            u64::from(self.recent_weight.bp()),
+            u64::from(Score::MAX_BP - self.recent_weight.bp()),
+        );
+        let max = u64::from(Score::MAX_BP);
+        // Integer decaying average, rounded half up at each step: identical on every target.
+        let decayed = tries.fold(first, |sofar, next| {
+            (sofar * earlier + next * recent + max / 2) / max
+        });
+        // A weighted average never exceeds the largest score averaged, so this is in range.
+        let score = Score::of(decayed as u16);
         let (state, rank, label) = if score >= self.threshold {
             (OutcomeState::Achieved, 2, "mastery.mastered")
         } else if score >= self.support_below {

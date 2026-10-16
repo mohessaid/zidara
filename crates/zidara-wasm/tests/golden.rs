@@ -134,9 +134,9 @@ fn the_session_tells_the_story_it_is_meant_to() {
     };
     assert_eq!(state(0, 0), "achieved");
     assert_eq!(s["views_ar"][2]["assigned"], json!(["remedial-f2"]));
-    // Full marks after two weak tries: the mean of the last three is 5 555, still below the
-    // 6 000 support line. True to the mastery rule; a balance question for G5.
-    assert_eq!(state(4, 1), "needs_support");
+    // Full marks after two weak tries: the decaying average (ADR 0007) gives 7 667, so the
+    // learner is back "in progress", not still "needs support" as with a plain mean (G5).
+    assert_eq!(state(4, 1), "in_progress");
     assert_eq!(s["views_ar"][5]["framework"], "cambridge-style");
     assert_eq!(s["studio_fr"]["view"]["flags"][0]["reason"], "struggling");
 }

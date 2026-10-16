@@ -35,6 +35,7 @@ fn proposal(answer: u128, decision: Decision) -> Proposal {
             score: Score::FULL,
             confidence: Score::of(9_000),
             rationale: "r".into(),
+            met: None,
         },
         decision,
     }

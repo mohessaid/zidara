@@ -35,8 +35,8 @@ Balance questions for G5:
 - ~~Memorised retakes~~: done 16 Oct, quiz versions rotated and enforced by the kernel.
 
 Deferred minors found later:
-- The rubric's rationale is English text ("met 1 of 2 criteria in 3 words"), even in the Arabic
-  studio. It should be a structured result the studio translates.
+- ~~The rubric's rationale is English text in the Arabic studio~~: done 16 Oct, assessments carry
+  structured `met` data that the studio says in the teacher's language.
 
 Deferred minors from the M1 review (fold into the goal that touches the code):
 - ~~Undoing a remediation assignment is re-assigned on the next weak attempt~~: done 16 Oct, the teacher's undo stays (story "Help the teacher removed is not given again").

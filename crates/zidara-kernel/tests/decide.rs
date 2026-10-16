@@ -90,6 +90,7 @@ fn assessment(score: u16, confidence: u16) -> Assessment {
         score: Score::of(score),
         confidence: Score::of(confidence),
         rationale: "r".into(),
+        met: None,
     }
 }
 

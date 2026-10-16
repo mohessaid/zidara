@@ -154,6 +154,7 @@ pub fn read_reply(reply: &Value) -> Option<Assessment> {
         score: bp("score_bp")?,
         confidence: bp("confidence_bp")?,
         rationale: marked["rationale"].as_str()?.to_owned(),
+        met: None,
     })
 }
 
@@ -164,5 +165,6 @@ pub fn fallback(rubric: &Rubric, answer: &str, why: &str) -> Assessment {
         score: marked.score,
         confidence: marked.confidence.min(MIXED),
         rationale: format!("rubric fallback ({why}): {}", marked.rationale),
+        met: marked.met,
     }
 }

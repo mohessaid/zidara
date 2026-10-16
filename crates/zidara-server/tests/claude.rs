@@ -74,7 +74,8 @@ async fn claude_scores_are_parsed() {
         Assessment {
             score: Score::of(7_500),
             confidence: Score::of(9_100),
-            rationale: "Mentions multiplying.".into()
+            rationale: "Mentions multiplying.".into(),
+            met: None,
         }
     );
     let sent: Value =
@@ -109,6 +110,11 @@ async fn assert_falls_back(response: ResponseTemplate, timeout_ms: u64) {
         got.rationale.starts_with("rubric fallback"),
         "{}",
         got.rationale
+    );
+    assert_eq!(
+        got.met.map(|m| (m.criteria, m.of)),
+        Some((2, 2)),
+        "the fallback keeps the rubric's findings"
     );
 }
 

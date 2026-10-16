@@ -43,6 +43,7 @@ fn proposal() -> Proposal {
             score: Score::FULL,
             confidence: Score::of(9_000),
             rationale: "r".into(),
+            met: None,
         },
         decision: Decision::Queue,
     }

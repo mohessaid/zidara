@@ -28,7 +28,20 @@ pub struct Rubric {
 pub struct Assessment {
     pub score: Score,
     pub confidence: Score,
+    /// Free text from the marker (a model writes it); may be in any language.
     pub rationale: String,
+    /// What the rubric found, as data, so screens can say it in the teacher's language.
+    #[serde(default)]
+    pub met: Option<Met>,
+}
+
+/// How many rubric criteria an answer met, out of how many, in how many words.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
+pub struct Met {
+    pub criteria: u16,
+    pub of: u16,
+    pub words: u16,
 }
 
 /// All criteria met, or none: easy to call.
@@ -64,10 +77,16 @@ pub fn assess(rubric: &Rubric, answer: &str) -> Assessment {
         rubric.criteria.len(),
         words
     );
+    let met = Met {
+        criteria: met.len() as u16,
+        of: rubric.criteria.len() as u16,
+        words: u16::try_from(words).unwrap_or(u16::MAX),
+    };
     Assessment {
         score,
         confidence,
         rationale,
+        met: Some(met),
     }
 }
 

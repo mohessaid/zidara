@@ -174,6 +174,7 @@ fn the_studio_counts_who_is_where_and_lists_the_agent_queue() {
         score: Score::of(5_000),
         confidence: Score::of(6_000),
         rationale: "r".into(),
+        met: None,
     };
     run(
         &mut log,
@@ -198,6 +199,7 @@ fn the_studio_counts_who_is_where_and_lists_the_agent_queue() {
         score: Score::FULL,
         confidence: Score::of(9_000),
         rationale: "r".into(),
+        met: None,
     };
     run(
         &mut log,

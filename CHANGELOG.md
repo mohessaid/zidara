@@ -86,6 +86,8 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Changed
 
+- Assessments carry what the rubric found as data (`met`), so the studio shows it in the
+  teacher's language; a model's free-text rationale is shown as written.
 - Remediation a teacher undid is not assigned again by the rules: the teacher has the last word.
 - Server load: one agent marking pass per class at a time, proposals applied in batches of 8,
   marking on the blocking pool behind a one-pass gate, and `apply_batch` for a phone's whole

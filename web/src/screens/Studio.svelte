@@ -80,7 +80,9 @@
         <article class="proposal" data-testid="proposal">
           <p><strong>{name(q.proposal.learner)}</strong> · {outcomeTitle(q.proposal.outcome)}</p>
           <blockquote><bdi>{q.answer}</bdi></blockquote>
-          <p class="agent">🤖 {t(app.locale, "studio.agent.proposes", { score: pct(q.proposal.assessment.score), confidence: pct(q.proposal.assessment.confidence) })}<br /><small>{q.proposal.assessment.rationale}</small></p>
+          <p class="agent">🤖 {t(app.locale, "studio.agent.proposes", { score: pct(q.proposal.assessment.score), confidence: pct(q.proposal.assessment.confidence) })}<br /><small>{q.proposal.assessment.met
+              ? t(app.locale, "studio.agent.found", { met: q.proposal.assessment.met.criteria, of: q.proposal.assessment.met.of, words: q.proposal.assessment.met.words })
+              : q.proposal.assessment.rationale}</small></p>
           <div class="row">
             <button class="primary" disabled={busy} onclick={() => command({ type: "decide_proposal", proposal: q.id, accept: true })}>{t(app.locale, "studio.accept")}</button>
             <button disabled={busy} onclick={() => command({ type: "decide_proposal", proposal: q.id, accept: false })}>{t(app.locale, "studio.reject")}</button>

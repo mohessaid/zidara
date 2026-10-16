@@ -83,6 +83,7 @@ fn the_policy_applies_only_confident_formative_marks() {
         score: Score::FULL,
         confidence: Score::of(confidence),
         rationale: String::new(),
+        met: None,
     };
     assert_eq!(policy.auto_apply_at, Score::of(8_500));
     assert_eq!(
@@ -159,4 +160,35 @@ fn arabic_and_symbol_terms_still_match_inside_words() {
         min_words: 0,
     };
     assert_eq!(assess(&times, "1×2 and 2×2").score, Score::FULL);
+}
+
+#[test]
+fn the_rubric_says_what_it_found_as_data_for_any_language() {
+    let a = assess(
+        &rubric(),
+        "You multiply the top and bottom by the same number",
+    );
+    assert_eq!(
+        a.met,
+        Some(Met {
+            criteria: 2,
+            of: 2,
+            words: 10
+        })
+    );
+    let partial = assess(&rubric(), "you multiply them both");
+    assert_eq!(
+        partial.met,
+        Some(Met {
+            criteria: 1,
+            of: 2,
+            words: 4
+        })
+    );
+    // Word counts saturate rather than wrap.
+    let long = "word ".repeat(70_000);
+    assert_eq!(assess(&rubric(), &long).met.unwrap().words, u16::MAX);
+    // Stored assessments from before this field still read.
+    let old = r#"{"score":10000,"confidence":9000,"rationale":"r"}"#;
+    assert_eq!(serde_json::from_str::<Assessment>(old).unwrap().met, None);
 }

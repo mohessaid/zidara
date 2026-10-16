@@ -55,6 +55,20 @@ test("offline work is kept, then syncs to the server when the network returns", 
   await teacher.close();
 });
 
+test("after one visit, the app opens with no network at all", async ({ page, context }) => {
+  await signIn(page, "amina");
+  await expect(stone(page, "F1")).toHaveAttribute("data-state", "achieved");
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.reload();
+  await expect(stone(page, "F1")).toBeVisible();
+  await context.setOffline(true);
+  await page.reload();
+  // The shell, the kernel and the lesson come from the device: the path is still Amina's.
+  await expect(stone(page, "F1")).toHaveAttribute("data-state", "achieved");
+  await expect(page.getByTestId("sync")).toHaveText(/غير متصل/);
+  await context.setOffline(false);
+});
+
 test("a learner of another class sees none of it", async ({ page }) => {
   await signIn(page, "sara");
   await expect(stone(page, "F1")).toHaveAttribute("data-state", "not_started");

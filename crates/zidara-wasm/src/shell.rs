@@ -34,6 +34,14 @@ impl Shell {
         self.core.run(actor, envelope).map_err(|e| JsError::new(&e))
     }
 
+    /// The version of a quiz due for `user` (show that one; the kernel refuses others).
+    #[wasm_bindgen(js_name = nextVariant)]
+    pub fn next_variant(&self, user: &str, activity: &str) -> Result<u32, JsError> {
+        self.core
+            .next_variant(user, activity)
+            .map_err(|e| JsError::new(&e))
+    }
+
     #[wasm_bindgen(js_name = learnerView)]
     pub fn learner_view(&self, user: &str, locale: &str, now: f64) -> Result<String, JsError> {
         self.core

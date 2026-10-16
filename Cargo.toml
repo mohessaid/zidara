@@ -30,3 +30,10 @@ all = { level = "warn", priority = -1 }
 lto = true
 codegen-units = 1
 opt-level = "s"
+
+# Mutation testing builds a full copy of the workspace per job. Without debug info or
+# incremental state each copy is several times smaller (a full disk stopped a run once).
+[profile.mutants]
+inherits = "test"
+debug = "none"
+incremental = false

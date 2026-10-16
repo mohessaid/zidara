@@ -77,15 +77,9 @@ impl Api {
     }
 }
 
-fn quiz_f2(right: usize) -> Value {
-    let answers = [(2, 4), (4, 6), (6, 8)];
-    let responses: Vec<Value> = (0..3)
-        .map(|i| {
-            let (num, den) = if i < right { answers[i] } else { (0, 1) };
-            json!({ "type": "fraction", "num": num, "den": den })
-        })
-        .collect();
-    json!({ "id": Uuid::now_v7(), "at": NOW, "command": { "type": "submit_quiz", "activity": "quiz-f2", "responses": responses } })
+/// An envelope for version `variant` of quiz-f2 (attempts rotate 0, 1, 2, …).
+fn quiz_f2(variant: u32, right: usize) -> Value {
+    json!({ "id": Uuid::now_v7(), "at": NOW, "command": support::quiz_f2(variant, right) })
 }
 
 #[tokio::test]
@@ -119,7 +113,7 @@ async fn a_lesson_round_trip() {
         .await;
     assert_eq!(status, StatusCode::OK);
     assert_eq!(pack["title"]["ar"], "الكسور المتكافئة");
-    let sent = quiz_f2(3);
+    let sent = quiz_f2(0, 3);
     let (status, results) = api
         .call(
             "POST",
@@ -203,7 +197,7 @@ async fn learners_cannot_open_the_studio_or_other_cohorts() {
             "POST",
             &format!("/api/cohorts/{}/commands", s.b),
             Some(s.amina),
-            Some(json!([quiz_f2(3)])),
+            Some(json!([quiz_f2(0, 3)])),
         )
         .await;
     assert_eq!(status, StatusCode::FORBIDDEN);
@@ -217,12 +211,12 @@ async fn learners_cannot_open_the_studio_or_other_cohorts() {
 async fn events_page_by_keyset() {
     let api = api(true).await;
     let s = api.db.seed;
-    for right in [0, 0, 3] {
+    for (variant, right) in [(0, 0), (1, 0), (2, 3)] {
         api.call(
             "POST",
             &format!("/api/cohorts/{}/commands", s.a),
             Some(s.amina),
-            Some(json!([quiz_f2(right)])),
+            Some(json!([quiz_f2(variant, right)])),
         )
         .await;
     }
@@ -265,7 +259,7 @@ async fn teachers_get_the_studio_and_xapi() {
         "POST",
         &format!("/api/cohorts/{}/commands", s.a),
         Some(s.amina),
-        Some(json!([quiz_f2(3)])),
+        Some(json!([quiz_f2(0, 3)])),
     )
     .await;
     let (status, studio) = api

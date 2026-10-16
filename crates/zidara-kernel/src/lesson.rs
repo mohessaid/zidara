@@ -77,8 +77,13 @@ impl Lesson {
                     outcome: missing.clone(),
                 });
             }
-            if let ActivityKind::Quiz { questions, .. } = &activity.kind {
-                for question in questions {
+            if let ActivityKind::Quiz {
+                questions,
+                variants,
+                ..
+            } = &activity.kind
+            {
+                for question in questions.iter().chain(variants.iter().flatten()) {
                     if let Expected::Choice { options, correct } = &question.expected
                         && *correct as usize >= options.len()
                     {
@@ -118,7 +123,16 @@ impl Lesson {
 fn referenced_outcomes(activity: &Activity) -> Vec<&OutcomeId> {
     let mut refs: Vec<&OutcomeId> = activity.outcomes.iter().collect();
     match &activity.kind {
-        ActivityKind::Quiz { questions, .. } => refs.extend(questions.iter().map(|q| &q.outcome)),
+        ActivityKind::Quiz {
+            questions,
+            variants,
+            ..
+        } => refs.extend(
+            questions
+                .iter()
+                .chain(variants.iter().flatten())
+                .map(|q| &q.outcome),
+        ),
         ActivityKind::OpenResponse { outcome, .. } => refs.push(outcome),
         ActivityKind::Video { .. } | ActivityKind::Reading { .. } => {}
     }

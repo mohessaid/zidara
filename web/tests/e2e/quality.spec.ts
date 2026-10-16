@@ -2,7 +2,7 @@
 // throttled 4x, "fast 4G". The Quest map must hold 60 fps through a level transition, with no
 // long task over 50 ms. Uses Sara (class 4 B) so the school story is untouched.
 import { expect, test } from "@playwright/test";
-import { signIn, stone } from "./helpers.ts";
+import { passQuizF1, signIn, stone } from "./helpers.ts";
 
 // A real GPU (this machine's Intel HD 630), as a phone has. Headless Chromium otherwise renders
 // WebGL in software (SwiftShader), which measured the CPU pretending to be a GPU: 2.4 s of
@@ -36,11 +36,7 @@ test("the map holds its frame rate through a level transition on an economy phon
   const runs: { fps: number; worstTask: number; worstFrame: number }[] = [];
   for (let attempt = 0; attempt < 3; attempt++) {
     await stone(page, "F1").click();
-    await page.getByRole("button", { name: /تمرين: أجزاء من كلّ/ }).click();
-    await page.getByRole("radio").first().check();
-    await page.getByRole("spinbutton", { name: "البسط" }).fill("3");
-    await page.getByRole("spinbutton", { name: "المقام" }).fill("8");
-    await page.getByRole("button", { name: "تحقّق من إجاباتي" }).click();
+    await passQuizF1(page);
     await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
     // Start measuring, then step back onto the map: the stone redraws (the transition).
     await page.evaluate(() => {

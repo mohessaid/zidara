@@ -6,11 +6,11 @@ use std::collections::BTreeSet;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use zidara_frameworks::{Registry, demo_registry};
-use zidara_kernel::decide::{Env, Envelope, KernelError, decide};
+use zidara_kernel::decide::{Env, Envelope, KernelError, decide, next_variant};
 use zidara_kernel::event::Event;
 use zidara_kernel::framework::FrameworkRegistry;
 use zidara_kernel::governance::Policy;
-use zidara_kernel::ids::{CohortId, EventId, FrameworkId, IdGen, TenantId, UserId};
+use zidara_kernel::ids::{ActivityId, CohortId, EventId, FrameworkId, IdGen, TenantId, UserId};
 use zidara_kernel::lesson::Lesson;
 use zidara_kernel::roles::Actor;
 use zidara_kernel::view::{learner_view, studio_view};
@@ -117,6 +117,17 @@ impl Core {
             }
             Err(error) => Ok(to_json(&RunResult::Refused { error })),
         }
+    }
+
+    /// The version of a quiz the learner must be shown next; the kernel refuses any other.
+    pub fn next_variant(&self, user: &str, activity: &str) -> Result<u32, String> {
+        let user = Uuid::parse_str(user).map_err(|e| format!("user: {e}"))?;
+        Ok(next_variant(
+            &self.log,
+            UserId(user),
+            &ActivityId::new(activity),
+            &self.lesson,
+        ))
     }
 
     /// Views are drawn at `now`, the shell's clock (calendar locks depend on it).

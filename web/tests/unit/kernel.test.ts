@@ -46,6 +46,14 @@ describe("Kernel", () => {
     expect(studio.flags[0]!.reason).toBe("struggling");
   });
 
+  it("tells the app which quiz version is due", () => {
+    const kernel = new Kernel(golden.setup);
+    expect(kernel.nextVariant(golden.learner, "quiz-f2")).toBe(0);
+    for (const step of golden.steps.slice(0, 3)) kernel.run(step.actor, step.envelope);
+    expect(kernel.nextVariant(golden.learner, "quiz-f2")).toBe(2);
+    expect(() => kernel.nextVariant("nope", "quiz-f2")).toThrow(/user: /);
+  });
+
   it("throws readable errors", () => {
     expect(() => new Kernel({ ...golden.setup, framework: "ib" })).toThrow(/unknown framework/);
   });

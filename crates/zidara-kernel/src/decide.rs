@@ -5,7 +5,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::activity::{Activity, ActivityKind, Response, mark};
+use crate::activity::{Activity, ActivityKind, Response, mark, version};
 use crate::event::{Event, EventBody};
 use crate::evidence::{Evidence, EvidenceKind};
 use crate::framework::{Framework, FrameworkRegistry};
@@ -25,6 +25,9 @@ use crate::state::{CohortState, ProposalStatus, fold};
 pub enum Command {
     SubmitQuiz {
         activity: ActivityId,
+        /// Which version of the quiz was shown: `next_variant` says which one is due.
+        #[serde(default)]
+        variant: u32,
         responses: Vec<Response>,
     },
     SubmitAnswer {
@@ -101,6 +104,8 @@ pub enum KernelError {
     NotUndoable { target: EventId },
     #[error("unknown framework {framework:?}")]
     UnknownFramework { framework: FrameworkId },
+    #[error("this attempt must use version {expected} of the quiz")]
+    WrongVariant { expected: u32 },
 }
 
 pub fn decide(
@@ -119,8 +124,9 @@ pub fn decide(
     match command {
         Command::SubmitQuiz {
             activity,
+            variant,
             responses,
-        } => submit_quiz(&mut batch, actor, activity, responses)?,
+        } => submit_quiz(&mut batch, actor, activity, variant, responses)?,
         Command::SubmitAnswer { activity, answer } => {
             submit_answer(&mut batch, actor, activity, answer)?
         }
@@ -276,6 +282,7 @@ fn submit_quiz(
     b: &mut Batch<'_, '_>,
     actor: &Actor,
     id: ActivityId,
+    variant: u32,
     responses: Vec<Response>,
 ) -> Result<(), KernelError> {
     require(actor, Permission::SubmitWork)?;
@@ -283,10 +290,22 @@ fn submit_quiz(
     let ActivityKind::Quiz {
         evidence: kind,
         questions,
+        variants,
     } = &activity(b.env, &id)?.kind
     else {
         return Err(KernelError::WrongActivityKind { activity: id });
     };
+    let expected = turn(
+        b.history.iter().chain(&b.events),
+        learner,
+        &id,
+        variants.len(),
+    );
+    if variant != expected {
+        return Err(KernelError::WrongVariant { expected });
+    }
+    // The rotation only ever asks for a version that exists.
+    let questions = version(questions, variants, variant).unwrap_or(questions);
     let marks = mark(questions, &responses).map_err(|e| KernelError::Responses {
         expected: e.expected,
         got: e.got,
@@ -296,6 +315,7 @@ fn submit_quiz(
         EventBody::QuizSubmitted {
             learner,
             activity: id.clone(),
+            variant,
             responses,
         },
     );
@@ -312,6 +332,34 @@ fn submit_quiz(
         )?;
     }
     Ok(())
+}
+
+/// The version of `activity` due for `learner`: their attempts so far, modulo the versions.
+fn turn<'a>(
+    events: impl Iterator<Item = &'a Event>,
+    learner: UserId,
+    activity: &ActivityId,
+    extra_versions: usize,
+) -> u32 {
+    let attempts = events
+        .filter(|e| matches!(&e.body, EventBody::QuizSubmitted { learner: l, activity: a, .. } if *l == learner && a == activity))
+        .count();
+    (attempts % (extra_versions + 1)) as u32
+}
+
+/// Which version of a quiz the learner must be shown next (0 for anything without versions).
+pub fn next_variant(
+    history: &[Event],
+    learner: UserId,
+    activity: &ActivityId,
+    lesson: &Lesson,
+) -> u32 {
+    match lesson.activity(activity).map(|a| &a.kind) {
+        Some(ActivityKind::Quiz { variants, .. }) => {
+            turn(history.iter(), learner, activity, variants.len())
+        }
+        _ => 0,
+    }
 }
 
 fn submit_answer(

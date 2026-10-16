@@ -4,6 +4,48 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-10-16 — We filled the owner's disk
+
+**What happened.** A mutation run died with "No space left on device". The laptop had 98 GB
+free when the session began; it had 1.7 GB. The load average was 24 on 8 cores, and the browser
+tests ran eight times slower than usual.
+**The problem, and it was ours.** Each mutation job builds a complete copy of the workspace in
+`/tmp`, with full debug info: 2–5 GB each. Runs we had stopped or that collided left six of
+those copies behind (18 GB). The project's own build cache had grown to 28 GB. This is someone's
+working machine, shared with other projects. It is the same kind of mistake the owner had
+already flagged on another project ("contributors have other projects on the same machine").
+**What we did.**
+- Stopped our own run.
+- Checked with `lsof` that no process, ours or another session's, held each temporary copy,
+  then deleted the orphans.
+- Cleared only regenerable caches (incremental and coverage builds): 32 GB free again.
+- Added a `mutants` build profile without debug info or incremental state, so each copy is
+  several times smaller.
+- The skill now says: check `df` before heavy runs, and never stack them.
+
+**Lesson.** A test that leaves its scaffolding behind is a leak, even when it passes.
+Clean-up is part of the work, and so is the machine it runs on.
+
+## 2026-10-16 — Fairness: no more memorised retakes, and recovery that counts
+
+**What happened.** Two balance problems from the backlog were fixed in the kernel, where the
+rules live.
+- **Retakes.** A quiz had one fixed set of questions, so a learner could retake it until the
+  answers were memorised. Each practice quiz now has three versions. The kernel decides which
+  version each attempt must use, rotating per learner and per activity, and refuses any other.
+  A modified phone cannot keep choosing the version it knows. Phone and server compute the
+  same turn, so offline work still syncs. Every new answer was checked independently (exact
+  fractions) before it entered the pack.
+- **Recovery.** Mastery used the mean of the last three tries, so a child who got everything
+  right after remediation still read "needs support". It now uses a decaying average (65% on
+  the newest try), the standards-based-grading default, recorded with sources in ADR 0007.
+
+**Numbers.** 117 kernel and framework tests, 17 stories, 53 server tests, 21 web unit tests. A
+new browser test proves a retake shows different questions. The golden session changed in one
+judged value (the recovery) and four envelopes (the versions).
+**Lesson.** Fairness rules belong in the kernel. In the UI they would be one phone's opinion;
+in the kernel they are the same rule on every device.
+
 ## 2026-10-16 — The web shell: a lesson a child can take offline
 
 **What happened.** G4 built the app learners and teachers use, in Arabic first. The Quest path

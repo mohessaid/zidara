@@ -34,10 +34,17 @@ fn teacher() -> String {
 }
 
 fn quiz_f1(id: u128, right: usize) -> String {
+    quiz_f1_version(id, 0, right)
+}
+
+/// quiz-f1, version `variant`, with both answers right (`right == 2`) or both wrong.
+fn quiz_f1_version(id: u128, variant: u32, right: usize) -> String {
+    let answers = [(0, (3, 8)), (1, (2, 5)), (2, (4, 7))];
+    let (choice, (num, den)) = answers[variant as usize];
     let responses = if right == 2 {
-        json!([{ "type": "choice", "index": 0 }, { "type": "fraction", "num": 3, "den": 8 }])
+        json!([{ "type": "choice", "index": choice }, { "type": "fraction", "num": num, "den": den }])
     } else {
-        json!([{ "type": "choice", "index": 2 }, { "type": "fraction", "num": 0, "den": 1 }])
+        json!([{ "type": "choice", "index": (choice + 1) % 3 }, { "type": "fraction", "num": 0, "den": 1 }])
     };
     let id = format!("{:032x}", id);
     let id = format!(
@@ -48,7 +55,7 @@ fn quiz_f1(id: u128, right: usize) -> String {
         &id[16..20],
         &id[20..]
     );
-    json!({ "id": id, "at": NOW, "command": { "type": "submit_quiz", "activity": "quiz-f1", "responses": responses } }).to_string()
+    json!({ "id": id, "at": NOW, "command": { "type": "submit_quiz", "activity": "quiz-f1", "variant": variant, "responses": responses } }).to_string()
 }
 
 fn parse(s: &str) -> Value {
@@ -73,7 +80,8 @@ fn a_quiz_runs_offline_and_changes_the_view() {
 fn ids_come_from_the_envelope_and_never_repeat() {
     let mut core = core();
     let first = parse(&core.run(&learner(), &quiz_f1(0x10, 0)).unwrap());
-    let second = parse(&core.run(&learner(), &quiz_f1(0x20, 0)).unwrap());
+    assert_eq!(core.next_variant(AMINA, "quiz-f1").unwrap(), 1);
+    let second = parse(&core.run(&learner(), &quiz_f1_version(0x20, 1, 0)).unwrap());
     let ids: Vec<String> = first["events"]
         .as_array()
         .unwrap()
@@ -223,5 +231,26 @@ fn a_log_naming_an_unknown_framework_cannot_be_viewed() {
     assert_eq!(
         core.studio_view("[]", "en", NOW).unwrap_err(),
         "view: unknown framework FrameworkId(\"ib\")"
+    );
+}
+
+#[test]
+fn the_phone_asks_the_kernel_which_version_is_due() {
+    let mut core = core();
+    assert_eq!(core.next_variant(AMINA, "quiz-f1").unwrap(), 0);
+    core.run(&learner(), &quiz_f1(1, 2)).unwrap();
+    assert_eq!(core.next_variant(AMINA, "quiz-f1").unwrap(), 1);
+    assert_eq!(core.next_variant(KARIM, "quiz-f1").unwrap(), 0);
+    assert_eq!(core.next_variant(AMINA, "reading-halves").unwrap(), 0);
+    assert!(
+        core.next_variant("nope", "quiz-f1")
+            .unwrap_err()
+            .starts_with("user: ")
+    );
+    // Retaking the version already seen is refused, with the version that is due.
+    let again = parse(&core.run(&learner(), &quiz_f1(2, 2)).unwrap());
+    assert_eq!(
+        again,
+        json!({ "status": "refused", "error": { "type": "wrong_variant", "expected": 1 } })
     );
 }

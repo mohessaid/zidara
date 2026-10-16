@@ -227,6 +227,7 @@ fn assignments_notifications_and_framework_are_kept() {
             EventBody::QuizSubmitted {
                 learner: user(1),
                 activity: ActivityId::new("quiz-f1"),
+                variant: 0,
                 responses: vec![],
             },
         ),

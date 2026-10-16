@@ -34,6 +34,13 @@ fn the_shell_forwards_to_the_kernel() {
         .studio_view(r#"["00000000-0000-0000-0000-0000001ea001"]"#, "en", NOW)
         .unwrap();
     assert!(studio.contains(r#""achieved":1"#));
+    assert_eq!(
+        shell
+            .next_variant("00000000-0000-0000-0000-0000001ea001", "quiz-f1")
+            .unwrap(),
+        1
+    );
+    assert!(shell.next_variant("x", "quiz-f1").is_err());
     let log = shell.events();
     shell.load(&log).unwrap();
     assert_eq!(shell.events(), log);

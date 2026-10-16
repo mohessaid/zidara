@@ -4,8 +4,8 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use cucumber::{World, given, then, when};
 use zidara_frameworks::{Registry, cambridge::CambridgeStyle, mastery::Mastery};
-use zidara_kernel::activity::{ActivityKind, Expected, Response};
-use zidara_kernel::decide::{Command, Env, Envelope, KernelError, decide};
+use zidara_kernel::activity::{ActivityKind, Expected, Response, version};
+use zidara_kernel::decide::{Command, Env, Envelope, KernelError, decide, next_variant};
 use zidara_kernel::event::Event;
 use zidara_kernel::evidence::EvidenceKind;
 use zidara_kernel::governance::{Policy, assess};
@@ -180,14 +180,20 @@ impl Class {
             .unwrap()
     }
 
-    fn quiz(&self, activity: &str, right: usize, total: usize) -> Command {
-        let Some(ActivityKind::Quiz { questions, .. }) = self
-            .lesson
-            .activity(&ActivityId::new(activity))
-            .map(|a| &a.kind)
+    /// Answers whichever version of the quiz is due for the learner, `right` of them correctly.
+    fn quiz(&self, learner: &str, activity: &str, right: usize, total: usize) -> Command {
+        let id = ActivityId::new(activity);
+        let Some(ActivityKind::Quiz {
+            questions,
+            variants,
+            ..
+        }) = self.lesson.activity(&id).map(|a| &a.kind)
         else {
             panic!("{activity} is not a quiz")
         };
+        let history = self.phone.as_ref().map_or(&self.server, |p| &p.log);
+        let variant = next_variant(history, self.user(learner), &id, &self.lesson);
+        let questions = version(questions, variants, variant).expect("the due version exists");
         assert_eq!(
             questions.len(),
             total,
@@ -199,9 +205,9 @@ impl Class {
             .enumerate()
             .map(|(i, q)| match (&q.expected, i < right) {
                 (Expected::Choice { correct, .. }, true) => Response::Choice { index: *correct },
-                (Expected::Choice { correct, .. }, false) => {
-                    Response::Choice { index: correct + 1 }
-                }
+                (Expected::Choice { correct, options }, false) => Response::Choice {
+                    index: (correct + 1) % options.len() as u32,
+                },
                 (Expected::Exactly { num, den }, true) => Response::Fraction {
                     num: *num,
                     den: *den,
@@ -215,7 +221,8 @@ impl Class {
             })
             .collect();
         Command::SubmitQuiz {
-            activity: ActivityId::new(activity),
+            activity: id,
+            variant,
             responses,
         }
     }
@@ -295,7 +302,7 @@ fn when_week(class: &mut Class, week: i64) {
 }
 
 fn answers(class: &mut Class, name: String, activity: String, right: usize, total: usize) {
-    let command = class.quiz(&activity, right, total);
+    let command = class.quiz(&name, &activity, right, total);
     class.run(&name, command);
 }
 

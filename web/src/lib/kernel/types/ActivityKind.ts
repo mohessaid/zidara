@@ -5,4 +5,9 @@ import type { OutcomeId } from "./OutcomeId";
 import type { Question } from "./Question";
 import type { Rubric } from "./Rubric";
 
-export type ActivityKind = { "type": "video", src: string, seconds: number, } | { "type": "reading", body: Localized, audio: string | null, } | { "type": "quiz", evidence: EvidenceKind, questions: Array<Question>, } | { "type": "open_response", evidence: EvidenceKind, outcome: OutcomeId, prompt: Localized, rubric: Rubric, };
+export type ActivityKind = { "type": "video", src: string, seconds: number, } | { "type": "reading", body: Localized, audio: string | null, } | { "type": "quiz", evidence: EvidenceKind, questions: Array<Question>, 
+/**
+ * More versions of the same questions; attempts rotate through them (version 0 is
+ * `questions`), so a retake is not a memory test.
+ */
+variants: Array<Array<Question>>, } | { "type": "open_response", evidence: EvidenceKind, outcome: OutcomeId, prompt: Localized, rubric: Rubric, };

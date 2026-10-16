@@ -9,4 +9,8 @@ import type { Response } from "./Response";
 import type { Score } from "./Score";
 import type { UserId } from "./UserId";
 
-export type Command = { "type": "submit_quiz", activity: ActivityId, responses: Array<Response>, } | { "type": "submit_answer", activity: ActivityId, answer: string, } | { "type": "record_evidence", learner: UserId, outcome: OutcomeId, activity: ActivityId, score: Score, kind: EvidenceKind, } | { "type": "propose_assessment", answer: EventId, assessment: Assessment, } | { "type": "decide_proposal", proposal: EventId, accept: boolean, } | { "type": "undo", target: EventId, } | { "type": "change_framework", framework: FrameworkId, };
+export type Command = { "type": "submit_quiz", activity: ActivityId, 
+/**
+ * Which version of the quiz was shown: `next_variant` says which one is due.
+ */
+variant: number, responses: Array<Response>, } | { "type": "submit_answer", activity: ActivityId, answer: string, } | { "type": "record_evidence", learner: UserId, outcome: OutcomeId, activity: ActivityId, score: Score, kind: EvidenceKind, } | { "type": "propose_assessment", answer: EventId, assessment: Assessment, } | { "type": "decide_proposal", proposal: EventId, accept: boolean, } | { "type": "undo", target: EventId, } | { "type": "change_framework", framework: FrameworkId, };

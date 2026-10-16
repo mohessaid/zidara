@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { expectAccessible, signIn, stone } from "./helpers.ts";
+import { expectAccessible, passQuizF1, signIn, stone } from "./helpers.ts";
 
 test("sign-in is in Arabic, right to left, and accessible", async ({ page }) => {
   await page.goto("/");
@@ -31,11 +31,9 @@ test("offline work is kept, then syncs to the server when the network returns", 
   await context.setOffline(true);
   await stone(page, "F1").click();
   await page.getByRole("button", { name: /تمرين: أجزاء من كلّ/ }).click();
-  await page.getByRole("radio").first().check();
-  await page.getByRole("spinbutton", { name: "البسط" }).fill("3");
-  await page.getByRole("spinbutton", { name: "المقام" }).fill("8");
   await expectAccessible(page, "quiz");
-  await page.getByRole("button", { name: "تحقّق من إجاباتي" }).click();
+  await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
+  await passQuizF1(page);
   await expect(page.getByRole("status").filter({ hasText: "أحسنت المحاولة" })).toBeVisible();
   await expect(page.getByTestId("sync")).toHaveText(/غير متصل|في انتظار/);
   await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
@@ -69,6 +67,17 @@ test("after one visit, the app opens with no network at all", async ({ page, con
   await context.setOffline(false);
 });
 
+test("a retake shows another version of the quiz", async ({ page }) => {
+  await signIn(page, "yacine");
+  await stone(page, "F1").click();
+  expect(await passQuizF1(page)).toBe(0);
+  await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
+  const first = await page.getByRole("button", { name: /تمرين: أجزاء من كلّ/ }).count();
+  expect(first).toBe(1);
+  expect(await passQuizF1(page)).toBe(1);
+  await expect(page.locator("form[data-variant] legend").first()).toContainText("كعكة");
+});
+
 test("a learner of another class sees none of it", async ({ page }) => {
   await signIn(page, "sara");
   await expect(stone(page, "F1")).toHaveAttribute("data-state", "not_started");
@@ -79,11 +88,7 @@ test("a learner of another class sees none of it", async ({ page }) => {
 test("an unsure answer waits for the teacher, who accepts it", async ({ page, browser }) => {
   await signIn(page, "yacine");
   await stone(page, "F1").click();
-  await page.getByRole("button", { name: /تمرين: أجزاء من كلّ/ }).click();
-  await page.getByRole("radio").first().check();
-  await page.getByRole("spinbutton", { name: "البسط" }).fill("3");
-  await page.getByRole("spinbutton", { name: "المقام" }).fill("8");
-  await page.getByRole("button", { name: "تحقّق من إجاباتي" }).click();
+  await passQuizF1(page);
   await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
   await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
   await stone(page, "F2").click();

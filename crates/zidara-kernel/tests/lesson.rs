@@ -113,7 +113,8 @@ fn rejects_unknown_outcomes_wherever_they_appear() {
             "q",
             ActivityKind::Quiz {
                 evidence: EvidenceKind::Formative,
-                questions: vec![question]
+                questions: vec![question],
+                variants: vec![]
             }
         )),
         expected("q")
@@ -147,6 +148,7 @@ fn rejects_choices_without_the_correct_option() {
             ActivityKind::Quiz {
                 evidence: EvidenceKind::Formative,
                 questions: vec![question(correct)],
+                variants: vec![],
             },
         )
     };
@@ -182,4 +184,67 @@ fn a_bad_pack_fails_to_deserialize() {
                                   "kind":{"type":"reading","body":{}}}]}"#;
     let err = serde_json::from_str::<Lesson>(pack).unwrap_err();
     assert!(err.to_string().contains("unknown outcome"), "{err}");
+}
+
+#[test]
+fn every_version_of_a_quiz_is_checked() {
+    let choice = |correct| Question {
+        id: "q".into(),
+        outcome: OutcomeId::new("F1"),
+        prompt: Localized::default(),
+        expected: Expected::Choice {
+            options: vec![Localized::default(); 2],
+            correct,
+        },
+    };
+    let quiz = |variant: Question| {
+        with_kind(
+            "q",
+            ActivityKind::Quiz {
+                evidence: EvidenceKind::Formative,
+                questions: vec![choice(0)],
+                variants: vec![vec![variant]],
+            },
+        )
+    };
+    assert!(
+        Lesson::new(
+            "x",
+            Localized::default(),
+            vec![outcome("F1")],
+            vec![quiz(choice(1))]
+        )
+        .is_ok()
+    );
+    assert_eq!(
+        Lesson::new(
+            "x",
+            Localized::default(),
+            vec![outcome("F1")],
+            vec![quiz(choice(5))]
+        )
+        .unwrap_err(),
+        LessonError::BadChoice {
+            activity: ActivityId::new("q"),
+            question: "q".into(),
+            correct: 5
+        }
+    );
+    let elsewhere = Question {
+        outcome: OutcomeId::new("F9"),
+        ..choice(0)
+    };
+    assert_eq!(
+        Lesson::new(
+            "x",
+            Localized::default(),
+            vec![outcome("F1")],
+            vec![quiz(elsewhere)]
+        )
+        .unwrap_err(),
+        LessonError::UnknownOutcome {
+            activity: ActivityId::new("q"),
+            outcome: OutcomeId::new("F9")
+        }
+    );
 }

@@ -7,6 +7,9 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- Quiz versions: each practice quiz has three versions; the kernel rotates them per learner and
+  activity and refuses any other (`WrongVariant`), so retakes are not memory tests. Exposed as
+  `next_variant` / `nextVariant` to the phone; the web shell shows the version due.
 - The web shell (`web/`): Vite, Svelte 5, TypeScript 6, an installable offline-first PWA, in
   Arabic (right to left), French and English.
   - Learners: the Quest path (PixiJS map, with a DOM button for every stone), a grid view, and
@@ -77,6 +80,9 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Changed
 
+- Mastery judges on a decaying average (65% on each newest try) instead of the mean of the last
+  three tries, so recovery after remediation shows (ADR 0007).
+- Mutation testing builds with a slim `mutants` profile (no debug info, no incremental state).
 - Rubric marking matches Latin-script terms at word starts ("same" no longer matches
   "sesame"); Arabic roots and symbols still match inside words.
 - The `Framework` and `FrameworkRegistry` traits require `Send + Sync`, so a school's

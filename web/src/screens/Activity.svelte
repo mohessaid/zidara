@@ -12,10 +12,13 @@
   let videoMissing = $state(false);
 
   // Quiz answers: a choice index, or a fraction typed as two numbers.
-  // One activity per component instance (the panel re-creates it), so the answer slots are
-  // made once, before the first render binds to them.
+  // One activity per component instance (the panel re-creates it), so the version and the
+  // answer slots are fixed once, before the first render binds to them. The kernel says which
+  // version of a quiz is due; it refuses any other, so retakes are never a memory test.
   // svelte-ignore state_referenced_locally
-  const questions = activity.kind.type === "quiz" ? activity.kind.questions : [];
+  const { kind, id: activityId } = activity;
+  const variant = kind.type === "quiz" ? app.kernel!.nextVariant(app.me!.id, activityId) : 0;
+  const questions = kind.type === "quiz" ? (variant === 0 ? kind.questions : (kind.variants[variant - 1] ?? kind.questions)) : [];
   let answers: { choice?: number; num?: number; den?: number }[] = $state(questions.map(() => ({})));
   const complete = $derived(
     answers.length === questions.length &&
@@ -28,7 +31,7 @@
     const responses: Response[] = answers.map((a, i) =>
       questions[i]!.expected.type === "choice" ? { type: "choice", index: a.choice! } : { type: "fraction", num: a.num!, den: a.den! },
     );
-    const result = await app.run({ type: "submit_quiz", activity: activity.id, responses });
+    const result = await app.run({ type: "submit_quiz", activity: activity.id, variant, responses });
     busy = false;
     message = result.status === "refused" ? t(app.locale, "error.generic") : t(app.locale, "quiz.done");
   }
@@ -55,7 +58,7 @@
     <p class="reading">{text(activity.kind.body)}</p>
     {#if activity.kind.audio}<audio controls preload="none" src={`/${activity.kind.audio}`}></audio>{/if}
   {:else if activity.kind.type === "quiz"}
-    <form onsubmit={(e) => (e.preventDefault(), submitQuiz())}>
+    <form data-variant={variant} onsubmit={(e) => (e.preventDefault(), submitQuiz())}>
       {#each questions as q, i (q.id)}
         <fieldset>
           <legend>{text(q.prompt)}</legend>

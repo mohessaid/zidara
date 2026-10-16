@@ -3,10 +3,10 @@ mod support;
 
 use support::*;
 use uuid::Uuid;
-use zidara_kernel::activity::Response;
+
 use zidara_kernel::decide::{Command, Envelope, KernelError};
 use zidara_kernel::event::EventBody;
-use zidara_kernel::ids::{ActivityId, FrameworkId, Timestamp};
+use zidara_kernel::ids::{FrameworkId, Timestamp};
 use zidara_kernel::roles::{Permission, Role};
 use zidara_server::commands::{ApiError, Outcome, apply};
 use zidara_server::school::{FixedClock, School};
@@ -14,20 +14,6 @@ use zidara_server::store;
 
 const NOW: i64 = 1_791_158_400_000 + 3_600_000; // 5 October 2026, 01:00 UTC
 const DAY: i64 = 86_400_000;
-
-fn quiz_f2(right: usize) -> Command {
-    let answers = [(2, 4), (4, 6), (6, 8)];
-    let responses = (0..3)
-        .map(|i| {
-            let (num, den) = if i < right { answers[i] } else { (0, 1) };
-            Response::Fraction { num, den }
-        })
-        .collect();
-    Command::SubmitQuiz {
-        activity: ActivityId::new("quiz-f2"),
-        responses,
-    }
-}
 
 fn envelope(at: i64, command: Command) -> Envelope {
     Envelope {
@@ -52,7 +38,7 @@ async fn a_learners_quiz_is_marked_and_stored() {
         &clock,
         db.seed.amina,
         db.seed.a,
-        envelope(NOW, quiz_f2(3)),
+        envelope(NOW, quiz_f2(0, 3)),
     )
     .await
     .unwrap();
@@ -73,7 +59,7 @@ async fn a_learners_quiz_is_marked_and_stored() {
 async fn replayed_envelope_applies_once() {
     let db = db().await;
     let (school, clock) = (School::demo(), FixedClock::at(NOW));
-    let sent = envelope(NOW, quiz_f2(3));
+    let sent = envelope(NOW, quiz_f2(0, 3));
     assert!(matches!(
         apply(
             &db.app,
@@ -155,7 +141,7 @@ async fn future_dated_envelopes_are_capped() {
         &clock,
         db.seed.amina,
         db.seed.a,
-        envelope(NOW + DAY, quiz_f2(3)),
+        envelope(NOW + DAY, quiz_f2(0, 3)),
     )
     .await
     .unwrap();
@@ -177,7 +163,7 @@ async fn backdated_envelopes_are_floored() {
         &clock,
         db.seed.amina,
         db.seed.a,
-        envelope(NOW, quiz_f2(3)),
+        envelope(NOW, quiz_f2(0, 3)),
     )
     .await
     .unwrap();
@@ -188,7 +174,7 @@ async fn backdated_envelopes_are_floored() {
         &clock,
         db.seed.amina,
         db.seed.a,
-        envelope(NOW - DAY, quiz_f2(0)),
+        envelope(NOW - DAY, quiz_f2(1, 0)),
     )
     .await
     .unwrap();
@@ -209,7 +195,7 @@ async fn backdated_envelopes_are_floored() {
         &clock,
         db.seed.amina,
         db.seed.a,
-        envelope(NOW + 5, quiz_f2(0)),
+        envelope(NOW + 5, quiz_f2(2, 0)),
     )
     .await
     .unwrap();
@@ -230,7 +216,7 @@ async fn concurrent_weak_attempts_assign_remediation_once() {
         &clock,
         db.seed.amina,
         db.seed.a,
-        envelope(NOW, quiz_f2(0)),
+        envelope(NOW, quiz_f2(0, 0)),
     )
     .await
     .unwrap();
@@ -242,7 +228,7 @@ async fn concurrent_weak_attempts_assign_remediation_once() {
             &clock,
             db.seed.amina,
             db.seed.a,
-            envelope(NOW, quiz_f2(0)),
+            envelope(NOW, quiz_f2(1, 0)),
         )
     });
     for result in futures::future::join_all(attempts).await {
@@ -266,7 +252,7 @@ async fn non_members_are_refused() {
         &clock,
         db.seed.sara,
         db.seed.a,
-        envelope(NOW, quiz_f2(3)),
+        envelope(NOW, quiz_f2(0, 3)),
     )
     .await
     .unwrap_err();
@@ -283,7 +269,7 @@ async fn the_teacher_sees_what_the_learner_did() {
         &clock,
         db.seed.amina,
         db.seed.a,
-        envelope(NOW, quiz_f2(3)),
+        envelope(NOW, quiz_f2(0, 3)),
     )
     .await
     .unwrap();
@@ -293,7 +279,7 @@ async fn the_teacher_sees_what_the_learner_did() {
         &clock,
         db.seed.yacine,
         db.seed.a,
-        envelope(NOW, quiz_f2(0)),
+        envelope(NOW, quiz_f2(0, 0)),
     )
     .await
     .unwrap();
@@ -335,7 +321,7 @@ async fn commands_wait_for_the_cohort_lock() {
         &clock,
         db.seed.amina,
         db.seed.a,
-        envelope(NOW, quiz_f2(3)),
+        envelope(NOW, quiz_f2(0, 3)),
     ));
     let waited = tokio::time::timeout(std::time::Duration::from_millis(500), &mut pending).await;
     assert!(
@@ -361,7 +347,7 @@ async fn a_cohort_with_an_unknown_lesson_is_an_error() {
         &clock,
         db.seed.amina,
         db.seed.a,
-        envelope(NOW, quiz_f2(3)),
+        envelope(NOW, quiz_f2(0, 3)),
     )
     .await
     .unwrap_err();

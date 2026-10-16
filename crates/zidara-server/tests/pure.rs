@@ -57,6 +57,7 @@ fn learner_bodies_name_their_learner() {
         EventBody::QuizSubmitted {
             learner: user(1),
             activity: a.clone(),
+            variant: 0,
             responses: vec![],
         },
         EventBody::AnswerSubmitted {

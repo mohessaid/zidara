@@ -82,6 +82,10 @@ pub enum ActivityKind {
     Quiz {
         evidence: EvidenceKind,
         questions: Vec<Question>,
+        /// More versions of the same questions; attempts rotate through them (version 0 is
+        /// `questions`), so a retake is not a memory test.
+        #[serde(default)]
+        variants: Vec<Vec<Question>>,
     },
     OpenResponse {
         evidence: EvidenceKind,
@@ -107,6 +111,18 @@ pub struct Activity {
 pub struct MarkError {
     pub expected: usize,
     pub got: usize,
+}
+
+/// The questions of version `variant` (0 is the original), if the quiz has it.
+pub fn version<'a>(
+    questions: &'a [Question],
+    variants: &'a [Vec<Question>],
+    variant: u32,
+) -> Option<&'a [Question]> {
+    match variant {
+        0 => Some(questions),
+        n => variants.get(n as usize - 1).map(Vec::as_slice),
+    }
 }
 
 /// Marks a quiz: one score per outcome, in the order outcomes first appear.

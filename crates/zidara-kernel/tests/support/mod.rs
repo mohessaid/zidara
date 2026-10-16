@@ -189,3 +189,50 @@ pub fn env<'a>(
         policy: Policy::STANDARD,
     }
 }
+
+/// A quiz submission by `learner` for the version of `activity` that is due, with the first
+/// `right` questions answered correctly and the rest wrongly.
+pub fn answer_due(
+    log: &[Event],
+    learner: u128,
+    activity: &str,
+    right: usize,
+) -> zidara_kernel::decide::Command {
+    use zidara_kernel::activity::{ActivityKind, Expected, Response, version};
+    let lesson = lesson();
+    let id = ActivityId::new(activity);
+    let variant = zidara_kernel::decide::next_variant(log, user(learner), &id, &lesson);
+    let Some(ActivityKind::Quiz {
+        questions,
+        variants,
+        ..
+    }) = lesson.activity(&id).map(|a| a.kind.clone())
+    else {
+        panic!("{activity} is a quiz")
+    };
+    let questions = version(&questions, &variants, variant)
+        .expect("the due version exists")
+        .to_vec();
+    let responses = questions
+        .iter()
+        .enumerate()
+        .map(|(i, q)| match (&q.expected, i < right) {
+            (Expected::Choice { correct, .. }, true) => Response::Choice { index: *correct },
+            (Expected::Choice { correct, options }, false) => Response::Choice {
+                index: (correct + 1) % options.len() as u32,
+            },
+            (Expected::Exactly { num, den } | Expected::EquivalentTo { num, den }, true) => {
+                Response::Fraction {
+                    num: *num,
+                    den: *den,
+                }
+            }
+            (_, false) => Response::Fraction { num: 0, den: 1 },
+        })
+        .collect();
+    zidara_kernel::decide::Command::SubmitQuiz {
+        activity: id,
+        variant,
+        responses,
+    }
+}

@@ -49,24 +49,20 @@ impl Class {
         self.run(actor, command).unwrap()
     }
 
-    fn quiz_f2(&mut self, right: usize) -> Vec<Event> {
-        let answers = [frac(2, 4), frac(4, 6), frac(6, 8)];
-        let responses = (0..3)
-            .map(|i| {
-                if i < right {
-                    answers[i].clone()
-                } else {
-                    frac(0, 1)
-                }
-            })
-            .collect();
-        self.ok(
-            &learner(1),
-            Command::SubmitQuiz {
-                activity: ActivityId::new("quiz-f2"),
-                responses,
-            },
+    /// The version of `activity` due for learner 1.
+    fn due(&self, activity: &str) -> u32 {
+        zidara_kernel::decide::next_variant(
+            &self.log,
+            user(1),
+            &ActivityId::new(activity),
+            &self.lesson,
         )
+    }
+
+    /// Learner 1 answers the due version of quiz-f2, `right` of its three questions correctly.
+    fn quiz_f2(&mut self, right: usize) -> Vec<Event> {
+        let quiz = answer_due(&self.log, 1, "quiz-f2", right);
+        self.ok(&learner(1), quiz)
     }
 
     fn answer(&mut self, text: &str) -> EventId {
@@ -166,6 +162,7 @@ fn no_remediation_activity_means_only_a_notice() {
         &learner(1),
         Command::SubmitQuiz {
             activity: ActivityId::new("quiz-f1"),
+            variant: 0,
             responses: wrong(),
         },
     );
@@ -173,6 +170,7 @@ fn no_remediation_activity_means_only_a_notice() {
         &learner(1),
         Command::SubmitQuiz {
             activity: ActivityId::new("quiz-f1"),
+            variant: class.due("quiz-f1"),
             responses: wrong(),
         },
     );
@@ -216,6 +214,7 @@ fn quizzes_check_the_activity_and_responses() {
     let mut class = Class::new();
     let quiz = |activity: &str, responses| Command::SubmitQuiz {
         activity: ActivityId::new(activity),
+        variant: 0,
         responses,
     };
     assert_eq!(
@@ -595,6 +594,7 @@ fn a_missing_default_framework_is_an_error_not_a_panic() {
             &learner(1),
             Command::SubmitQuiz {
                 activity: ActivityId::new("quiz-f2"),
+                variant: 0,
                 responses: vec![frac(0, 1), frac(0, 1), frac(0, 1)],
             }
         ),
@@ -621,5 +621,133 @@ fn commands_and_errors_travel_as_json() {
     assert_eq!(
         KernelError::NotAPerson.to_string(),
         "only a person can submit work"
+    );
+}
+
+fn quiz_f1(variant: u32, responses: Vec<Response>) -> Command {
+    Command::SubmitQuiz {
+        activity: ActivityId::new("quiz-f1"),
+        variant,
+        responses,
+    }
+}
+
+#[test]
+fn quiz_versions_rotate_and_the_kernel_keeps_the_turn() {
+    use zidara_kernel::decide::next_variant;
+    let mut class = Class::new();
+    let f1 = ActivityId::new("quiz-f1");
+    let turn =
+        |class: &Class, learner: u128| next_variant(&class.log, user(learner), &f1, &class.lesson);
+    assert_eq!(turn(&class, 1), 0);
+    class.ok(
+        &learner(1),
+        quiz_f1(0, vec![Response::Choice { index: 0 }, frac(3, 8)]),
+    );
+    assert_eq!(turn(&class, 1), 1);
+    // The memorised version is refused: the next turn is version 1.
+    assert_eq!(
+        class.run(
+            &learner(1),
+            quiz_f1(0, vec![Response::Choice { index: 0 }, frac(3, 8)])
+        ),
+        Err(KernelError::WrongVariant { expected: 1 })
+    );
+    class.ok(
+        &learner(1),
+        quiz_f1(1, vec![Response::Choice { index: 1 }, frac(2, 5)]),
+    );
+    class.ok(
+        &learner(1),
+        quiz_f1(2, vec![Response::Choice { index: 2 }, frac(4, 7)]),
+    );
+    // Three versions, so the fourth try starts again at version 0. Each learner has their own turn.
+    assert_eq!(turn(&class, 1), 0);
+    assert_eq!(turn(&class, 2), 0);
+    assert_eq!(
+        class.run(
+            &learner(1),
+            quiz_f1(3, vec![Response::Choice { index: 0 }, frac(3, 8)])
+        ),
+        Err(KernelError::WrongVariant { expected: 0 })
+    );
+}
+
+#[test]
+fn answers_are_marked_against_the_version_asked() {
+    let mut class = Class::new();
+    class.ok(
+        &learner(1),
+        quiz_f1(0, vec![Response::Choice { index: 0 }, frac(3, 8)]),
+    );
+    // Version 1's right answers; version 0's answers would score nothing here.
+    let events = class.ok(
+        &learner(1),
+        quiz_f1(1, vec![Response::Choice { index: 1 }, frac(2, 5)]),
+    );
+    let EventBody::QuizSubmitted { variant, .. } = &events[0].body else {
+        panic!()
+    };
+    assert_eq!(*variant, 1);
+    assert!(
+        matches!(&events[1].body, EventBody::EvidenceRecorded { evidence } if evidence.score == Score::FULL)
+    );
+    class.ok(
+        &learner(1),
+        quiz_f1(2, vec![Response::Choice { index: 0 }, frac(3, 8)]),
+    );
+    let state = fold(&class.log);
+    let scores: Vec<u16> = state
+        .evidence_for(user(1), &OutcomeId::new("F1"))
+        .iter()
+        .map(|e| e.score.bp())
+        .collect();
+    assert_eq!(scores, [10_000, 10_000, 0]);
+}
+
+#[test]
+fn quizzes_without_versions_always_use_the_first() {
+    use zidara_kernel::decide::next_variant;
+    let mut class = Class::new();
+    let checkpoint = ActivityId::new("checkpoint");
+    let full = || vec![frac(2, 5), frac(4, 10), Response::Choice { index: 1 }];
+    class.ok(
+        &learner(1),
+        Command::SubmitQuiz {
+            activity: checkpoint.clone(),
+            variant: 0,
+            responses: full(),
+        },
+    );
+    assert_eq!(
+        next_variant(&class.log, user(1), &checkpoint, &class.lesson),
+        0
+    );
+    assert_eq!(
+        next_variant(
+            &class.log,
+            user(1),
+            &ActivityId::new("reading-halves"),
+            &class.lesson
+        ),
+        0
+    );
+    assert_eq!(
+        next_variant(&class.log, user(1), &ActivityId::new("nope"), &class.lesson),
+        0
+    );
+}
+
+#[test]
+fn old_commands_without_a_version_mean_the_first() {
+    let json = r#"{"type":"submit_quiz","activity":"quiz-f1","responses":[]}"#;
+    let command: Command = serde_json::from_str(json).unwrap();
+    assert_eq!(
+        command,
+        Command::SubmitQuiz {
+            activity: ActivityId::new("quiz-f1"),
+            variant: 0,
+            responses: vec![]
+        }
     );
 }

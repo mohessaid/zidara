@@ -85,5 +85,8 @@ Tooling traps already met (details in `docs/JOURNAL.md`):
 - Find servers by port, not by name: `ss -ltnpH 'sport = :PORT'`. `kill $!` after `npx` kills
   only the wrapper; start `node_modules/.bin/vite` directly.
 - Never run two `cargo mutants` at once in one directory: they share `mutants.out`.
+- Check `df -h /` before heavy runs (mutants, coverage, E2E) and never stack them: each mutant
+  job copies the workspace to `/tmp`. Killed runs leave those copies behind; remove orphans
+  (verify with `lsof +D`) after any interrupted run. The `mutants` profile keeps them slim.
 - Another session may be running `cargo mutants` or Docker on this machine. Touch only what
   you started (by PID or by the `org.zidara.test` label).

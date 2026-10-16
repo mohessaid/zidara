@@ -1,75 +1,650 @@
 {
   "id": "equivalent-fractions",
-  "title": { "ar": "الكسور المتكافئة", "fr": "Fractions équivalentes", "en": "Equivalent fractions" },
+  "title": {
+    "ar": "الكسور المتكافئة",
+    "fr": "Fractions équivalentes",
+    "en": "Equivalent fractions"
+  },
   "outcomes": [
-    { "id": "F1", "title": { "ar": "أتعرّف على الكسر كأجزاء من كلّ", "fr": "Reconnaître une fraction comme des parts d'un tout", "en": "Recognise a fraction as parts of a whole" } },
-    { "id": "F2", "title": { "ar": "أجد كسورًا متكافئة", "fr": "Trouver des fractions équivalentes", "en": "Find equivalent fractions" }, "prerequisites": ["F1"] },
-    { "id": "F3", "title": { "ar": "أقارن بين الكسور", "fr": "Comparer des fractions", "en": "Compare fractions" }, "prerequisites": ["F2"] }
+    {
+      "id": "F1",
+      "title": {
+        "ar": "أتعرّف على الكسر كأجزاء من كلّ",
+        "fr": "Reconnaître une fraction comme des parts d'un tout",
+        "en": "Recognise a fraction as parts of a whole"
+      }
+    },
+    {
+      "id": "F2",
+      "title": {
+        "ar": "أجد كسورًا متكافئة",
+        "fr": "Trouver des fractions équivalentes",
+        "en": "Find equivalent fractions"
+      },
+      "prerequisites": [
+        "F1"
+      ]
+    },
+    {
+      "id": "F3",
+      "title": {
+        "ar": "أقارن بين الكسور",
+        "fr": "Comparer des fractions",
+        "en": "Compare fractions"
+      },
+      "prerequisites": [
+        "F2"
+      ]
+    }
   ],
   "activities": [
-    { "id": "video-intro", "outcomes": ["F1"],
-      "title": { "ar": "ما هو الكسر؟", "fr": "Qu'est-ce qu'une fraction ?", "en": "What is a fraction?" },
-      "kind": { "type": "video", "src": "media/fractions-intro.mp4", "seconds": 60 } },
-    { "id": "reading-halves", "outcomes": ["F1", "F2"],
-      "title": { "ar": "أنصاف وأرباع", "fr": "Moitiés et quarts", "en": "Halves and quarters" },
-      "kind": { "type": "reading", "audio": "media/halves.mp3", "body": {
-        "ar": "إذا قسمنا البيتزا إلى قطعتين متساويتين، فكل قطعة نصف. وإذا قسمنا كل نصف إلى قطعتين، صار عندنا أربعة أرباع، وقطعتان منها تساويان النصف.",
-        "fr": "Si on coupe une pizza en deux parts égales, chaque part est une moitié. Si on coupe chaque moitié en deux, on obtient quatre quarts, et deux quarts font une moitié.",
-        "en": "Cut a pizza into two equal parts and each part is a half. Cut each half in two and you get four quarters; two quarters make a half." } } },
-    { "id": "quiz-f1", "outcomes": ["F1"],
-      "title": { "ar": "تمرين: أجزاء من كلّ", "fr": "Exercice : des parts d'un tout", "en": "Practice: parts of a whole" },
-      "kind": { "type": "quiz", "evidence": "formative", "questions": [
-        { "id": "f1-q1", "outcome": "F1",
-          "prompt": { "ar": "قُسّمت بيتزا إلى 4 قطع متساوية وأكلنا قطعة واحدة. ما الكسر الذي أكلناه؟", "fr": "Une pizza est coupée en 4 parts égales et on en mange une. Quelle fraction a-t-on mangée ?", "en": "A pizza is cut into 4 equal slices and one is eaten. What fraction was eaten?" },
-          "expected": { "type": "choice", "correct": 0, "options": [ { "en": "1/4" }, { "en": "1/3" }, { "en": "4/1" } ] } },
-        { "id": "f1-q2", "outcome": "F1",
-          "prompt": { "ar": "اكتب الكسر: 3 أجزاء ملوّنة من 8 أجزاء متساوية.", "fr": "Écris la fraction : 3 parts coloriées sur 8 parts égales.", "en": "Write the fraction: 3 shaded parts out of 8 equal parts." },
-          "expected": { "type": "exactly", "num": 3, "den": 8 } } ] } },
-    { "id": "quiz-f2", "outcomes": ["F2"],
-      "title": { "ar": "تمرين: كسور متكافئة", "fr": "Exercice : fractions équivalentes", "en": "Practice: equivalent fractions" },
-      "kind": { "type": "quiz", "evidence": "formative", "questions": [
-        { "id": "f2-q1", "outcome": "F2",
-          "prompt": { "ar": "أكمل: 1/2 = ؟/4", "fr": "Complète : 1/2 = ?/4", "en": "Complete: 1/2 = ?/4" },
-          "expected": { "type": "exactly", "num": 2, "den": 4 } },
-        { "id": "f2-q2", "outcome": "F2",
-          "prompt": { "ar": "أكمل: 2/3 = ؟/6", "fr": "Complète : 2/3 = ?/6", "en": "Complete: 2/3 = ?/6" },
-          "expected": { "type": "exactly", "num": 4, "den": 6 } },
-        { "id": "f2-q3", "outcome": "F2",
-          "prompt": { "ar": "اكتب كسرًا يساوي 3/4", "fr": "Écris une fraction égale à 3/4", "en": "Write a fraction equal to 3/4" },
-          "expected": { "type": "equivalent_to", "num": 3, "den": 4 } } ] } },
-    { "id": "explain-f2", "outcomes": ["F2"],
-      "title": { "ar": "اشرح بكلماتك", "fr": "Explique avec tes mots", "en": "Explain in your own words" },
-      "kind": { "type": "open_response", "evidence": "formative", "outcome": "F2",
-        "prompt": { "ar": "كيف نحصل على كسر يساوي 1/2؟", "fr": "Comment obtenir une fraction égale à 1/2 ?", "en": "How do you make a fraction equal to 1/2?" },
-        "rubric": { "min_words": 3, "criteria": [
-          { "weight": 1, "any_of": ["multiply", "times", "×", "ضرب", "multipli", "fois"] },
-          { "weight": 1, "any_of": ["same", "both", "نفس", "كليهما", "même", "les deux"] } ] } } },
-    { "id": "quiz-f3", "outcomes": ["F3"],
-      "title": { "ar": "تمرين: المقارنة", "fr": "Exercice : comparer", "en": "Practice: comparing" },
-      "kind": { "type": "quiz", "evidence": "formative", "questions": [
-        { "id": "f3-q1", "outcome": "F3",
-          "prompt": { "ar": "أيّهما أكبر؟", "fr": "Laquelle est la plus grande ?", "en": "Which is bigger?" },
-          "expected": { "type": "choice", "correct": 0, "options": [ { "en": "2/3" }, { "en": "3/5" } ] } },
-        { "id": "f3-q2", "outcome": "F3",
-          "prompt": { "ar": "أيّهما أصغر؟", "fr": "Laquelle est la plus petite ?", "en": "Which is smaller?" },
-          "expected": { "type": "choice", "correct": 0, "options": [ { "en": "1/4" }, { "en": "1/3" } ] } } ] } },
-    { "id": "checkpoint", "outcomes": ["F1", "F2", "F3"],
-      "title": { "ar": "اختبار نهاية الدرس", "fr": "Évaluation de fin de leçon", "en": "End-of-lesson checkpoint" },
-      "kind": { "type": "quiz", "evidence": "summative", "questions": [
-        { "id": "cp-q1", "outcome": "F1",
-          "prompt": { "ar": "اكتب الكسر: جزءان من 5 أجزاء متساوية.", "fr": "Écris la fraction : 2 parts sur 5 parts égales.", "en": "Write the fraction: 2 parts out of 5 equal parts." },
-          "expected": { "type": "exactly", "num": 2, "den": 5 } },
-        { "id": "cp-q2", "outcome": "F2",
-          "prompt": { "ar": "اكتب كسرًا يساوي 2/5", "fr": "Écris une fraction égale à 2/5", "en": "Write a fraction equal to 2/5" },
-          "expected": { "type": "equivalent_to", "num": 2, "den": 5 } },
-        { "id": "cp-q3", "outcome": "F3",
-          "prompt": { "ar": "أيّهما أكبر؟", "fr": "Laquelle est la plus grande ?", "en": "Which is bigger?" },
-          "expected": { "type": "choice", "correct": 1, "options": [ { "en": "3/8" }, { "en": "1/2" } ] } } ] } },
-    { "id": "remedial-f2", "outcomes": ["F2"], "role": "remediation",
-      "title": { "ar": "لنجرّب بطريقة أخرى", "fr": "Essayons autrement", "en": "Let's try another way" },
-      "kind": { "type": "reading", "body": {
-        "ar": "خذ الكسر 1/2. اضرب البسط والمقام في 2: تحصل على 2/4. الكسران متساويان لأنك ضربت الاثنين في نفس العدد.",
-        "fr": "Prends 1/2. Multiplie le haut et le bas par 2 : tu obtiens 2/4. Les deux fractions sont égales car tu as multiplié les deux par le même nombre.",
-        "en": "Take 1/2. Multiply the top and the bottom by 2: you get 2/4. They are equal because you multiplied both by the same number." } } }
+    {
+      "id": "video-intro",
+      "outcomes": [
+        "F1"
+      ],
+      "title": {
+        "ar": "ما هو الكسر؟",
+        "fr": "Qu'est-ce qu'une fraction ?",
+        "en": "What is a fraction?"
+      },
+      "kind": {
+        "type": "video",
+        "src": "media/fractions-intro.mp4",
+        "seconds": 60
+      }
+    },
+    {
+      "id": "reading-halves",
+      "outcomes": [
+        "F1",
+        "F2"
+      ],
+      "title": {
+        "ar": "أنصاف وأرباع",
+        "fr": "Moitiés et quarts",
+        "en": "Halves and quarters"
+      },
+      "kind": {
+        "type": "reading",
+        "audio": "media/halves.mp3",
+        "body": {
+          "ar": "إذا قسمنا البيتزا إلى قطعتين متساويتين، فكل قطعة نصف. وإذا قسمنا كل نصف إلى قطعتين، صار عندنا أربعة أرباع، وقطعتان منها تساويان النصف.",
+          "fr": "Si on coupe une pizza en deux parts égales, chaque part est une moitié. Si on coupe chaque moitié en deux, on obtient quatre quarts, et deux quarts font une moitié.",
+          "en": "Cut a pizza into two equal parts and each part is a half. Cut each half in two and you get four quarters; two quarters make a half."
+        }
+      }
+    },
+    {
+      "id": "quiz-f1",
+      "outcomes": [
+        "F1"
+      ],
+      "title": {
+        "ar": "تمرين: أجزاء من كلّ",
+        "fr": "Exercice : des parts d'un tout",
+        "en": "Practice: parts of a whole"
+      },
+      "kind": {
+        "type": "quiz",
+        "evidence": "formative",
+        "questions": [
+          {
+            "id": "f1-q1",
+            "outcome": "F1",
+            "prompt": {
+              "ar": "قُسّمت بيتزا إلى 4 قطع متساوية وأكلنا قطعة واحدة. ما الكسر الذي أكلناه؟",
+              "fr": "Une pizza est coupée en 4 parts égales et on en mange une. Quelle fraction a-t-on mangée ?",
+              "en": "A pizza is cut into 4 equal slices and one is eaten. What fraction was eaten?"
+            },
+            "expected": {
+              "type": "choice",
+              "correct": 0,
+              "options": [
+                {
+                  "en": "1/4"
+                },
+                {
+                  "en": "1/3"
+                },
+                {
+                  "en": "4/1"
+                }
+              ]
+            }
+          },
+          {
+            "id": "f1-q2",
+            "outcome": "F1",
+            "prompt": {
+              "ar": "اكتب الكسر: 3 أجزاء ملوّنة من 8 أجزاء متساوية.",
+              "fr": "Écris la fraction : 3 parts coloriées sur 8 parts égales.",
+              "en": "Write the fraction: 3 shaded parts out of 8 equal parts."
+            },
+            "expected": {
+              "type": "exactly",
+              "num": 3,
+              "den": 8
+            }
+          }
+        ],
+        "variants": [
+          [
+            {
+              "id": "f1-v1-q1",
+              "outcome": "F1",
+              "prompt": {
+                "ar": "قُسّمت كعكة إلى 6 قطع متساوية وأكلنا قطعة واحدة. ما الكسر الذي أكلناه؟",
+                "fr": "Un gâteau est coupé en 6 parts égales et on en mange une. Quelle fraction a-t-on mangée ?",
+                "en": "A cake is cut into 6 equal pieces and one is eaten. What fraction was eaten?"
+              },
+              "expected": {
+                "type": "choice",
+                "correct": 1,
+                "options": [
+                  {
+                    "en": "6/1"
+                  },
+                  {
+                    "en": "1/6"
+                  },
+                  {
+                    "en": "1/5"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "f1-v1-q2",
+              "outcome": "F1",
+              "prompt": {
+                "ar": "اكتب الكسر: جزءان ملوّنان من 5 أجزاء متساوية.",
+                "fr": "Écris la fraction : 2 parts coloriées sur 5 parts égales.",
+                "en": "Write the fraction: 2 shaded parts out of 5 equal parts."
+              },
+              "expected": {
+                "type": "exactly",
+                "num": 2,
+                "den": 5
+              }
+            }
+          ],
+          [
+            {
+              "id": "f1-v2-q1",
+              "outcome": "F1",
+              "prompt": {
+                "ar": "في علبة 8 أقلام متساوية، أخذنا 3 منها. ما الكسر الذي أخذناه؟",
+                "fr": "Une boîte contient 8 crayons ; on en prend 3. Quelle fraction a-t-on prise ?",
+                "en": "A box holds 8 pencils; 3 are taken. What fraction was taken?"
+              },
+              "expected": {
+                "type": "choice",
+                "correct": 2,
+                "options": [
+                  {
+                    "en": "8/3"
+                  },
+                  {
+                    "en": "3/5"
+                  },
+                  {
+                    "en": "3/8"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "f1-v2-q2",
+              "outcome": "F1",
+              "prompt": {
+                "ar": "اكتب الكسر: 4 أجزاء ملوّنة من 7 أجزاء متساوية.",
+                "fr": "Écris la fraction : 4 parts coloriées sur 7 parts égales.",
+                "en": "Write the fraction: 4 shaded parts out of 7 equal parts."
+              },
+              "expected": {
+                "type": "exactly",
+                "num": 4,
+                "den": 7
+              }
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "quiz-f2",
+      "outcomes": [
+        "F2"
+      ],
+      "title": {
+        "ar": "تمرين: كسور متكافئة",
+        "fr": "Exercice : fractions équivalentes",
+        "en": "Practice: equivalent fractions"
+      },
+      "kind": {
+        "type": "quiz",
+        "evidence": "formative",
+        "questions": [
+          {
+            "id": "f2-q1",
+            "outcome": "F2",
+            "prompt": {
+              "ar": "أكمل: 1/2 = ؟/4",
+              "fr": "Complète : 1/2 = ?/4",
+              "en": "Complete: 1/2 = ?/4"
+            },
+            "expected": {
+              "type": "exactly",
+              "num": 2,
+              "den": 4
+            }
+          },
+          {
+            "id": "f2-q2",
+            "outcome": "F2",
+            "prompt": {
+              "ar": "أكمل: 2/3 = ؟/6",
+              "fr": "Complète : 2/3 = ?/6",
+              "en": "Complete: 2/3 = ?/6"
+            },
+            "expected": {
+              "type": "exactly",
+              "num": 4,
+              "den": 6
+            }
+          },
+          {
+            "id": "f2-q3",
+            "outcome": "F2",
+            "prompt": {
+              "ar": "اكتب كسرًا يساوي 3/4",
+              "fr": "Écris une fraction égale à 3/4",
+              "en": "Write a fraction equal to 3/4"
+            },
+            "expected": {
+              "type": "equivalent_to",
+              "num": 3,
+              "den": 4
+            }
+          }
+        ],
+        "variants": [
+          [
+            {
+              "id": "f2-v1-q1",
+              "outcome": "F2",
+              "prompt": {
+                "ar": "أكمل: 1/3 = ؟/6",
+                "fr": "Complète : 1/3 = ?/6",
+                "en": "Complete: 1/3 = ?/6"
+              },
+              "expected": {
+                "type": "exactly",
+                "num": 2,
+                "den": 6
+              }
+            },
+            {
+              "id": "f2-v1-q2",
+              "outcome": "F2",
+              "prompt": {
+                "ar": "أكمل: 3/4 = ؟/8",
+                "fr": "Complète : 3/4 = ?/8",
+                "en": "Complete: 3/4 = ?/8"
+              },
+              "expected": {
+                "type": "exactly",
+                "num": 6,
+                "den": 8
+              }
+            },
+            {
+              "id": "f2-v1-q3",
+              "outcome": "F2",
+              "prompt": {
+                "ar": "اكتب كسرًا يساوي 2/5",
+                "fr": "Écris une fraction égale à 2/5",
+                "en": "Write a fraction equal to 2/5"
+              },
+              "expected": {
+                "type": "equivalent_to",
+                "num": 2,
+                "den": 5
+              }
+            }
+          ],
+          [
+            {
+              "id": "f2-v2-q1",
+              "outcome": "F2",
+              "prompt": {
+                "ar": "أكمل: 1/4 = ؟/12",
+                "fr": "Complète : 1/4 = ?/12",
+                "en": "Complete: 1/4 = ?/12"
+              },
+              "expected": {
+                "type": "exactly",
+                "num": 3,
+                "den": 12
+              }
+            },
+            {
+              "id": "f2-v2-q2",
+              "outcome": "F2",
+              "prompt": {
+                "ar": "أكمل: 2/5 = ؟/10",
+                "fr": "Complète : 2/5 = ?/10",
+                "en": "Complete: 2/5 = ?/10"
+              },
+              "expected": {
+                "type": "exactly",
+                "num": 4,
+                "den": 10
+              }
+            },
+            {
+              "id": "f2-v2-q3",
+              "outcome": "F2",
+              "prompt": {
+                "ar": "اكتب كسرًا يساوي 5/6",
+                "fr": "Écris une fraction égale à 5/6",
+                "en": "Write a fraction equal to 5/6"
+              },
+              "expected": {
+                "type": "equivalent_to",
+                "num": 5,
+                "den": 6
+              }
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "explain-f2",
+      "outcomes": [
+        "F2"
+      ],
+      "title": {
+        "ar": "اشرح بكلماتك",
+        "fr": "Explique avec tes mots",
+        "en": "Explain in your own words"
+      },
+      "kind": {
+        "type": "open_response",
+        "evidence": "formative",
+        "outcome": "F2",
+        "prompt": {
+          "ar": "كيف نحصل على كسر يساوي 1/2؟",
+          "fr": "Comment obtenir une fraction égale à 1/2 ?",
+          "en": "How do you make a fraction equal to 1/2?"
+        },
+        "rubric": {
+          "min_words": 3,
+          "criteria": [
+            {
+              "weight": 1,
+              "any_of": [
+                "multiply",
+                "times",
+                "×",
+                "ضرب",
+                "multipli",
+                "fois"
+              ]
+            },
+            {
+              "weight": 1,
+              "any_of": [
+                "same",
+                "both",
+                "نفس",
+                "كليهما",
+                "même",
+                "les deux"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "quiz-f3",
+      "outcomes": [
+        "F3"
+      ],
+      "title": {
+        "ar": "تمرين: المقارنة",
+        "fr": "Exercice : comparer",
+        "en": "Practice: comparing"
+      },
+      "kind": {
+        "type": "quiz",
+        "evidence": "formative",
+        "questions": [
+          {
+            "id": "f3-q1",
+            "outcome": "F3",
+            "prompt": {
+              "ar": "أيّهما أكبر؟",
+              "fr": "Laquelle est la plus grande ?",
+              "en": "Which is bigger?"
+            },
+            "expected": {
+              "type": "choice",
+              "correct": 0,
+              "options": [
+                {
+                  "en": "2/3"
+                },
+                {
+                  "en": "3/5"
+                }
+              ]
+            }
+          },
+          {
+            "id": "f3-q2",
+            "outcome": "F3",
+            "prompt": {
+              "ar": "أيّهما أصغر؟",
+              "fr": "Laquelle est la plus petite ?",
+              "en": "Which is smaller?"
+            },
+            "expected": {
+              "type": "choice",
+              "correct": 0,
+              "options": [
+                {
+                  "en": "1/4"
+                },
+                {
+                  "en": "1/3"
+                }
+              ]
+            }
+          }
+        ],
+        "variants": [
+          [
+            {
+              "id": "f3-v1-q1",
+              "outcome": "F3",
+              "prompt": {
+                "ar": "أيّهما أكبر؟",
+                "fr": "Laquelle est la plus grande ?",
+                "en": "Which is bigger?"
+              },
+              "expected": {
+                "type": "choice",
+                "correct": 1,
+                "options": [
+                  {
+                    "en": "2/5"
+                  },
+                  {
+                    "en": "1/2"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "f3-v1-q2",
+              "outcome": "F3",
+              "prompt": {
+                "ar": "أيّهما أصغر؟",
+                "fr": "Laquelle est la plus petite ?",
+                "en": "Which is smaller?"
+              },
+              "expected": {
+                "type": "choice",
+                "correct": 1,
+                "options": [
+                  {
+                    "en": "3/4"
+                  },
+                  {
+                    "en": "2/3"
+                  }
+                ]
+              }
+            }
+          ],
+          [
+            {
+              "id": "f3-v2-q1",
+              "outcome": "F3",
+              "prompt": {
+                "ar": "أيّهما أكبر؟",
+                "fr": "Laquelle est la plus grande ?",
+                "en": "Which is bigger?"
+              },
+              "expected": {
+                "type": "choice",
+                "correct": 0,
+                "options": [
+                  {
+                    "en": "5/8"
+                  },
+                  {
+                    "en": "1/2"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "f3-v2-q2",
+              "outcome": "F3",
+              "prompt": {
+                "ar": "أيّهما أصغر؟",
+                "fr": "Laquelle est la plus petite ?",
+                "en": "Which is smaller?"
+              },
+              "expected": {
+                "type": "choice",
+                "correct": 0,
+                "options": [
+                  {
+                    "en": "1/5"
+                  },
+                  {
+                    "en": "1/4"
+                  }
+                ]
+              }
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "checkpoint",
+      "outcomes": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "title": {
+        "ar": "اختبار نهاية الدرس",
+        "fr": "Évaluation de fin de leçon",
+        "en": "End-of-lesson checkpoint"
+      },
+      "kind": {
+        "type": "quiz",
+        "evidence": "summative",
+        "questions": [
+          {
+            "id": "cp-q1",
+            "outcome": "F1",
+            "prompt": {
+              "ar": "اكتب الكسر: جزءان من 5 أجزاء متساوية.",
+              "fr": "Écris la fraction : 2 parts sur 5 parts égales.",
+              "en": "Write the fraction: 2 parts out of 5 equal parts."
+            },
+            "expected": {
+              "type": "exactly",
+              "num": 2,
+              "den": 5
+            }
+          },
+          {
+            "id": "cp-q2",
+            "outcome": "F2",
+            "prompt": {
+              "ar": "اكتب كسرًا يساوي 2/5",
+              "fr": "Écris une fraction égale à 2/5",
+              "en": "Write a fraction equal to 2/5"
+            },
+            "expected": {
+              "type": "equivalent_to",
+              "num": 2,
+              "den": 5
+            }
+          },
+          {
+            "id": "cp-q3",
+            "outcome": "F3",
+            "prompt": {
+              "ar": "أيّهما أكبر؟",
+              "fr": "Laquelle est la plus grande ?",
+              "en": "Which is bigger?"
+            },
+            "expected": {
+              "type": "choice",
+              "correct": 1,
+              "options": [
+                {
+                  "en": "3/8"
+                },
+                {
+                  "en": "1/2"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "remedial-f2",
+      "outcomes": [
+        "F2"
+      ],
+      "role": "remediation",
+      "title": {
+        "ar": "لنجرّب بطريقة أخرى",
+        "fr": "Essayons autrement",
+        "en": "Let's try another way"
+      },
+      "kind": {
+        "type": "reading",
+        "body": {
+          "ar": "خذ الكسر 1/2. اضرب البسط والمقام في 2: تحصل على 2/4. الكسران متساويان لأنك ضربت الاثنين في نفس العدد.",
+          "fr": "Prends 1/2. Multiplie le haut et le bas par 2 : tu obtiens 2/4. Les deux fractions sont égales car tu as multiplié les deux par le même nombre.",
+          "en": "Take 1/2. Multiply the top and the bottom by 2: you get 2/4. They are equal because you multiplied both by the same number."
+        }
+      }
+    }
   ]
 }

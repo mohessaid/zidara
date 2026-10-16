@@ -30,10 +30,9 @@ Known limits to carry (G5/G6):
 - The first level transition after start-up can take one 50–70 ms frame (shader compilation).
 
 Balance questions for G5:
-- Under mastery, full marks after two weak tries still reads "needs support" (the mean of the
-  last three is 5 555 < 6 000). It may need two more good tries, or a recovery rule (e.g. the
-  latest try counts double, or a perfect try after remediation clears support). Found by the
-  G3 golden session.
+- ~~Under mastery, full marks after two weak tries still read "needs support"~~: done 16 Oct,
+  decaying average (ADR 0007).
+- ~~Memorised retakes~~: done 16 Oct, quiz versions rotated and enforced by the kernel.
 
 Deferred minors from the M1 review (fold into the goal that touches the code):
 - Undoing a remediation assignment is re-assigned on the next weak attempt (G4: decide with the studio UX).

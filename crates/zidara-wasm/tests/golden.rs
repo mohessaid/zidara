@@ -24,23 +24,25 @@ fn script() -> Vec<(Value, Value)> {
     let karim = json!({ "kind": "human", "user": KARIM, "role": "teacher" });
     let fraction = |num: u32, den: u32| json!({ "type": "fraction", "num": num, "den": den });
     let step = |n: u32, minutes: i64, command: Value| json!({ "id": id(n), "at": T0 + minutes * 60_000, "command": command });
+    let quiz_f2 = |variant: u32, responses: Value| json!({ "type": "submit_quiz", "activity": "quiz-f2", "variant": variant, "responses": responses });
     vec![
+        // F1 mastered at the first try.
         (
             amina.clone(),
             step(
                 1,
                 0,
-                json!({ "type": "submit_quiz", "activity": "quiz-f1",
+                json!({ "type": "submit_quiz", "activity": "quiz-f1", "variant": 0,
             "responses": [{ "type": "choice", "index": 0 }, fraction(3, 8)] }),
             ),
         ),
+        // F2: one of three right, on versions 0 and 1 (each retake is a new version).
         (
             amina.clone(),
             step(
                 2,
                 5,
-                json!({ "type": "submit_quiz", "activity": "quiz-f2",
-            "responses": [fraction(2, 4), fraction(0, 1), fraction(0, 1)] }),
+                quiz_f2(0, json!([fraction(2, 4), fraction(0, 1), fraction(0, 1)])),
             ),
         ),
         (
@@ -48,8 +50,7 @@ fn script() -> Vec<(Value, Value)> {
             step(
                 3,
                 9,
-                json!({ "type": "submit_quiz", "activity": "quiz-f2",
-            "responses": [fraction(2, 4), fraction(0, 1), fraction(0, 1)] }),
+                quiz_f2(1, json!([fraction(2, 6), fraction(0, 1), fraction(0, 1)])),
             ),
         ),
         (
@@ -61,13 +62,16 @@ fn script() -> Vec<(Value, Value)> {
             "answer": "نضرب البسط والمقام في نفس العدد" }),
             ),
         ),
+        // After remediation, all three right on version 2.
         (
             amina.clone(),
             step(
                 5,
                 20,
-                json!({ "type": "submit_quiz", "activity": "quiz-f2",
-            "responses": [fraction(2, 4), fraction(4, 6), fraction(9, 12)] }),
+                quiz_f2(
+                    2,
+                    json!([fraction(3, 12), fraction(4, 10), fraction(10, 12)]),
+                ),
             ),
         ),
         (

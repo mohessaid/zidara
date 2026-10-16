@@ -8,6 +8,9 @@ use testcontainers_modules::postgres::Postgres as PostgresImage;
 use testcontainers_modules::testcontainers::{ContainerAsync, ImageExt, runners::AsyncRunner};
 use tokio::sync::OnceCell;
 use uuid::Uuid;
+use zidara_kernel::activity::{ActivityKind, Expected, Response, version};
+use zidara_kernel::ids::ActivityId;
+use zidara_server::school::School;
 use zidara_server::seed::Seed;
 
 struct Cluster {
@@ -141,4 +144,40 @@ pub async fn try_insert_event(
     .execute(&mut *tx)
     .await?;
     tx.commit().await
+}
+
+/// Version `variant` of quiz-f2 with the first `right` questions answered correctly. Each test
+/// states the version due: a learner's attempts rotate through the versions (0, 1, 2, 0, …).
+pub fn quiz_f2(variant: u32, right: usize) -> zidara_kernel::decide::Command {
+    let school = School::demo();
+    let lesson = school.lesson("equivalent-fractions").unwrap();
+    let Some(ActivityKind::Quiz {
+        questions,
+        variants,
+        ..
+    }) = lesson
+        .activity(&ActivityId::new("quiz-f2"))
+        .map(|a| &a.kind)
+    else {
+        panic!("quiz-f2 is a quiz")
+    };
+    let responses = version(questions, variants, variant)
+        .unwrap()
+        .iter()
+        .enumerate()
+        .map(|(i, q)| match (&q.expected, i < right) {
+            (Expected::Exactly { num, den } | Expected::EquivalentTo { num, den }, true) => {
+                Response::Fraction {
+                    num: *num,
+                    den: *den,
+                }
+            }
+            _ => Response::Fraction { num: 0, den: 1 },
+        })
+        .collect();
+    zidara_kernel::decide::Command::SubmitQuiz {
+        activity: ActivityId::new("quiz-f2"),
+        variant,
+        responses,
+    }
 }

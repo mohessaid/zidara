@@ -36,6 +36,11 @@ export class Kernel {
     return JSON.parse(this.#shell.run(JSON.stringify(actor), JSON.stringify(envelope))) as RunResult;
   }
 
+  /** The version of a quiz due for `user`: show it, and send its number with the answers. */
+  nextVariant(user: UserId, activity: string): number {
+    return this.#shell.nextVariant(user, activity);
+  }
+
   learnerView(user: UserId, locale: string, now: number): LearnerView {
     return JSON.parse(this.#shell.learnerView(user, locale, now)) as LearnerView;
   }

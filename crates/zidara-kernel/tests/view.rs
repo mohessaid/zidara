@@ -28,20 +28,6 @@ fn run(
     log.extend(events);
 }
 
-fn quiz_f2(right: usize) -> Command {
-    let all = [(2, 4), (4, 6), (6, 8)];
-    let responses = (0..3)
-        .map(|i| {
-            let (num, den) = if i < right { all[i] } else { (0, 1) };
-            zidara_kernel::activity::Response::Fraction { num, den }
-        })
-        .collect();
-    Command::SubmitQuiz {
-        activity: ActivityId::new("quiz-f2"),
-        responses,
-    }
-}
-
 #[test]
 fn a_new_learner_sees_every_outcome_in_order_in_their_language() {
     let (lesson, registry, framework) =
@@ -69,9 +55,12 @@ fn a_new_learner_sees_every_outcome_in_order_in_their_language() {
 #[test]
 fn progress_moves_next_and_shows_assignments() {
     let (mut log, mut ids) = (vec![], SequentialIds::default());
-    run(&mut log, &mut ids, &learner(1), quiz_f2(0));
-    run(&mut log, &mut ids, &learner(1), quiz_f2(0));
-    run(&mut log, &mut ids, &learner(2), quiz_f2(3));
+    let quiz = answer_due(&log, 1, "quiz-f2", 0);
+    run(&mut log, &mut ids, &learner(1), quiz);
+    let quiz = answer_due(&log, 1, "quiz-f2", 0);
+    run(&mut log, &mut ids, &learner(1), quiz);
+    let quiz = answer_due(&log, 2, "quiz-f2", 3);
+    run(&mut log, &mut ids, &learner(2), quiz);
     let (lesson, registry, framework) =
         (lesson(), TestRegistry::standard(), FrameworkId::new("test"));
     let env = env(&lesson, &registry, &framework, 10);
@@ -167,8 +156,10 @@ fn views_need_a_known_framework() {
 #[test]
 fn the_studio_counts_who_is_where_and_lists_the_agent_queue() {
     let (mut log, mut ids) = (vec![], SequentialIds::default());
-    run(&mut log, &mut ids, &learner(1), quiz_f2(0));
-    run(&mut log, &mut ids, &learner(2), quiz_f2(3));
+    let quiz = answer_due(&log, 1, "quiz-f2", 0);
+    run(&mut log, &mut ids, &learner(1), quiz);
+    let quiz = answer_due(&log, 2, "quiz-f2", 3);
+    run(&mut log, &mut ids, &learner(2), quiz);
     run(
         &mut log,
         &mut ids,

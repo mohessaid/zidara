@@ -29,6 +29,8 @@ pub enum EventBody {
     QuizSubmitted {
         learner: UserId,
         activity: ActivityId,
+        #[serde(default)]
+        variant: u32,
         responses: Vec<Response>,
     },
     AnswerSubmitted {

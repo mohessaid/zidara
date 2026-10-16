@@ -4,6 +4,76 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-10-16 — The web shell: a lesson a child can take offline
+
+**What happened.** G4 built the app learners and teachers use, in Arabic first. The Quest path
+is drawn by PixiJS, with every stone a real button underneath for keyboards and screen
+readers. There is a grid view, an activity player and a teacher studio. Everything runs on the
+kernel in wasm, offline first, as an installable app.
+**Numbers.** Eight browser tests on the real server and a fresh database:
+- RTL;
+- offline answer → the map updates with no network → it syncs when the network returns;
+- the app reopens with no network at all;
+- the other class sees nothing;
+- an unsure answer reaches the teacher, who accepts it;
+- a framework switch redraws the path.
+
+axe finds no WCAG violations on any screen. Lighthouse mobile: 94–100 performance and 100
+accessibility. On an economy-phone profile the map holds a median of 58–59 fps through a level
+transition.
+
+## 2026-10-16 — Measuring a phone with a CPU pretending to be a GPU
+
+**What happened.** The first frame-rate gate failed badly: 22 fps, and a 436 ms freeze when
+stepping back onto the map.
+**What we tried first.** A guess: the map was re-created on every return, so we kept it
+mounted. It got *worse* (595 ms). We stopped guessing and profiled: our code was ~100 ms;
+2.4 s was the browser's own native work. Headless Chromium had no GPU and drew WebGL in
+software (SwiftShader). We were measuring this laptop's CPU pretending to be a graphics chip.
+**What we did.** Gave the test browser the laptop's real GPU, an Intel HD 630 (roughly a
+mid-range phone's class), and kept the CPU throttled 4×. Then the data settled it:
+- re-creating the map on each return costs 350–405 ms on real hardware too, so keeping it
+  mounted was right after all; software rendering had hidden that cost;
+- pausing the hidden map, or slowing it to 1 fps, moved a GPU upload into the first frame back
+  (50–80 ms);
+- leaving it running gave no long task in 8 of 9 transitions.
+
+**Two more mistakes found on the way.** The measuring code double-counted frames (impossible
+"179 fps"), because each run left its frame counter running. And one run on a busy laptop is
+noise, so the gate now takes the median of three.
+**Lesson.** Profile before you fix. Check that the instrument measures the thing, not itself.
+A number that's too good is a bug report too.
+
+## 2026-10-16 — From 51 to 100 by moving nothing but timing
+
+**What happened.** Lighthouse scored performance 51: first paint 2.8 s, largest paint 6.4 s.
+**What we did, one measured step at a time.**
+- Split the code: PixiJS loads only on the learner's screen, not the sign-in page. Score 81.
+- Painted a static splash and deferred the service-worker script. Score 87.
+- Tested the obvious suspect, the Arabic web font, by removing it: still 87, so not guilty.
+- The real cause: the 143 KB kernel download started during first paint, and Lighthouse counted
+  everything in flight as blocking. The kernel now loads when someone signs in, or quietly two
+  seconds later. **Score 100**, largest paint 1.4 s.
+
+**Lesson.** Rule suspects out with data before fixing them. The font looked guilty and wasn't.
+
+## 2026-10-16 — Bugs the browser tests caught that unit tests could not
+
+- **A screen-reader name hid the visible name.** Sign-in buttons had `aria-label="Sign in as
+  Amina"`, but showed "Amina 4 A". axe flagged WCAG 2.5.3: a voice-control user saying the
+  visible words would not match. Now the prefix is hidden text inside the button.
+- **The quiz crashed before it showed.** Answer slots were created in an effect, which runs
+  after the first render, but the template bound to them during it. The button just did
+  nothing. Fixed, and an error boundary now shows a friendly message instead of silence.
+- **A teacher's switch could leave late.** If a sync was already running, the next one was
+  skipped instead of queued. It wasn't lost (the outbox keeps it), but it waited for the
+  next sync. Syncs now queue.
+- **Replaying the outbox on reload would have doubled offline work.** Caught by reading the
+  code before it shipped: the saved log already holds those answers.
+- **A test killed itself, again.** `pgrep -f` matched its own command line. Port-based PID
+  lookup now. And `kill $!` killed `npx` but not the Vite server it started; the script now
+  starts Vite directly.
+
 ## 2026-10-16 — One lesson, three machines, the same answer
 
 **What happened.** G3 put the kernel in the browser. To prove the claim at the heart of the

@@ -7,6 +7,22 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- The web shell (`web/`): Vite, Svelte 5, TypeScript 6, an installable offline-first PWA, in
+  Arabic (right to left), French and English.
+  - Learners: the Quest path (PixiJS map, with a DOM button for every stone), a grid view, and
+    an activity player for video, reading, quizzes (choice and fractions) and open answers.
+    Stars come only from the framework's judgement band.
+  - Teachers: the studio, with class progress, the agent's queue (accept or reject), alerts,
+    the agent's own marks with undo, and the framework switch.
+  - Offline: every command runs through the kernel in wasm first, waits in an IndexedDB outbox,
+    and syncs through `/commands`; the server's log then replaces the local one. The service
+    worker precaches the shell, the kernel and the fonts.
+  - Proof: Vitest (kernel wrapper, store and sync, i18n, layout); eight Playwright tests on the
+    real server; axe with no WCAG violations; an economy-phone frame-rate gate; Lighthouse
+    mobile (`make web e2e lighthouse`).
+- Server: `/api/me` returns each cohort's framework and tenant; `/api/cohorts/{id}/roster`
+  gives teachers learners' names.
+- `docs/art-bible.md`: the visual identity, with contrast-checked colours.
 - The kernel in the browser (`zidara-wasm`): `Core` runs the same `decide` as the server over
   a local log, with a JSON contract; `Shell` exposes it to JavaScript through wasm-bindgen.
   Event ids derive from the envelope id, and time comes from the shell, so offline sessions

@@ -80,3 +80,16 @@ Distilled from the Svelte 5 best-practices skill and the official PixiJS v8 skil
 - Types: import from `web/src/lib/kernel/types/` (generated; never edit; `make types`).
 - Queued agent proposals carry the learner's id; the Quest must not show them (only the
   studio does).
+
+## Proven in G4
+
+- Keep the PixiJS map mounted and running (re-creating it cost 350–405 ms; pausing it moved a
+  GPU upload into the first frame back). Its canvas is `aria-hidden`; DOM twins are the controls.
+- Never bind a template to state created in `$effect`: effects run after the first render.
+  Initialise it in the `$state(...)` call.
+- `aria-label` must contain the visible text (WCAG 2.5.3); prefer visually hidden text inside
+  the element.
+- Syncs queue (`syncNow` chains on a promise); never skip one because another is running.
+- The sign-in page must stay light: screens load on demand, and the kernel's wasm is fetched
+  after sign-in or 2 s after idle. That took Lighthouse performance from 51 to 100.
+- Lighthouse: `make lighthouse` (gate: performance ≥ 90, accessibility = 100).

@@ -79,5 +79,11 @@ Tooling traps already met (details in `docs/JOURNAL.md`):
   the Makefile once). For whole functions or files, rewrite them instead of patching.
 - A race test that fails only sometimes under sabotage is a weak guard. Add a deterministic
   test of the mechanism too (e.g. hold the lock, assert the command waits).
+- Headless Chromium draws WebGL in software (SwiftShader). Measure frame rates with the real
+  GPU: launch args `--use-angle=gl --ignore-gpu-blocklist --enable-gpu`; check the renderer
+  string first (`tests/e2e/quality.spec.ts`).
+- Find servers by port, not by name: `ss -ltnpH 'sport = :PORT'`. `kill $!` after `npx` kills
+  only the wrapper; start `node_modules/.bin/vite` directly.
+- Never run two `cargo mutants` at once in one directory: they share `mutants.out`.
 - Another session may be running `cargo mutants` or Docker on this machine. Touch only what
   you started (by PID or by the `org.zidara.test` label).

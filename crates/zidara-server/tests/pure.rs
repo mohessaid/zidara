@@ -379,9 +379,19 @@ mod config {
             "ZIDARA_SECRET is not set"
         );
         assert_eq!(
-            Config::from_env(env(&[("DATABASE_URL", "x"), ("ZIDARA_SECRET", "short")]))
-                .unwrap_err(),
+            Config::from_env(env(&[
+                ("DATABASE_URL", "x"),
+                ("ZIDARA_SECRET", &"s".repeat(31))
+            ]))
+            .unwrap_err(),
             "ZIDARA_SECRET must be at least 32 bytes"
+        );
+        assert!(
+            Config::from_env(env(&[
+                ("DATABASE_URL", "x"),
+                ("ZIDARA_SECRET", &"s".repeat(32))
+            ]))
+            .is_ok()
         );
         assert_eq!(
             Config::from_env(env(&[
@@ -426,8 +436,10 @@ mod config {
         assert!(
             matches!(default_model.assessor, AssessorConfig::Claude { ref model, .. } if model == "claude-opus-5-5")
         );
-        assert!(
-            !format!("{config:?}").contains("s3cret") && !format!("{config:?}").contains("\"k\"")
+        assert_eq!(
+            format!("{config:?}"),
+            "Config { addr: \"0.0.0.0:9000\", demo_login: true, agent: 00000000-0000-0000-0000-000000000007, \
+             assessor: Claude { base_url: \"https://api.anthropic.com\", model: \"claude-haiku-5-5\" }, .. }"
         );
     }
 }

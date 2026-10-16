@@ -35,6 +35,8 @@ pub struct AppState {
     pub assessor: Arc<Assessor>,
     /// The assessment agent's user id.
     pub agent: uuid::Uuid,
+    /// One marking pass per class at a time.
+    pub passes: Arc<agent::Passes>,
     /// Sign in by user id, for demos only.
     pub demo_login: bool,
 }

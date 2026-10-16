@@ -16,7 +16,7 @@ use zidara_kernel::view::{learner_view, studio_view};
 use crate::AppState;
 use crate::agent::mark_pending;
 use crate::auth::{issue, verify};
-use crate::commands::{ApiError, Outcome, apply};
+use crate::commands::{ApiError, Outcome, apply_batch};
 use crate::store::{self, CohortRow, Tx};
 use crate::xapi::statement;
 
@@ -122,39 +122,50 @@ async fn commands(
     Path(cohort): Path<Uuid>,
     Json(envelopes): Json<Vec<Envelope>>,
 ) -> Result<Json<Value>, ApiError> {
-    let mut results = Vec::with_capacity(envelopes.len());
-    let mut answered = false;
-    for envelope in envelopes {
-        let id = envelope.id;
-        let outcome = apply(
-            &state.pool,
-            &state.school,
-            state.clock.as_ref(),
-            user,
-            cohort,
-            envelope,
-        )
-        .await?;
-        if let Outcome::Applied { events } = &outcome {
-            answered |= events
-                .iter()
-                .any(|e| matches!(e.body, EventBody::AnswerSubmitted { .. }));
-        }
-        results.push(json!({ "id": id, "outcome": outcome }));
-    }
-    if answered {
-        // The agent marks outside this request; the learner does not wait for the model.
+    let ids: Vec<Uuid> = envelopes.iter().map(|e| e.id).collect();
+    let outcomes = apply_batch(
+        &state.pool,
+        &state.school,
+        state.clock.as_ref(),
+        user,
+        cohort,
+        envelopes,
+    )
+    .await?;
+    let answered = outcomes.iter().any(|o| {
+        matches!(o, Outcome::Applied { events } if events.iter().any(|e| matches!(e.body, EventBody::AnswerSubmitted { .. })))
+    });
+    let results: Vec<Value> = ids
+        .iter()
+        .zip(&outcomes)
+        .map(|(id, outcome)| json!({ "id": id, "outcome": outcome }))
+        .collect();
+    if answered && state.passes.request(cohort) {
+        // The agent marks outside this request (the learner does not wait for the model), one
+        // pass per class at a time; answers that arrive meanwhile are marked by one more pass.
+        // Marking folds a whole class's history: it runs on the blocking pool, one pass at a
+        // time, so request workers never wait behind it.
         let state = state.clone();
-        tokio::spawn(async move {
-            let _ = mark_pending(
-                &state.pool,
-                &state.school,
-                state.clock.as_ref(),
-                &state.assessor,
-                state.agent,
-                cohort,
-            )
-            .await;
+        let runtime = tokio::runtime::Handle::current();
+        tokio::task::spawn_blocking(move || {
+            runtime.block_on(async {
+                loop {
+                    let permit = state.passes.gate.acquire().await;
+                    let _ = mark_pending(
+                        &state.pool,
+                        &state.school,
+                        state.clock.as_ref(),
+                        &state.assessor,
+                        state.agent,
+                        cohort,
+                    )
+                    .await;
+                    drop(permit);
+                    if !state.passes.finished(cohort) {
+                        break;
+                    }
+                }
+            })
         });
     }
     Ok(Json(Value::Array(results)))

@@ -11,6 +11,8 @@ use zidara_kernel::roles::{Actor, Role};
 use crate::error::ApiError;
 
 pub type Tx = Transaction<'static, Postgres>;
+/// A connection inside a transaction or savepoint.
+pub type Conn = sqlx::PgConnection;
 
 /// Begins a transaction acting as `user`. The setting is `SET LOCAL`, so it ends with the
 /// transaction and a pooled connection cannot carry it into the next request.
@@ -75,7 +77,7 @@ pub async fn cohort(tx: &mut Tx, cohort: Uuid) -> Result<CohortRow, sqlx::Error>
 
 /// Records an envelope id; `false` when it was already applied.
 pub async fn record_envelope(
-    tx: &mut Tx,
+    tx: &mut Conn,
     id: Uuid,
     tenant: Uuid,
     cohort: Uuid,
@@ -89,7 +91,7 @@ pub async fn record_envelope(
     .bind(tenant)
     .bind(cohort)
     .bind(user)
-    .fetch_optional(&mut **tx)
+    .fetch_optional(&mut *tx)
     .await?;
     Ok(inserted.is_some())
 }
@@ -182,7 +184,7 @@ struct Columns {
 }
 
 /// Appends events in one statement.
-pub async fn insert(tx: &mut Tx, events: &[(Event, Option<UserId>)]) -> Result<(), ApiError> {
+pub async fn insert(tx: &mut Conn, events: &[(Event, Option<UserId>)]) -> Result<(), ApiError> {
     let mut c = Columns::default();
     for (event, learner) in events {
         c.ids.push(event.id.0);
@@ -204,7 +206,7 @@ pub async fn insert(tx: &mut Tx, events: &[(Event, Option<UserId>)]) -> Result<(
     .bind(c.times)
     .bind(c.actors)
     .bind(c.bodies)
-    .execute(&mut **tx)
+    .execute(&mut *tx)
     .await?;
     Ok(())
 }

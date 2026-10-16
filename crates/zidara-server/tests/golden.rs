@@ -34,6 +34,7 @@ async fn the_server_reaches_the_views_the_phone_computed() {
         keys: keys.clone(),
         assessor: Arc::new(Assessor::Rubric),
         agent: Uuid::nil(),
+        passes: Default::default(),
         demo_login: false,
     });
     let cohort = session["setup"]["cohort"].as_str().unwrap();

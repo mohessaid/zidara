@@ -8,7 +8,7 @@ WASM_RUNNER := CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUNNER=wasm-bindgen-test-runn
 # crates/zidara-wasm/tests/shell.rs under `make wasm`.
 COVERAGE_SCOPE := --ignore-filename-regex 'zidara-acceptance|tests/|zidara-server/src/main.rs|zidara-wasm/src/shell.rs'
 
-.PHONY: gauntlet lint test acceptance wasm targets types bridge web e2e lighthouse coverage mutants clean-containers db-up db-down serve
+.PHONY: gauntlet lint test acceptance wasm targets types bridge web e2e lighthouse load coverage mutants clean-containers db-up db-down serve
 
 gauntlet: lint test acceptance wasm targets types bridge web e2e lighthouse coverage mutants
 
@@ -55,6 +55,12 @@ e2e: web
 # Lighthouse, mobile profile: performance >= 90, accessibility = 100.
 lighthouse: web
 	scripts/lighthouse.sh
+
+# Load: release server pinned to 2 cores, a school of 10 classes x 30 learners. Gate: p95 read
+# < 200 ms and write < 300 ms at 150 views/s + 50 answers/s (open loop). Capacity is recorded
+# separately with tools/load/capacity.js. Needs k6.
+load:
+	tools/load/run.sh
 
 coverage:
 	cargo +nightly llvm-cov --workspace --branch $(COVERAGE_SCOPE) \

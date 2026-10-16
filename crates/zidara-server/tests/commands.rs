@@ -356,3 +356,82 @@ async fn a_cohort_with_an_unknown_lesson_is_an_error() {
         "{err:?}"
     );
 }
+
+#[tokio::test]
+async fn a_batch_is_decided_in_order_in_one_go() {
+    use zidara_server::commands::apply_batch;
+    let db = db().await;
+    let (school, clock) = (School::demo(), FixedClock::at(NOW));
+    let first = envelope(NOW, quiz_f2(0, 0));
+    let wrong_turn = envelope(NOW, quiz_f2(0, 3)); // version 0 again: refused, the turn is 1
+    let second = envelope(NOW, quiz_f2(1, 0));
+    let outcomes = apply_batch(
+        &db.app,
+        &school,
+        &clock,
+        db.seed.amina,
+        db.seed.a,
+        vec![first.clone(), wrong_turn.clone(), second, first],
+    )
+    .await
+    .unwrap();
+    assert!(matches!(outcomes[0], Outcome::Applied { .. }));
+    assert_eq!(
+        outcomes[1],
+        Outcome::Refused {
+            error: zidara_kernel::decide::KernelError::WrongVariant { expected: 1 }
+        }
+    );
+    // Later commands see the earlier ones of the same batch: this is the second attempt.
+    let Outcome::Applied { events } = &outcomes[2] else {
+        panic!("{:?}", outcomes[2])
+    };
+    assert!(
+        events
+            .iter()
+            .any(|e| matches!(e.body, EventBody::ActivityAssigned { .. })),
+        "two weak tries bring help"
+    );
+    assert_eq!(outcomes[3], Outcome::Duplicate);
+    // The refused envelope left no ledger row, so it can be sent again (and refused again).
+    let ledger: i64 = sqlx::query_scalar("select count(*) from applied_envelopes")
+        .fetch_one(&db.owner)
+        .await
+        .unwrap();
+    assert_eq!(ledger, 2);
+    let again = apply_batch(
+        &db.app,
+        &school,
+        &clock,
+        db.seed.amina,
+        db.seed.a,
+        vec![wrong_turn],
+    )
+    .await
+    .unwrap();
+    assert!(matches!(again[0], Outcome::Refused { .. }));
+}
+
+#[tokio::test]
+async fn an_empty_batch_does_nothing_and_strangers_are_refused() {
+    use zidara_server::commands::apply_batch;
+    let db = db().await;
+    let (school, clock) = (School::demo(), FixedClock::at(NOW));
+    assert_eq!(
+        apply_batch(&db.app, &school, &clock, db.seed.amina, db.seed.a, vec![])
+            .await
+            .unwrap(),
+        vec![]
+    );
+    let err = apply_batch(
+        &db.app,
+        &school,
+        &clock,
+        db.seed.sara,
+        db.seed.a,
+        vec![envelope(NOW, quiz_f2(0, 3))],
+    )
+    .await
+    .unwrap_err();
+    assert!(matches!(err, ApiError::NotMember), "{err:?}");
+}

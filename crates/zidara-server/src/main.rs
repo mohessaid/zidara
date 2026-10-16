@@ -56,6 +56,7 @@ async fn run(command: &str, config: Config) -> Result<(), Box<dyn std::error::Er
                 keys: Keys::from_secret(config.secret.as_bytes()),
                 assessor: Arc::new(assessor),
                 agent: config.agent,
+                passes: Default::default(),
                 demo_login: config.demo_login,
             };
             let listener = tokio::net::TcpListener::bind(&config.addr).await?;

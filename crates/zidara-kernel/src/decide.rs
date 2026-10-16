@@ -17,7 +17,7 @@ use crate::lesson::Lesson;
 use crate::roles::{Actor, Permission, Role};
 use crate::rules::{Action, evaluate};
 use crate::score::Score;
-use crate::state::{CohortState, ProposalStatus, fold};
+use crate::state::{CohortState, ProposalStatus, fold_refs};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
@@ -196,8 +196,7 @@ impl Batch<'_, '_> {
     }
 
     fn state(&self) -> CohortState {
-        let all: Vec<Event> = self.history.iter().chain(&self.events).cloned().collect();
-        fold(&all)
+        fold_refs(self.history.iter().chain(&self.events))
     }
 
     /// Records evidence, then runs the framework's rules for that learner and outcome.

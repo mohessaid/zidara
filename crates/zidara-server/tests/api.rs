@@ -35,6 +35,7 @@ async fn api(demo_login: bool) -> Api {
         keys: keys.clone(),
         assessor: Arc::new(Assessor::Rubric),
         agent: db.seed.agent,
+        passes: Default::default(),
         demo_login,
     };
     Api {

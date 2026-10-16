@@ -62,7 +62,13 @@ impl CohortState {
 /// Folds a log into state. Events are ordered by `at` (a stable sort, so events from one
 /// command keep their order), and undone events are skipped.
 pub fn fold(events: &[Event]) -> CohortState {
-    let mut ordered: Vec<&Event> = events.iter().collect();
+    fold_refs(events)
+}
+
+/// `fold` over borrowed events from anywhere (e.g. stored history chained with new events), so
+/// nothing is copied: cloning a class's whole log for every command dominated server load.
+pub fn fold_refs<'a>(events: impl IntoIterator<Item = &'a Event>) -> CohortState {
+    let mut ordered: Vec<&Event> = events.into_iter().collect();
     ordered.sort_by_key(|e| e.at);
     let undone: BTreeSet<EventId> = ordered
         .iter()

@@ -283,3 +283,22 @@ fn arrival_order_does_not_matter_when_times_differ() {
         Ok(())
     });
 }
+
+/// Folding borrowed events (two slices, no copies) gives exactly what folding owned ones does.
+#[test]
+fn folding_references_matches_folding_values() {
+    use zidara_kernel::state::fold_refs;
+    let log = proptest::collection::btree_set(0i64..1_000, 1..12).prop_flat_map(|times| {
+        let events: Vec<_> = times
+            .into_iter()
+            .enumerate()
+            .map(|(i, at)| recorded(i as u128 + 1, at, (i as u16 * 997) % 10_001))
+            .collect();
+        (Just(events.clone()), 0..=events.len())
+    });
+    support::check(log, |(events, split)| {
+        let (history, new) = events.split_at(split);
+        prop_assert_eq!(fold_refs(history.iter().chain(new)), fold(&events));
+        Ok(())
+    });
+}

@@ -461,3 +461,30 @@ mod clock_and_debug {
         assert_eq!(format!("{:?}", AssessorConfig::Rubric), "Rubric");
     }
 }
+
+mod agent_passes {
+    use uuid::Uuid;
+    use zidara_server::agent::Passes;
+
+    #[test]
+    fn one_marking_pass_per_class_at_a_time() {
+        let passes = Passes::default();
+        let (a, b) = (Uuid::from_u128(1), Uuid::from_u128(2));
+        assert!(passes.request(a), "the first request starts a pass");
+        assert!(
+            !passes.request(a),
+            "a second one, during the pass, does not"
+        );
+        assert!(!passes.request(a), "nor a third");
+        assert!(passes.request(b), "another class has its own pass");
+        // Answers arrived during the pass, so exactly one more pass runs, then none.
+        assert!(passes.finished(a));
+        assert!(!passes.finished(a));
+        assert!(
+            passes.request(a),
+            "after that, a new answer starts a new pass"
+        );
+        assert!(!passes.finished(a));
+        assert!(!passes.finished(b));
+    }
+}

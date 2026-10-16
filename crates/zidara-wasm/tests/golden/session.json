@@ -8,8 +8,13 @@
         {
           "id": "video-intro",
           "kind": {
-            "seconds": 60,
-            "src": "media/fractions-intro.mp4",
+            "seconds": 36,
+            "src": "media/fractions-intro.{locale}.mp4",
+            "transcript": {
+              "ar": "نرى بيتزا كاملة. نقسمها إلى قطعتين متساويتين: قطعة واحدة من قطعتين هي النصف، 1/2. ثم نقسمها إلى أربع قطع متساوية: قطعة واحدة من أربع هي الربع، 1/4. ثم إلى ثماني قطع متساوية، ونأخذ ثلاثًا: 3/8. البسط، العدد في الأعلى، هو عدد القطع التي أخذناها. المقام، العدد في الأسفل، هو عدد القطع المتساوية كلها. الكسر أجزاء متساوية من كلّ.",
+              "en": "We see a whole pizza. We cut it into 2 equal parts: 1 part out of 2 is one half, 1/2. Then into 4 equal parts: 1 part out of 4 is one quarter, 1/4. Then into 8 equal parts, and we take 3: 3/8. The numerator, on top, counts the parts we take. The denominator, below, counts all the equal parts. A fraction is equal parts of a whole.",
+              "fr": "On voit une pizza entière. On la coupe en 2 parts égales : 1 part sur 2, c'est la moitié, 1/2. Puis en 4 parts égales : 1 part sur 4, c'est un quart, 1/4. Puis en 8 parts égales, et on en prend 3 : 3/8. Le numérateur, en haut, compte les parts prises. Le dénominateur, en bas, compte toutes les parts égales. Une fraction, ce sont des parts égales d'un tout."
+            },
             "type": "video"
           },
           "outcomes": [

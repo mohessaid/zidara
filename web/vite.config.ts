@@ -35,6 +35,14 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
         navigateFallback: "index.html",
         navigateFallbackDenylist: [/^\/api\//],
+        // Lesson films are cached the first time they play, so they can be watched again offline.
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith("/media/"),
+            handler: "CacheFirst",
+            options: { cacheName: "zidara-media", rangeRequests: true, expiration: { maxEntries: 30 } },
+          },
+        ],
       },
     }),
   ],

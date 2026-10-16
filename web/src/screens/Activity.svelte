@@ -51,8 +51,13 @@
     {#if videoMissing}
       <p>{t(app.locale, "video.missing")}</p>
     {:else}
-      <!-- svelte-ignore a11y_media_has_caption: captions arrive with the video in G5 -->
-      <video controls preload="none" src={`/${activity.kind.src}`} onerror={() => (videoMissing = true)}></video>
+      <!-- The film has no sound (its words are on screen in the learner's language), so it needs
+           no captions; the transcript below is its text alternative (WCAG 1.2.1). -->
+      <!-- svelte-ignore a11y_media_has_caption -->
+      <video controls preload="metadata" src={`/${activity.kind.src.replace("{locale}", app.locale)}`} onerror={() => (videoMissing = true)}></video>
+    {/if}
+    {#if activity.kind.transcript}
+      <details><summary>{t(app.locale, "video.transcript")}</summary><p>{text(activity.kind.transcript)}</p></details>
     {/if}
   {:else if activity.kind.type === "reading"}
     <p class="reading">{text(activity.kind.body)}</p>

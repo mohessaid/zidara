@@ -71,8 +71,12 @@ pub enum ActivityRole {
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum ActivityKind {
     Video {
+        /// May contain `{locale}`: one rendering per language.
         src: String,
         seconds: u32,
+        /// A text alternative for learners who cannot see the video (WCAG 1.2.1).
+        #[serde(default)]
+        transcript: Option<Localized>,
     },
     Reading {
         body: Localized,

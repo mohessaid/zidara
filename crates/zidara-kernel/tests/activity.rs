@@ -123,3 +123,25 @@ fn activities_read_from_json_with_defaults() {
         }
     );
 }
+
+#[test]
+fn videos_may_carry_a_transcript() {
+    let json = r#"{"id":"v","title":{"en":"Watch"},"outcomes":["F1"],
+                   "kind":{"type":"video","src":"media/v.{locale}.mp4","seconds":36,"transcript":{"en":"A pizza in 8 parts."}}}"#;
+    let activity: Activity = serde_json::from_str(json).unwrap();
+    let ActivityKind::Video { transcript, .. } = activity.kind else {
+        panic!()
+    };
+    assert_eq!(
+        transcript,
+        Some(Localized::from_pairs(&[("en", "A pizza in 8 parts.")]))
+    );
+    let bare =
+        r#"{"id":"v","title":{},"outcomes":[],"kind":{"type":"video","src":"x","seconds":1}}"#;
+    let ActivityKind::Video { transcript, .. } =
+        serde_json::from_str::<Activity>(bare).unwrap().kind
+    else {
+        panic!()
+    };
+    assert_eq!(transcript, None);
+}

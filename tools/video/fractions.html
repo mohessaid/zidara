@@ -1,0 +1,100 @@
+<!doctype html>
+<!-- "What is a fraction?": a 36-second lesson film drawn as SVG. render.mjs calls
+     render(t, locale) for each frame; nothing here depends on wall-clock time. Colours and
+     shapes follow docs/art-bible.md. -->
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face { font-family: "Noto Sans Arabic"; src: url("../../web/node_modules/@fontsource/noto-sans-arabic/files/noto-sans-arabic-arabic-700-normal.woff2") format("woff2"); font-weight: 700; unicode-range: U+0600-06FF, U+0750-077F, U+FB50-FDFF, U+FE70-FEFF; }
+  @font-face { font-family: "Noto Sans Arabic"; src: url("../../web/node_modules/@fontsource/noto-sans-arabic/files/noto-sans-arabic-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+  html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; background: #fff8ec; }
+  svg { display: block; }
+  text { font-family: "Noto Sans Arabic", sans-serif; font-weight: 700; fill: #1f2a44; }
+</style>
+</head>
+<body>
+<svg id="stage" width="1280" height="720" viewBox="0 0 1280 720"></svg>
+<script>
+const TEXT = {
+  ar: { title: "ما هو الكسر؟", half: "قسمنا البيتزا إلى قطعتين متساويتين", halfOne: "قطعة واحدة من قطعتين: النصف", quarter: "والآن إلى أربع قطع متساوية", quarterOne: "قطعة واحدة من أربع: الربع", eighth: "ثماني قطع متساوية، أخذنا ثلاثًا", top: "البسط: عدد القطع التي أخذناها", bottom: "المقام: عدد القطع المتساوية كلها", end: "الكسر = أجزاء متساوية من كلّ" },
+  fr: { title: "Qu'est-ce qu'une fraction ?", half: "On coupe la pizza en 2 parts égales", halfOne: "1 part sur 2 : la moitié", quarter: "Maintenant, en 4 parts égales", quarterOne: "1 part sur 4 : un quart", eighth: "8 parts égales, on en prend 3", top: "Le numérateur : les parts prises", bottom: "Le dénominateur : toutes les parts égales", end: "Une fraction = des parts égales d'un tout" },
+  en: { title: "What is a fraction?", half: "We cut the pizza into 2 equal parts", halfOne: "1 part out of 2: one half", quarter: "Now into 4 equal parts", quarterOne: "1 part out of 4: one quarter", eighth: "8 equal parts, we take 3", top: "The numerator: the parts we take", bottom: "The denominator: all the equal parts", end: "A fraction = equal parts of a whole" },
+};
+const C = { ink: "#1f2a44", achieved: "#1e7b4f", blue: "#1f5fad", crust: "#c9a96e", cheese: "#f6d77a", paper: "#fff8ec" };
+const ease = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
+const clamp01 = (x) => Math.max(0, Math.min(1, x));
+const at = (t, start, length) => ease(clamp01((t - start) / length));
+
+function slice(cx, cy, r, a0, a1, fill) {
+  const p = (a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+  const [x0, y0] = p(a0), [x1, y1] = p(a1);
+  const large = a1 - a0 > Math.PI ? 1 : 0;
+  return `<path d="M${cx},${cy} L${x0},${y0} A${r},${r} 0 ${large} 1 ${x1},${y1} Z" fill="${fill}" stroke="${C.crust}" stroke-width="6" stroke-linejoin="round"/>`;
+}
+
+function pizza(cx, cy, r, parts, taken, highlight, separation) {
+  // A whole pizza is a circle: an arc from an angle back to itself draws nothing.
+  if (parts === 1) return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${C.cheese}" stroke="${C.crust}" stroke-width="6"/>`;
+  let out = "";
+  for (let i = 0; i < parts; i++) {
+    const a0 = (i / parts) * 2 * Math.PI, a1 = ((i + 1) / parts) * 2 * Math.PI, mid = (a0 + a1) / 2;
+    const lift = i < taken ? separation : 0;
+    const dx = lift * Math.sin(mid), dy = -lift * Math.cos(mid);
+    const fill = i < taken ? (highlight > 0 ? mix(C.cheese, C.achieved, highlight) : C.cheese) : C.cheese;
+    out += `<g transform="translate(${dx},${dy})">${slice(cx, cy, r, a0, a1, fill)}</g>`;
+  }
+  return out;
+}
+
+function mix(a, b, k) {
+  const h = (s) => [1, 3, 5].map((i) => parseInt(s.slice(i, i + 2), 16));
+  const [x, y] = [h(a), h(b)];
+  return "#" + x.map((v, i) => Math.round(v + (y[i] - v) * k).toString(16).padStart(2, "0")).join("");
+}
+
+function fraction(x, y, num, den, alpha, colourTop) {
+  return `<g opacity="${alpha}" font-size="110" text-anchor="middle" direction="ltr">
+    <text x="${x}" y="${y - 20}" style="fill:${colourTop}">${num}</text>
+    <rect x="${x - 70}" y="${y + 5}" width="140" height="10" rx="5" fill="${C.ink}"/>
+    <text x="${x}" y="${y + 120}">${den}</text></g>`;
+}
+
+function caption(text, alpha, y = 640) {
+  return `<text x="640" y="${y}" font-size="44" text-anchor="middle" opacity="${alpha}">${text}</text>`;
+}
+
+// Scenes (seconds): 0 title · 5 halves · 12 quarters · 19 eighths · 27 parts named · 33 end.
+window.render = (t, locale) => {
+  const T = TEXT[locale];
+  const rtl = locale === "ar";
+  const side = rtl ? 300 : 980; // the fraction sits on the reading-ending side
+  const pz = rtl ? 860 : 420;
+  let parts = 1, taken = 0, num = "", den = "", cap = "";
+  if (t >= 5) { parts = 2; taken = 1; num = "1"; den = "2"; cap = t < 8.5 ? T.half : T.halfOne; }
+  if (t >= 12) { parts = 4; taken = 1; num = "1"; den = "4"; cap = t < 15.5 ? T.quarter : T.quarterOne; }
+  if (t >= 19) { parts = 8; taken = 3; num = "3"; den = "8"; cap = T.eighth; }
+  if (t >= 27) cap = t < 30 ? T.top : T.bottom;
+  if (t >= 33) cap = T.end;
+  const sceneStart = t >= 19 ? 19 : t >= 12 ? 12 : t >= 5 ? 5 : 0;
+  const separation = 28 * at(t, sceneStart + 1.5, 1.2);
+  const highlight = at(t, sceneStart + 2.5, 1);
+  const titleAlpha = t < 5 ? at(t, 0.3, 0.8) * (1 - at(t, 4.2, 0.6)) : 0;
+  const fracAlpha = num ? at(t, sceneStart + 3, 0.8) : 0;
+  const topColour = t >= 27 && t < 30 ? C.achieved : C.ink;
+  const capAlpha = cap ? at(t, sceneStart + 0.2, 0.6) : 0;
+  let svg = `<rect width="1280" height="720" fill="${C.paper}"/>`;
+  svg += pizza(pz, 330, 210, parts, taken, highlight, separation);
+  if (titleAlpha > 0) svg += `<text x="640" y="90" font-size="72" text-anchor="middle" opacity="${titleAlpha}">${T.title}</text>`;
+  if (fracAlpha > 0) svg += fraction(side, 320, num, den, fracAlpha, topColour);
+  if (t >= 30 && t < 33) svg += `<rect x="${side - 80}" y="${330}" width="160" height="130" rx="20" fill="none" stroke="${C.blue}" stroke-width="6"/>`;
+  if (capAlpha > 0) svg += caption(cap, capAlpha);
+  const stage = document.getElementById("stage");
+  stage.setAttribute("direction", rtl ? "rtl" : "ltr");
+  stage.innerHTML = svg;
+};
+window.DURATION = 36;
+window.fontsReady = document.fonts.ready.then(() => Promise.all([document.fonts.load('700 40px "Noto Sans Arabic"', "ما هو"), document.fonts.load('700 40px "Noto Sans Arabic"', "What")]));
+</script>
+</body>
+</html>

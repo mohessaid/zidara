@@ -107,7 +107,7 @@ async fn a_lesson_round_trip() {
     assert_eq!(me["display_name"], "Amina");
     assert_eq!(
         me["cohorts"],
-        json!([{ "id": s.a, "name": "Class 4 A", "lesson_id": "equivalent-fractions", "role": "learner" }])
+        json!([{ "id": s.a, "tenant_id": s.tenant, "name": "Class 4 A", "lesson_id": "equivalent-fractions", "framework": "mastery", "role": "learner" }])
     );
     let (status, pack) = api
         .call(
@@ -338,4 +338,36 @@ async fn a_misconfigured_cohort_is_a_server_error_not_a_crash() {
         .await;
     assert_eq!(status, StatusCode::INTERNAL_SERVER_ERROR);
     assert_eq!(body["error"], "the cohort's lesson \"gone\" is not loaded");
+}
+
+#[tokio::test]
+async fn teachers_see_their_roster_by_name_and_learners_cannot() {
+    let api = api(true).await;
+    let s = api.db.seed;
+    let (status, roster) = api
+        .call(
+            "GET",
+            &format!("/api/cohorts/{}/roster", s.a),
+            Some(s.karim),
+            None,
+        )
+        .await;
+    assert_eq!(status, StatusCode::OK);
+    let mut names: Vec<&str> = roster
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|p| p["display_name"].as_str().unwrap())
+        .collect();
+    names.sort();
+    assert_eq!(names, ["Amina", "Yacine"]);
+    let (status, _) = api
+        .call(
+            "GET",
+            &format!("/api/cohorts/{}/roster", s.a),
+            Some(s.amina),
+            None,
+        )
+        .await;
+    assert_eq!(status, StatusCode::FORBIDDEN);
 }

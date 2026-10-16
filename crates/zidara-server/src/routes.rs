@@ -30,6 +30,7 @@ pub fn router(state: AppState) -> Router {
         .route("/api/cohorts/{id}/learner-view", get(learner))
         .route("/api/cohorts/{id}/studio", get(studio))
         .route("/api/cohorts/{id}/xapi", get(xapi))
+        .route("/api/cohorts/{id}/roster", get(roster))
         .with_state(state)
 }
 
@@ -87,8 +88,9 @@ async fn me(State(state): State<AppState>, Auth(user): Auth) -> Result<Json<Valu
         .bind(user)
         .fetch_one(&mut *tx)
         .await?;
-    let cohorts: Vec<(Uuid, String, String, String)> = sqlx::query_as(
-        "select c.id, c.name, c.lesson_id, m.role from memberships m join cohorts c on c.id = m.cohort_id
+    let cohorts: Vec<(Uuid, Uuid, String, String, String, String)> = sqlx::query_as(
+        "select c.id, c.tenant_id, c.name, c.lesson_id, c.framework, m.role
+         from memberships m join cohorts c on c.id = m.cohort_id
          where m.user_id = $1 order by c.name",
     )
     .bind(user)
@@ -96,7 +98,9 @@ async fn me(State(state): State<AppState>, Auth(user): Auth) -> Result<Json<Valu
     .await?;
     let cohorts: Vec<Value> = cohorts
         .into_iter()
-        .map(|(id, name, lesson_id, role)| json!({ "id": id, "name": name, "lesson_id": lesson_id, "role": role }))
+        .map(|(id, tenant_id, name, lesson_id, framework, role)| {
+            json!({ "id": id, "tenant_id": tenant_id, "name": name, "lesson_id": lesson_id, "framework": framework, "role": role })
+        })
         .collect();
     Ok(Json(
         json!({ "id": user, "display_name": name, "cohorts": cohorts }),
@@ -238,6 +242,28 @@ async fn xapi(
         history
             .iter()
             .filter_map(|e| statement(e, &row.lesson_id))
+            .collect(),
+    ))
+}
+
+/// The cohort's learners with their names, for the teacher's studio.
+async fn roster(
+    State(state): State<AppState>,
+    Auth(user): Auth,
+    Path(cohort): Path<Uuid>,
+) -> Result<Json<Value>, ApiError> {
+    let mut tx = teacher(&state, user, cohort).await?;
+    let people: Vec<(Uuid, String)> = sqlx::query_as(
+        "select u.id, u.display_name from memberships m join users u on u.id = m.user_id
+         where m.cohort_id = $1 and m.role = 'learner' order by u.display_name",
+    )
+    .bind(cohort)
+    .fetch_all(&mut *tx)
+    .await?;
+    Ok(Json(
+        people
+            .into_iter()
+            .map(|(id, name)| json!({ "id": id, "display_name": name }))
             .collect(),
     ))
 }

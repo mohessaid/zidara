@@ -362,6 +362,7 @@ mod config {
         assert_eq!(config.database_url, "postgres://x");
         assert_eq!(config.addr, "127.0.0.1:8080");
         assert!(!config.demo_login);
+        assert_eq!(config.web_dir, None);
         assert_eq!(config.assessor, AssessorConfig::Rubric);
         assert_eq!(config.agent, zidara_server::seed::Seed::DEMO.agent);
     }
@@ -415,6 +416,7 @@ mod config {
             ("ZIDARA_ASSESSOR_MODEL", "claude-haiku-5-5"),
             ("ZIDARA_DEMO_LOGIN", "1"),
             ("ZIDARA_ADDR", "0.0.0.0:9000"),
+            ("ZIDARA_WEB_DIR", "/srv/zidara/web"),
             ("ZIDARA_AGENT_ID", "00000000-0000-0000-0000-000000000007"),
         ]))
         .unwrap();
@@ -427,6 +429,7 @@ mod config {
             }
         );
         assert!(config.demo_login);
+        assert_eq!(config.web_dir.as_deref(), Some("/srv/zidara/web"));
         assert_eq!(config.addr, "0.0.0.0:9000");
         assert_eq!(config.agent, uuid::Uuid::from_u128(7));
         let default_model = Config::from_env(env(&[
@@ -441,7 +444,7 @@ mod config {
         assert_eq!(
             format!("{config:?}"),
             "Config { addr: \"0.0.0.0:9000\", demo_login: true, agent: 00000000-0000-0000-0000-000000000007, \
-             assessor: Claude { base_url: \"https://api.anthropic.com\", model: \"claude-haiku-5-5\" }, .. }"
+             assessor: Claude { base_url: \"https://api.anthropic.com\", model: \"claude-haiku-5-5\" }, web_dir: Some(\"/srv/zidara/web\"), .. }"
         );
     }
 }

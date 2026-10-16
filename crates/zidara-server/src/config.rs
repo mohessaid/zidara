@@ -25,6 +25,8 @@ pub struct Config {
     pub demo_login: bool,
     pub agent: Uuid,
     pub assessor: AssessorConfig,
+    /// The built web app to serve beside the API (`ZIDARA_WEB_DIR`), if any.
+    pub web_dir: Option<String>,
 }
 
 impl Config {
@@ -54,6 +56,7 @@ impl Config {
             demo_login: var("ZIDARA_DEMO_LOGIN").as_deref() == Some("1"),
             agent,
             assessor,
+            web_dir: var("ZIDARA_WEB_DIR"),
         })
     }
 }
@@ -77,6 +80,7 @@ impl fmt::Debug for Config {
             .field("demo_login", &self.demo_login)
             .field("agent", &self.agent)
             .field("assessor", &self.assessor)
+            .field("web_dir", &self.web_dir)
             .finish_non_exhaustive()
     }
 }

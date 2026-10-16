@@ -61,7 +61,11 @@ async fn run(command: &str, config: Config) -> Result<(), Box<dyn std::error::Er
             };
             let listener = tokio::net::TcpListener::bind(&config.addr).await?;
             println!("zidara-server listening on {} ({config:?})", config.addr);
-            Ok(axum::serve(listener, app(state)).await?)
+            let router = match &config.web_dir {
+                Some(dir) => zidara_server::with_web(app(state), std::path::Path::new(dir)),
+                None => app(state),
+            };
+            Ok(axum::serve(listener, router).await?)
         }
         _ => Err("usage: zidara-server migrate | seed | serve".into()),
     }

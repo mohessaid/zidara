@@ -366,3 +366,39 @@ async fn teachers_see_their_roster_by_name_and_learners_cannot() {
         .await;
     assert_eq!(status, StatusCode::FORBIDDEN);
 }
+
+#[tokio::test]
+async fn the_server_can_serve_the_web_app_too() {
+    let dir = std::env::temp_dir().join(format!("zidara-web-{}", Uuid::now_v7()));
+    std::fs::create_dir_all(dir.join("assets")).unwrap();
+    std::fs::write(dir.join("index.html"), "<!doctype html><title>app</title>").unwrap();
+    std::fs::write(dir.join("assets/app.js"), "console.log(1)").unwrap();
+    let base = api(true).await;
+    let router = zidara_server::with_web(base.router.clone(), &dir);
+    let get = |uri: &str| {
+        let router = router.clone();
+        let request = Request::get(uri).body(Body::empty()).unwrap();
+        async move {
+            let response = router.oneshot(request).await.unwrap();
+            let status = response.status();
+            let bytes = response.into_body().collect().await.unwrap().to_bytes();
+            (status, String::from_utf8_lossy(&bytes).into_owned())
+        }
+    };
+    assert_eq!(
+        get("/").await,
+        (StatusCode::OK, "<!doctype html><title>app</title>".into())
+    );
+    assert_eq!(
+        get("/assets/app.js").await,
+        (StatusCode::OK, "console.log(1)".into())
+    );
+    // App routes the browser may reload fall back to the app.
+    assert_eq!(get("/studio").await.1, "<!doctype html><title>app</title>");
+    // The API never falls back to HTML.
+    let (status, body) = get("/api/nope").await;
+    assert_eq!(status, StatusCode::NOT_FOUND);
+    assert!(!body.contains("<!doctype"));
+    assert_eq!(get("/api/me").await.0, StatusCode::UNAUTHORIZED);
+    std::fs::remove_dir_all(dir).unwrap();
+}

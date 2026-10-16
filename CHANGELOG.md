@@ -7,6 +7,11 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- One process for the whole prototype: `ZIDARA_WEB_DIR` makes the server also serve the built
+  web app (unknown `/api/` paths stay JSON 404s). `docs/deploy.md`: build, database roles,
+  systemd, Caddy.
+- The Solve pitch video (`tools/video/pitch.mjs` → `pitch/solve/zidara-solve-pitch.mp4`, 100 s,
+  silent with English on screen): problem, the recorded demo, how it works, proof from tests.
 - `tools/load/`: k6 load and capacity tests against a release server pinned to 2 cores.
 - The one-minute demo of the real app (`web/tests/demo`, `scripts/compose-demo.py` →
   `pitch/demo/zidara-demo.mp4`).

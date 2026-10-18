@@ -7,6 +7,10 @@ from 300 learners (`make load`). A small VPS is enough.
 
 ## 1. Build (on any Linux machine with the toolchain)
 
+Needs Rust 1.98 or newer from rustup (with the `wasm32-unknown-unknown` target), Node and pnpm.
+A distribution's own `cargo` is usually older and fails with "`resolver` setting `3` is not
+valid": put `~/.cargo/bin` first in `PATH`.
+
 ```bash
 scripts/build-wasm.sh                      # the kernel for the browser
 (cd web && pnpm install --frozen-lockfile && npx vite build)
@@ -20,12 +24,21 @@ Create a database, and an owner role for migrations. The app role `zidara_app` i
 the first migration; it gets a password from you, and it never owns anything (row-level
 security depends on that).
 
+Every command needs `ZIDARA_SECRET` (at least 32 bytes, or it refuses to start); use the one
+you will put in `/etc/zidara.env`.
+
 ```bash
+export ZIDARA_SECRET=$(openssl rand -hex 32)   # keep it for /etc/zidara.env
 sudo -u postgres createdb zidara
-DATABASE_URL=postgres://postgres@/zidara ZIDARA_SECRET=x zidara-server migrate
+sudo -u postgres psql -c "alter role postgres password '<owner password>'"
+export OWNER_URL='postgres://postgres:<owner password>@127.0.0.1:5432/zidara'
+DATABASE_URL=$OWNER_URL zidara-server migrate
 sudo -u postgres psql -d zidara -c "alter role zidara_app password '<app password>'"
-DATABASE_URL=postgres://postgres@/zidara ZIDARA_SECRET=x zidara-server seed   # the demo school
+DATABASE_URL=$OWNER_URL zidara-server seed   # the demo school
 ```
+
+Rehearsed on 18 October 2026 against a fresh PostgreSQL 16 with the release build: migrate,
+seed, serve, the two `curl` checks and `pnpm smoke` all passed.
 
 ## 3. The service
 
@@ -77,6 +90,13 @@ The service worker needs HTTPS (any real domain works with Caddy's automatic cer
 ```bash
 curl -s -o /dev/null -w "%{http_code}\n" https://zidara.example.org/          # 200
 curl -s -o /dev/null -w "%{http_code}\n" https://zidara.example.org/api/me    # 401
+```
+
+Then, from any machine with the repository, the browser check (it signs in as a demo learner,
+reads, and reloads offline; it changes no data):
+
+```bash
+cd web && ZIDARA_URL=https://zidara.example.org pnpm smoke     # 3 passed
 ```
 
 ## Before real children use it

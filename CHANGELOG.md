@@ -7,13 +7,18 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- `pnpm smoke` (`web/playwright.deploy.config.ts`): checks a running deployment at `ZIDARA_URL`
+  without changing its data: the API refuses visitors, a learner signs in, and the app reloads
+  with no network.
+- `docs/cost-model.md` (cost per learner: measured capacity plus stated assumptions),
+  `docs/pilot-plan.md` (a draft for the owner), `docs/SUBMIT.md` (the owner's dated checklist).
 - One process for the whole prototype: `ZIDARA_WEB_DIR` makes the server also serve the built
   web app (unknown `/api/` paths stay JSON 404s). `docs/deploy.md`: build, database roles,
   systemd, Caddy.
 - The Solve pitch video (`tools/video/pitch.mjs` → `pitch/solve/zidara-solve-pitch.mp4`, 100 s,
   silent with English on screen): problem, the recorded demo, how it works, proof from tests.
 - `tools/load/`: k6 load and capacity tests against a release server pinned to 2 cores.
-- The one-minute demo of the real app (`web/tests/demo`, `scripts/compose-demo.py` →
+- The 26-second demo of the real app (`web/tests/demo`, `scripts/compose-demo.py` →
   `pitch/demo/zidara-demo.mp4`).
 - The lesson film "What is a fraction?" in Arabic, French and English, drawn from code
   (`tools/video`), with a transcript as its text alternative; `content/CREDITS.md`.
@@ -91,6 +96,10 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Changed
 
+- `docs/deploy.md`, after a rehearsal on a fresh database: Rust from rustup (a distribution's
+  `cargo` is too old), a real `ZIDARA_SECRET` for `migrate` and `seed` (a placeholder is
+  refused), the owner role over TCP, and the browser smoke check.
+- The docs quote the measured numbers of the final runs (they still quoted earlier ones).
 - Assessments carry what the rubric found as data (`met`), so the studio shows it in the
   teacher's language; a model's free-text rationale is shown as written.
 - Remediation a teacher undid is not assigned again by the rules: the teacher has the last word.

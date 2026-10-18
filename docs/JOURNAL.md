@@ -4,6 +4,36 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-10-18 — Rehearsing the deploy, and the evidence a judge can check
+
+**What happened.** We followed `docs/deploy.md` word for word on a fresh PostgreSQL 16 with the
+release build, and wrote the evidence Solve's criteria still lacked: a cost model, a pilot
+draft, cited impact figures and the owner's dated checklist.
+**What the rehearsal caught.** Three steps of the guide failed as written.
+- **The wrong `cargo`.** This shell found the distribution's cargo 1.75 before rustup's 1.98,
+  and it cannot read the workspace ("`resolver` setting `3` is not valid"). The guide now
+  says to use rustup's toolchain.
+- **A placeholder secret.** The guide ran `migrate` with `ZIDARA_SECRET=x`, which the server
+  refuses (32 bytes at least). The guide now generates the real secret first.
+- **A connection we never tested.** The owner's URL used the local socket, which peer
+  authentication refuses unless the command runs as the `postgres` user. The guide now uses
+  the TCP form we tested.
+**A trap for the owner.** The branch `g3-bridge` and the tag `g3-bridge` share a name, and git
+resolves a bare `g3-bridge` to the tag, an older commit. A merge with that name would have
+silently dropped two days of work. The checklist says `heads/g3-bridge`.
+**The record disagreed with itself.** The evidence pack still quoted 117 tests, 53 server
+tests and p95 30/70 ms from earlier runs; the README said 121, 57 and 16/33. Both were true
+once. The docs now quote the final runs, and the load as a range across runs.
+**What we added.** `pnpm smoke` checks any deployment without changing its data (the API
+refuses visitors, a learner signs in, the app reloads offline). It passed 3 of 3 against the
+rehearsal, and failed 3 of 3 once the server stopped.
+**Numbers.** About 0.8 MB to make the app work offline (41 files), plus 0.24 MB for a film.
+Hosting about $0.01–0.24 per learner a year; AI marking $0.06 (Haiku 5.5) to $2.25 (Opus 5.5).
+**Lesson.** A guide nobody has followed is a draft. And when two names can mean two things,
+the tool will pick one you did not mean.
+
+---
+
 ## 2026-10-16 — The whole gauntlet, start to finish
 
 **What happened.** Every gate ran in sequence on the final code, timed: lint, tests,

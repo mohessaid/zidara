@@ -38,9 +38,22 @@ test("with data saver on, the light experience starts without the game engine", 
   await expect(page.locator("canvas")).toHaveCount(1);
 });
 
+test("if the map cannot load, the learner gets the table and can try again", async ({ page }) => {
+  // The connection drops between the screen and the map: the map's code never arrives.
+  await page.route("**/assets/Quest-*.js", (route) => route.abort());
+  await signIn(page, "amina");
+  await expect(page.getByRole("table")).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: "ستظهر الخريطة" })).toBeVisible();
+  await expectAccessible(page, "map unavailable");
+  await page.unroute("**/assets/Quest-*.js");
+  await page.getByRole("button", { name: "الطريق" }).click();
+  await expect(stone(page, "F1")).toBeVisible();
+});
+
 test("offline work is kept, then syncs to the server when the network returns", async ({ page, context, browser }) => {
   await signIn(page, "amina");
   await expect(page.getByTestId("sync")).toHaveText(/كل شيء محفوظ/);
+  await expect(stone(page, "F1")).toBeVisible();
   await context.setOffline(true);
   await stone(page, "F1").click();
   await page.getByRole("button", { name: /تمرين: أجزاء من كلّ/ }).click();

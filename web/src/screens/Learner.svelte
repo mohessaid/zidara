@@ -7,14 +7,26 @@
   import { startsLight, type DeviceHints } from "../lib/device.ts";
 
   // The map (PixiJS) loads only when first shown: low-end phones and data saver start light.
-  const Quest = () => import("./Quest.svelte");
+  // If its code cannot arrive (the connection dropped after sign-in), the table takes over and
+  // the map button tries again.
   const light = startsLight(navigator as DeviceHints);
   let experience: "quest" | "grid" = $state(light ? "grid" : "quest");
+  let mapUnavailable = $state(false);
+  function loadMap() {
+    const loading = import("./Quest.svelte");
+    loading.catch(() => {
+      map = undefined;
+      experience = "grid";
+      mapUnavailable = true;
+    });
+    return loading;
+  }
   // Once loaded, the map stays mounted (see below).
-  let mapLoaded = $state(!light);
+  let map = $state(light ? undefined : loadMap());
   function showMap() {
     experience = "quest";
-    mapLoaded = true;
+    mapUnavailable = false;
+    map ??= loadMap();
   }
   let selected: string | undefined = $state();
   let now = $state(Date.now());
@@ -37,12 +49,17 @@
     <!-- The map stays mounted, and keeps running, while a panel is open. Re-creating the WebGL
          renderer on every return cost a 350-405 ms long task on the economy profile; pausing
          or slowing its ticker while hidden moved a 50-80 ms GPU upload into the first frame back. -->
-    {#if mapLoaded}
+    {#if map}
       <div hidden={selected !== undefined || experience !== "quest"}>
-        {#await Quest() then quest}
+        {#await map then quest}
           <quest.default {view} onopen={(id: string) => (selected = id)} />
+        {:catch}
+          <!-- Handled in loadMap: the table takes over. -->
         {/await}
       </div>
+    {/if}
+    {#if mapUnavailable && !selected}
+      <p role="status" class="card">{t(app.locale, "map.unavailable")}</p>
     {/if}
     {#if !selected && experience === "grid"}
       <Grid {view} onopen={(id) => (selected = id)} />

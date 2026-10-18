@@ -22,11 +22,22 @@ accessible, and one tap loads the map. It failed on the old screen and passes on
 **Numbers.** The same phone at 4× CPU throttle, the same screen, two runs: JS heap 3.1–3.3 MB
 against 5.5–5.6 MB, main-thread work 710–723 ms against 1 542–1 628 ms, script 143–144 ms
 against 517–538 ms. The map still holds 60 fps; Lighthouse is still 100 and 100.
+**A mistake, caught by the gauntlet.** The first version passed all 10 browser tests, then
+failed 3 in the full gauntlet an hour later. Loading the map on demand had opened a gap: the
+learner screen arrives, then the map's code is fetched. If the connection drops in between
+(sign in, walk out of coverage), the map never comes and the screen stays blank, with no
+message. Before, the map came in one piece with the screen. The earlier pass was luck: the
+test went offline a moment later. Now the map starts loading at once; if it fails, the table
+takes over with a message ("the map will appear when the connection returns") and the map
+button tries again. A new test blocks the map's file on purpose: it showed a blank screen on
+the old code and passes on the new. The offline test now waits for the map before going
+offline, so it tests offline work and not this race.
 **A tool in the way.** A command wrapper on this machine compresses test output, and it
 swallowed Playwright's results: the suite exited green, but we could not see which tests had
 run. We now read Playwright's JSON report instead of its console.
 **Lesson.** An architecture claim is worth one working example. Two measured runs were enough
-to say "half"; one would not have been.
+to say "half"; one would not have been. And splitting code adds a network request, and every
+network request can fail: a test that passes once has not proven a race is gone.
 
 ---
 

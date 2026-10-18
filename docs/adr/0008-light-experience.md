@@ -11,7 +11,7 @@ are the same for every experience, so only the screen changes.
 ## Decision
 A learner starts in the table experience, and the map's code (PixiJS, GSAP, 100 KB
 compressed) is not loaded or run, when the browser reports data saver (`Save-Data`) or
-`navigator.deviceMemory` of 2 GB or less. Otherwise the map starts as before. The learner can
+`navigator.deviceMemory` of 2 or less. Otherwise the map starts as before. The learner can
 switch either way; once loaded, the map stays mounted (the earlier measurement still holds).
 The offline bundle still contains the map's code: excluding it from the service worker's
 precache would save the bytes but could leave a learner without the map offline if their
@@ -23,4 +23,7 @@ first visit ended before the worker took control.
   against 517–538 ms. The map also keeps a render loop running while shown; the light
   experience has none.
 - Only Chromium reports these hints. Other browsers get the map, as before.
+- Browsers round `deviceMemory` to a power of two (MDN: "nearest", ties unspecified), so some
+  3 GB phones report 2 and start light. We accept that: a wrong guess costs one tap, while a
+  game scene on a 2 GB phone costs battery and heat. Phones reporting 4 GB or more get the map.
 - Saving the bytes too (a data-saver bundle) is a later step for the low-end experience.

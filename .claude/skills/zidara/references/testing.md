@@ -93,3 +93,13 @@ Known traps:
 - `uuid` with `v7` does not build on plain wasm32. Use it as a type only.
 - Test-only `getrandom` needs the `wasm_js` feature.
 - `proptest` needs `default-features = false, features = ["std"]` and the fixed-seed runner.
+
+## This machine
+
+- `/usr/bin/cargo` (1.75) comes before rustup's in some shells and fails with "`resolver`
+  setting `3` is not valid". Prefix commands with `PATH=$HOME/.cargo/bin:$PATH`.
+- The `rtk` wrapper compresses output and can hide Playwright's results and raw diffs. Read
+  results from `PLAYWRIGHT_JSON_OUTPUT_NAME=<file> rtk proxy npx playwright test
+  --reporter=json`; use `rtk proxy git diff` for a diff a tool will parse (`cargo mutants
+  --in-diff`).
+- Find a server to stop by its port (`ss -ltnp`), never with `pkill -f`.

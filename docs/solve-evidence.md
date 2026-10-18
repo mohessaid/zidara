@@ -20,13 +20,13 @@ live form when submitting.
 | Arabic first (right to left), French and English | `web/src/lib/i18n/strings.ts` (every key in three languages, tested); RTL browser test |
 | Accessible | axe: zero WCAG 2.x A/AA violations on every screen; Lighthouse accessibility 100 |
 | Fast on an economy phone | Lighthouse mobile performance 100; map median 60 fps with no long task at 4× CPU throttle |
-| Light on low-end phones | with data saver on or ≤ 2 GB of memory, the lesson opens without the game engine: JS heap 3.1–3.3 MB vs 5.5–5.6 MB, main-thread work 710–723 ms vs 1 542–1 628 ms on the same throttled phone (browser test; ADR 0008) |
+| Light on low-end phones | with data saver on or a phone reporting ≤ 2 GB of memory, the lesson opens without the game engine: JS heap 3.1–3.3 MB vs 5.5–5.6 MB, main-thread work 710–723 ms vs 1 542–1 628 ms on the same throttled phone (browser test; ADR 0008) |
 | Small | kernel in the browser 150 KB gzipped; first page 28 KB gzipped |
 | Runs on a small server | 300 learners in 10 classes on 2 CPU cores: p95 16–32 ms reads, 33–71 ms writes across runs; capacity about 690 requests/s (`make load`, `tools/load`) |
 | AI that augments teachers, not replaces them | the assessor agent proposes; only confident formative marks apply; summative marks are impossible for an agent (permission table); teachers accept, reject or undo (ADR 0004; browser test "an unsure answer waits for the teacher") |
 | Privacy by design for minors | PostgreSQL row-level security: learners see only their own work and name; classes never see each other (9 isolation tests; ADR 0006) |
 | Fair practice | quiz versions rotate per learner, enforced by the kernel; recovery after remediation counts (ADR 0007) |
-| Proven by tests, not trust | 123 kernel/framework tests (also run as wasm), 18 user stories, 57 server tests on real PostgreSQL, 23 web unit tests, 11 browser tests; 100% of lines and 180/180 branches; 358 mutants, every viable one caught |
+| Proven by tests, not trust | 123 kernel/framework tests (also run as wasm), 18 user stories, 57 server tests on real PostgreSQL, 23 web unit tests, 12 browser tests; 100% of lines and 180/180 branches; 358 mutants, every viable one caught |
 
 ## Question by question
 

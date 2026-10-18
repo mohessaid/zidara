@@ -16,7 +16,7 @@ Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (dea
   boundaries). A teacher switches the class's framework and every learner's path redraws from
   the same evidence.
 - **Arabic first**, right to left, with French and English. A lesson film in all three.
-- **Light on low-end phones.** With data saver on or 2 GB of memory or less, the lesson opens
+- **Light on low-end phones.** With data saver on, or a phone reporting 2 GB of memory or less, the lesson opens
   without the game engine: 40% less memory and half the main-thread work (ADR 0008).
 - **Offline-first.** After one visit the app opens and the lesson works with no network; work
   syncs later, and the phone and the server compute the same result.
@@ -38,7 +38,7 @@ Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (dea
 | User stories | 18 scenarios in plain language (`features/`) |
 | Server, on real PostgreSQL | 57 tests, including 9 isolation tests |
 | Phone = server | one golden session, identical natively, in Node (wasm) and on the server |
-| Web | 23 unit tests; 11 browser tests on the real server |
+| Web | 23 unit tests; 12 browser tests on the real server |
 | Accessibility | zero WCAG violations (axe, every screen); Lighthouse accessibility 100 |
 | Performance | Lighthouse mobile 100; map median 60 fps at 4× CPU throttle; kernel 150 KB gzipped |
 | Load (2 CPU cores, 300 learners in 10 classes) | p95 16–32 ms reads, 33–71 ms writes across runs, at 150 views/s + 50 answers/s; capacity ~690 requests/s |

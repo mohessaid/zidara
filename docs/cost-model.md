@@ -2,7 +2,7 @@
 
 Evidence for Solve's scalability and financial-viability questions. Measured numbers are
 marked **measured** and say where they come from; everything else is an **assumption**, stated
-so the owner can change it. Prices were read 18 October 2026; check them before citing.
+so the owner can change it. Model prices are Anthropic's list prices as cached on 6 October 2026; check them before citing.
 
 ## Measured
 

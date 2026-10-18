@@ -38,7 +38,8 @@ DATABASE_URL=$OWNER_URL zidara-server seed   # the demo school
 ```
 
 Rehearsed on 18 October 2026 against a fresh PostgreSQL 16 with the release build: migrate,
-seed, serve, the two `curl` checks and `pnpm smoke` all passed.
+seed, serve, the two `curl` checks and `pnpm smoke` all passed (the owner role connected over
+TCP without a password there; the password step above is the standard equivalent).
 
 ## 3. The service
 

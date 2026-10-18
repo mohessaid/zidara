@@ -7,9 +7,11 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
-- The light experience: with data saver on or 2 GB of memory or less, a learner starts in the
-  table and the map's game engine is not loaded until asked for (ADR 0008). On a throttled
-  phone: 40% less JS memory and half the main-thread work.
+- The light experience: with data saver on, or a phone reporting 2 GB of memory or less, a learner
+  starts in the table and the map's game engine is not loaded until asked for (ADR 0008). On a throttled
+  phone: 40% less JS memory and half the main-thread work. If the map's code cannot arrive
+  (the connection dropped after sign-in), the table takes over with a message and the map
+  button tries again.
 - `pnpm smoke` (`web/playwright.deploy.config.ts`): checks a running deployment at `ZIDARA_URL`
   without changing its data: the API refuses visitors, a learner signs in, and the app reloads
   with no network.
@@ -98,12 +100,6 @@ All notable changes to Zidara are recorded here. The format follows
 - Design spec, M0–M1 implementation plan, ground rules (`AGENTS.md`), decision records and
   the project journal.
 
-### Fixed
-
-- A proposal whose mark a teacher undid now reads `undone`, not `applied` or `accepted`: evidence
-  recorded from a proposal names it (`EvidenceRecorded.proposal`, omitted otherwise, so older
-  logs read unchanged).
-
 ### Changed
 
 - `docs/deploy.md`, after a rehearsal on a fresh database: Rust from rustup (a distribution's
@@ -127,3 +123,9 @@ All notable changes to Zidara are recorded here. The format follows
   "sesame"); Arabic roots and symbols still match inside words.
 - The `Framework` and `FrameworkRegistry` traits require `Send + Sync`, so a school's
   frameworks can be shared across server threads.
+
+### Fixed
+
+- A proposal whose mark a teacher undid now reads `undone`, not `applied` or `accepted`: evidence
+  recorded from a proposal names it (`EvidenceRecorded.proposal`, omitted otherwise, so older
+  logs read unchanged).

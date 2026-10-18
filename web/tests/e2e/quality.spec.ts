@@ -71,3 +71,29 @@ test("the map holds its frame rate through a level transition on an economy phon
   expect(fps).toBeGreaterThanOrEqual(55);
   expect(worstTask).toBeLessThanOrEqual(50);
 });
+
+test("the light experience costs a low-end phone less than the map", async ({ browser }) => {
+  // The same throttled phone, signed in to the same screen, once with the map and once light.
+  const measure = async (light: boolean) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    if (light) await page.addInitScript(() => Object.defineProperty(navigator, "connection", { value: { saveData: true } }));
+    const cdp = await context.newCDPSession(page);
+    await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
+    await cdp.send("Performance.enable");
+    await signIn(page, "sara");
+    await expect(light ? page.getByRole("table") : stone(page, "F1")).toBeVisible();
+    await page.waitForTimeout(3_000);
+    const { metrics } = await cdp.send("Performance.getMetrics");
+    const get = (name: string) => metrics.find((m) => m.name === name)!.value;
+    const result = { heapMB: get("JSHeapUsedSize") / 2 ** 20, taskMs: get("TaskDuration") * 1000, scriptMs: get("ScriptDuration") * 1000 };
+    await context.close();
+    return result;
+  };
+  const map = await measure(false);
+  const light = await measure(true);
+  const show = (m: typeof map) => `heap ${m.heapMB.toFixed(1)} MB, main thread ${m.taskMs.toFixed(0)} ms, script ${m.scriptMs.toFixed(0)} ms`;
+  console.log(`map: ${show(map)}; light: ${show(light)}`);
+  expect(light.heapMB).toBeLessThan(map.heapMB);
+  expect(light.taskMs).toBeLessThan(map.taskMs);
+});

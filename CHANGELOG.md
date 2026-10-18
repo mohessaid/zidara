@@ -7,6 +7,9 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- The light experience: with data saver on or 2 GB of memory or less, a learner starts in the
+  table and the map's game engine is not loaded until asked for (ADR 0008). On a throttled
+  phone: 40% less JS memory and half the main-thread work.
 - `pnpm smoke` (`web/playwright.deploy.config.ts`): checks a running deployment at `ZIDARA_URL`
   without changing its data: the API refuses visitors, a learner signs in, and the app reloads
   with no network.

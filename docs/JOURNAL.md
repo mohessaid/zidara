@@ -4,6 +4,32 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-10-18 — The light experience
+
+**What happened.** The design says low-end phones get their own experience, and until today
+that was only a claim. Now a learner whose browser reports data saver, or 2 GB of memory or
+less, starts in the table, and the map's game engine is never loaded unless they ask for it.
+Same kernel, same views, a different screen: the separation doing what it was built for.
+**The problem.** The map was imported by the learner screen, so it came with it on every
+phone. Making it load on demand risked the earlier fix (the map stays mounted, because
+re-creating it cost a 350–405 ms long task), so it loads once and then stays.
+**What we chose not to do.** We could also have saved the bytes, by leaving the map out of
+the offline bundle. But on a slow first visit the learner might sign in before the service
+worker takes control, and then the map would be missing offline. Saving bytes is a later step
+for a data-saver bundle; the offline promise comes first (ADR 0008).
+**Proof.** A browser test with data saver on: the table shows, no canvas exists, the screen is
+accessible, and one tap loads the map. It failed on the old screen and passes on the new.
+**Numbers.** The same phone at 4× CPU throttle, the same screen, two runs: JS heap 3.1–3.3 MB
+against 5.5–5.6 MB, main-thread work 710–723 ms against 1 542–1 628 ms, script 143–144 ms
+against 517–538 ms. The map still holds 60 fps; Lighthouse is still 100 and 100.
+**A tool in the way.** A command wrapper on this machine compresses test output, and it
+swallowed Playwright's results: the suite exited green, but we could not see which tests had
+run. We now read Playwright's JSON report instead of its console.
+**Lesson.** An architecture claim is worth one working example. Two measured runs were enough
+to say "half"; one would not have been.
+
+---
+
 ## 2026-10-18 — Rehearsing the deploy, and the evidence a judge can check
 
 **What happened.** We followed `docs/deploy.md` word for word on a fresh PostgreSQL 16 with the

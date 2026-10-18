@@ -25,6 +25,19 @@ test("a learner sees the path, mirrored for Arabic, with locks explained", async
   await expectAccessible(page, "grid");
 });
 
+test("with data saver on, the light experience starts without the game engine", async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, "connection", { value: { saveData: true } }));
+  await signIn(page, "amina");
+  await expect(page.getByRole("table")).toBeVisible();
+  await expect(page.getByRole("button", { name: "الجدول" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("canvas")).toHaveCount(0);
+  await expectAccessible(page, "light");
+  // The map is one tap away, and loads only then.
+  await page.getByRole("button", { name: "الطريق" }).click();
+  await expect(stone(page, "F1")).toBeVisible();
+  await expect(page.locator("canvas")).toHaveCount(1);
+});
+
 test("offline work is kept, then syncs to the server when the network returns", async ({ page, context, browser }) => {
   await signIn(page, "amina");
   await expect(page.getByTestId("sync")).toHaveText(/كل شيء محفوظ/);

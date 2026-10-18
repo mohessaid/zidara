@@ -16,6 +16,8 @@ Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (dea
   boundaries). A teacher switches the class's framework and every learner's path redraws from
   the same evidence.
 - **Arabic first**, right to left, with French and English. A lesson film in all three.
+- **Light on low-end phones.** With data saver on or 2 GB of memory or less, the lesson opens
+  without the game engine: 40% less memory and half the main-thread work (ADR 0008).
 - **Offline-first.** After one visit the app opens and the lesson works with no network; work
   syncs later, and the phone and the server compute the same result.
 - **AI that drafts, teachers who decide.** The assessor marks open answers (Claude, or a
@@ -26,19 +28,19 @@ Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (dea
 - **Fair practice.** Quiz versions rotate per learner, enforced by the kernel; recovery after
   remediation counts.
 
-## The numbers (from `make gauntlet`, 16 October 2026)
+## The numbers (from `make gauntlet`, 16 October 2026; counts updated 18 October)
 
 | Gate | Result |
 |---|---|
-| Kernel and frameworks | 121 tests, also run on wasm32 |
+| Kernel and frameworks | 123 tests, also run on wasm32 |
 | Coverage | 100% of lines and functions, 180/180 branches (kernel, frameworks, server, wasm core) |
 | Mutation testing | 358 mutants (241 core, 117 server): every viable one caught |
 | User stories | 18 scenarios in plain language (`features/`) |
 | Server, on real PostgreSQL | 57 tests, including 9 isolation tests |
 | Phone = server | one golden session, identical natively, in Node (wasm) and on the server |
-| Web | 21 unit tests; 9 browser tests on the real server |
+| Web | 23 unit tests; 11 browser tests on the real server |
 | Accessibility | zero WCAG violations (axe, every screen); Lighthouse accessibility 100 |
-| Performance | Lighthouse mobile 100; map median 60 fps at 4× CPU throttle; kernel 146 KB gzipped |
+| Performance | Lighthouse mobile 100; map median 60 fps at 4× CPU throttle; kernel 150 KB gzipped |
 | Load (2 CPU cores, 300 learners in 10 classes) | p95 16–32 ms reads, 33–71 ms writes across runs, at 150 views/s + 50 answers/s; capacity ~690 requests/s |
 
 ## Run it

@@ -37,12 +37,12 @@ Cross-cutting priorities:
 |---|---|---|
 | Alignment | Above | |
 | Potential for impact | | Who is served first, how many, in which settings |
-| Feasibility | Kanonix and Sibr show a small team shipping fast; the three-week spike plan | A dated plan to the pilot |
+| Feasibility | Kanonix and Sibr show a small team shipping fast; the prototype; a pilot draft (`pilot-plan.md`) | The owner's dates and school |
 | Innovative approach | Pedagogy as a first-class layer; N + M instead of N × M; governed agents; one Rust core everywhere | |
 | Human-centred design | The team's lived knowledge of the communities | Named partners, co-design sessions, learner and teacher quotes |
-| Scalability (finalists) | Stateless runners, one replicated database, CDN for media, every framework reused | A financial-viability model |
+| Scalability (finalists) | Stateless runners, one replicated database, CDN for media, every framework reused; cost per learner (`cost-model.md`) | Revenue side of the model |
 | Partnership potential (finalists) | | What Solve's network would unlock |
-| Technical feasibility (finalists) | | The prototype, running, with its test gauntlet |
+| Technical feasibility (finalists) | The prototype and its gauntlet (`solve-evidence.md`) | A live link |
 
 ## Our advantage
 

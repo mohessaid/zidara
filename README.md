@@ -39,7 +39,7 @@ Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (dea
 | Web | 21 unit tests; 9 browser tests on the real server |
 | Accessibility | zero WCAG violations (axe, every screen); Lighthouse accessibility 100 |
 | Performance | Lighthouse mobile 100; map median 60 fps at 4× CPU throttle; kernel 146 KB gzipped |
-| Load (2 CPU cores, 300 learners in 10 classes) | p95 16 ms reads, 33 ms writes at 150 views/s + 50 answers/s; capacity ~690 requests/s |
+| Load (2 CPU cores, 300 learners in 10 classes) | p95 16–32 ms reads, 33–71 ms writes across runs, at 150 views/s + 50 answers/s; capacity ~690 requests/s |
 
 ## Run it
 

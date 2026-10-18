@@ -14,17 +14,18 @@ live form when submitting.
 
 | Claim | Evidence |
 |---|---|
-| Two pedagogies on one kernel: mastery (decaying average, 80%) and Cambridge-style (calendar, grade boundaries) | `crates/zidara-frameworks`; 17 executable user stories in `features/` |
+| Two pedagogies on one kernel: mastery (decaying average, 80%) and Cambridge-style (calendar, grade boundaries) | `crates/zidara-frameworks`; 18 executable user stories in `features/` |
 | Switching a class's pedagogy redraws the same learner's progress, with no data lost | story `framework_switch.feature`; browser test "switching the framework redraws…" |
 | Works fully offline after one visit; offline work syncs later, and phone and server compute the same result | browser tests "offline work is kept…" and "after one visit, the app opens with no network"; golden session replayed natively, in Node (wasm) and on the server |
 | Arabic first (right to left), French and English | `web/src/lib/i18n/strings.ts` (every key in three languages, tested); RTL browser test |
 | Accessible | axe: zero WCAG 2.x A/AA violations on every screen; Lighthouse accessibility 100 |
-| Fast on an economy phone | Lighthouse mobile performance 94–100; map median 58–60 fps with no long task at 4× CPU throttle |
-| Small | kernel in the browser 147 KB gzipped; first page 28 KB gzipped |
+| Fast on an economy phone | Lighthouse mobile performance 100; map median 60 fps with no long task at 4× CPU throttle |
+| Small | kernel in the browser 146 KB gzipped; first page 28 KB gzipped |
+| Runs on a small server | 300 learners in 10 classes on 2 CPU cores: p95 16–32 ms reads, 33–71 ms writes across runs; capacity about 690 requests/s (`make load`, `tools/load`) |
 | AI that augments teachers, not replaces them | the assessor agent proposes; only confident formative marks apply; summative marks are impossible for an agent (permission table); teachers accept, reject or undo (ADR 0004; browser test "an unsure answer waits for the teacher") |
 | Privacy by design for minors | PostgreSQL row-level security: learners see only their own work and name; classes never see each other (9 isolation tests; ADR 0006) |
 | Fair practice | quiz versions rotate per learner, enforced by the kernel; recovery after remediation counts (ADR 0007) |
-| Proven by tests, not trust | 117 kernel/framework tests (also run as wasm), 53 server tests on real PostgreSQL, 21 web unit tests, 10 browser tests, 100% line and branch coverage of the core, mutation testing |
+| Proven by tests, not trust | 121 kernel/framework tests (also run as wasm), 18 user stories, 57 server tests on real PostgreSQL, 21 web unit tests, 9 browser tests; 100% of lines and 180/180 branches; 358 mutants, every viable one caught |
 
 ## Question by question
 
@@ -45,7 +46,7 @@ school's; Arabic is often an afterthought; the teaching method is not something 
 understands.
 
 **What is your solution? (200 words).** The kernel/framework/experience separation; the demo
-lesson; offline-first; the governed agent. Link the 1-minute demo video (see below).
+lesson; offline-first; the governed agent. Link the demo video (`pitch/demo/zidara-demo.mp4`, 26 s) or the pitch (`pitch/solve/zidara-solve-pitch.mp4`, 100 s).
 
 **Who does it serve? (200 words).** *Owner:* the learners and teachers you know: country, ages,
 schools, connection conditions, languages. The prototype targets 9–11-year-olds learning
@@ -60,7 +61,7 @@ numbers; link the repository or the demo.
 **Beneficiaries served now.** 0 (be honest; Solve says it doesn't change your chances).
 
 **Website/app.** Either a public demo link that stays up (decision for the owner: the existing
-Hostinger server could host it), or upload the 1-minute demo video as the proof point.
+Hostinger server could host it), or upload the pitch video (100 s) as the proof point.
 
 **Well-positioned team (300 words).** *Owner only.* Solve wants engagement with the target
 population: who you have talked to, how many, and what changed because of them. Kanonix and

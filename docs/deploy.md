@@ -2,7 +2,7 @@
 
 One Rust binary serves the API and the web app (`ZIDARA_WEB_DIR`). It needs PostgreSQL 16 and,
 optionally, an Anthropic API key for the assessor (without one, the rubric marks). Measured on
-2 CPU cores: p95 30 ms for learner views, 70 ms for answers, at 150 views/s and 50 answers/s
+2 CPU cores: p95 16–32 ms for learner views, 33–71 ms for answers (across runs), at 150 views/s and 50 answers/s
 from 300 learners (`make load`). A small VPS is enough.
 
 ## 1. Build (on any Linux machine with the toolchain)

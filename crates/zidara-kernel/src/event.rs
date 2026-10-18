@@ -40,6 +40,10 @@ pub enum EventBody {
     },
     EvidenceRecorded {
         evidence: Evidence,
+        /// The proposal this mark came from, when an agent's proposal was applied or accepted.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        #[cfg_attr(feature = "ts", ts(optional))]
+        proposal: Option<EventId>,
     },
     ActivityAssigned {
         learner: UserId,

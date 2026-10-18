@@ -20,6 +20,7 @@ fn recorded(id: u128, at: i64, bp: u16) -> zidara_kernel::event::Event {
         Actor::System,
         EventBody::EvidenceRecorded {
             evidence: evidence(1, "F1", bp),
+            proposal: None,
         },
     )
 }
@@ -93,6 +94,7 @@ fn evidence_is_found_per_learner_and_outcome() {
         Actor::System,
         EventBody::EvidenceRecorded {
             evidence: evidence(2, "F1", 5_000),
+            proposal: None,
         },
     );
     let elsewhere = event(
@@ -101,6 +103,7 @@ fn evidence_is_found_per_learner_and_outcome() {
         Actor::System,
         EventBody::EvidenceRecorded {
             evidence: evidence(1, "F2", 5_000),
+            proposal: None,
         },
     );
     let state = fold(&[recorded(1, 10, 1_000), other, elsewhere]);
@@ -302,4 +305,46 @@ fn folding_references_matches_folding_values() {
         prop_assert_eq!(fold_refs(history.iter().chain(new)), fold(&events));
         Ok(())
     });
+}
+
+#[test]
+fn undoing_a_mark_touches_only_the_proposal_it_names() {
+    let marked = |id, proposal| {
+        event(
+            id,
+            20,
+            teacher(),
+            EventBody::EvidenceRecorded {
+                evidence: evidence(1, "F2", 10_000),
+                proposal,
+            },
+        )
+    };
+    let undo = |id, target| {
+        event(
+            id,
+            30,
+            teacher(),
+            EventBody::Undone {
+                target: eid(target),
+            },
+        )
+    };
+    let state = fold(&[
+        event(
+            1,
+            10,
+            agent(),
+            EventBody::ProposalMade {
+                proposal: proposal(7, Decision::Apply),
+            },
+        ),
+        marked(2, None),
+        marked(3, Some(eid(99))),
+        undo(4, 2),
+        undo(5, 3),
+    ]);
+    assert_eq!(state.proposals[&eid(1)].1, ProposalStatus::Applied);
+    assert!(!state.proposals.contains_key(&eid(99)));
+    assert!(state.evidence.is_empty());
 }

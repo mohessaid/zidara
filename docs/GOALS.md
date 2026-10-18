@@ -41,5 +41,5 @@ Deferred minors found later:
 Deferred minors from the M1 review (fold into the goal that touches the code):
 - ~~Undoing a remediation assignment is re-assigned on the next weak attempt~~: done 16 Oct, the teacher's undo stays (story "Help the teacher removed is not given again").
 - A rejected proposal's answer can never be re-proposed: kept on purpose, the teacher decided.
-- After undoing agent evidence, its proposal still reads "applied" (G2/G4: studio view).
+- ~~After undoing agent evidence, its proposal still reads "applied"~~: done 18 Oct, the mark names its proposal and the proposal reads `undone`.
 - ~~The rubric matches substrings ("same" in "sesame")~~: done 15 Oct (Latin word starts; Arabic unchanged).

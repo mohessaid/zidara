@@ -11,7 +11,8 @@ All notable changes to Zidara are recorded here. The format follows
   without changing its data: the API refuses visitors, a learner signs in, and the app reloads
   with no network.
 - `docs/cost-model.md` (cost per learner: measured capacity plus stated assumptions),
-  `docs/pilot-plan.md` (a draft for the owner), `docs/SUBMIT.md` (the owner's dated checklist).
+  `docs/pilot-plan.md` (a draft for the owner), `docs/SUBMIT.md` (the owner's dated checklist),
+  `docs/impact-facts.md` (public figures with sources, for the owner to check and choose from).
 - One process for the whole prototype: `ZIDARA_WEB_DIR` makes the server also serve the built
   web app (unknown `/api/` paths stay JSON 404s). `docs/deploy.md`: build, database roles,
   systemd, Caddy.
@@ -93,6 +94,12 @@ All notable changes to Zidara are recorded here. The format follows
   third-party skills.
 - Design spec, M0–M1 implementation plan, ground rules (`AGENTS.md`), decision records and
   the project journal.
+
+### Fixed
+
+- A proposal whose mark a teacher undid now reads `undone`, not `applied` or `accepted`: evidence
+  recorded from a proposal names it (`EvidenceRecorded.proposal`, omitted otherwise, so older
+  logs read unchanged).
 
 ### Changed
 

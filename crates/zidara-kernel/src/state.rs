@@ -19,6 +19,8 @@ pub enum ProposalStatus {
     Queued,
     Accepted,
     Rejected,
+    /// The mark it led to was undone by a teacher.
+    Undone,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -80,21 +82,30 @@ pub fn fold_refs<'a>(events: impl IntoIterator<Item = &'a Event>) -> CohortState
         })
         .collect();
     let mut state = CohortState::default();
+    let mut unmarked = BTreeSet::new();
     for event in ordered.iter().filter(|e| undone.contains(&e.id)) {
-        if let EventBody::ActivityAssigned {
-            learner,
-            outcome,
-            activity,
-        } = &event.body
-        {
-            state
-                .dismissed
-                .insert((*learner, outcome.clone(), activity.clone()));
+        match &event.body {
+            EventBody::ActivityAssigned {
+                learner,
+                outcome,
+                activity,
+            } => {
+                state
+                    .dismissed
+                    .insert((*learner, outcome.clone(), activity.clone()));
+            }
+            EventBody::EvidenceRecorded {
+                proposal: Some(proposal),
+                ..
+            } => {
+                unmarked.insert(*proposal);
+            }
+            _ => {}
         }
     }
     for event in ordered.into_iter().filter(|e| !undone.contains(&e.id)) {
         match &event.body {
-            EventBody::EvidenceRecorded { evidence } => {
+            EventBody::EvidenceRecorded { evidence, .. } => {
                 state
                     .evidence
                     .push((event.id, event.actor.clone(), evidence.clone()));
@@ -149,6 +160,11 @@ pub fn fold_refs<'a>(events: impl IntoIterator<Item = &'a Event>) -> CohortState
             }
             EventBody::FrameworkChanged { framework } => state.framework = Some(framework.clone()),
             EventBody::QuizSubmitted { .. } | EventBody::Undone { .. } => {}
+        }
+    }
+    for proposal in unmarked {
+        if let Some(entry) = state.proposals.get_mut(&proposal) {
+            entry.1 = ProposalStatus::Undone;
         }
     }
     state

@@ -29,6 +29,13 @@ refuses visitors, a learner signs in, the app reloads offline). It passed 3 of 3
 rehearsal, and failed 3 of 3 once the server stopped.
 **Numbers.** About 0.8 MB to make the app work offline (41 files), plus 0.24 MB for a film.
 Hosting about $0.01–0.24 per learner a year; AI marking $0.06 (Haiku 5.5) to $2.25 (Opus 5.5).
+**The last known bug.** After a teacher undid an AI mark, its proposal still read "applied".
+The fold could not tell which mark came from which proposal, so the mark now names it. The
+field is left out when empty, so every stored event and the golden session read exactly as
+before. 8 of 8 new mutants caught; coverage still 100% of lines and every branch.
+**Checking the researcher.** An agent gathered the impact figures; we re-read one at its
+source (Arabic is 0.6% of web content, W3Techs, today) and it held. The owner checks the rest
+before citing any.
 **Lesson.** A guide nobody has followed is a draft. And when two names can mean two things,
 the tool will pick one you did not mean.
 

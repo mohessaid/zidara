@@ -131,6 +131,7 @@ fn locked_outcomes_are_shown_and_skipped_for_next() {
         zidara_kernel::roles::Actor::System,
         EventBody::EvidenceRecorded {
             evidence: evidence(1, "F1", 10_000),
+            proposal: None,
         },
     );
     let view = learner_view(user(1), "en", &[achieved_f1], &env).unwrap();

@@ -13,7 +13,7 @@ pub fn learner_of(body: &EventBody, known: &BTreeMap<EventId, Option<UserId>>) -
         | EventBody::AnswerSubmitted { learner, .. }
         | EventBody::ActivityAssigned { learner, .. }
         | EventBody::TeacherNotified { learner, .. } => Some(*learner),
-        EventBody::EvidenceRecorded { evidence } => Some(evidence.learner),
+        EventBody::EvidenceRecorded { evidence, .. } => Some(evidence.learner),
         EventBody::ProposalMade { proposal } => Some(proposal.learner),
         EventBody::ProposalDecided {
             proposal: target, ..

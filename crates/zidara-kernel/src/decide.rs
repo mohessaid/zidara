@@ -200,9 +200,14 @@ impl Batch<'_, '_> {
     }
 
     /// Records evidence, then runs the framework's rules for that learner and outcome.
-    fn record(&mut self, actor: Actor, evidence: Evidence) -> Result<(), KernelError> {
+    fn record(
+        &mut self,
+        actor: Actor,
+        evidence: Evidence,
+        proposal: Option<EventId>,
+    ) -> Result<(), KernelError> {
         let (learner, outcome) = (evidence.learner, evidence.outcome.clone());
-        self.push(actor, EventBody::EvidenceRecorded { evidence });
+        self.push(actor, EventBody::EvidenceRecorded { evidence, proposal });
         let state = self.state();
         let framework = current_framework(&state, self.env)?;
         let judgement = framework.judge(&state.evidence_for(learner, &outcome));
@@ -333,6 +338,7 @@ fn submit_quiz(
                 score,
                 kind: *kind,
             },
+            None,
         )?;
     }
     Ok(())
@@ -403,7 +409,7 @@ fn record_evidence(
         });
     }
     activity(b.env, &evidence.activity)?;
-    b.record(actor.clone(), evidence)
+    b.record(actor.clone(), evidence, None)
 }
 
 fn propose(
@@ -441,7 +447,7 @@ fn propose(
         assessment: assessment.clone(),
         decision,
     };
-    b.push(actor.clone(), EventBody::ProposalMade { proposal });
+    let made = b.push(actor.clone(), EventBody::ProposalMade { proposal });
     if decision == Decision::Apply {
         let evidence = Evidence {
             learner: submitted.learner,
@@ -450,7 +456,7 @@ fn propose(
             score: assessment.score,
             kind: *kind,
         };
-        b.record(actor.clone(), evidence)?;
+        b.record(actor.clone(), evidence, Some(made))?;
     }
     Ok(())
 }
@@ -478,7 +484,7 @@ fn decide_proposal(
             score: open.assessment.score,
             kind: open.kind,
         };
-        b.record(actor.clone(), evidence)?;
+        b.record(actor.clone(), evidence, Some(proposal))?;
     }
     Ok(())
 }

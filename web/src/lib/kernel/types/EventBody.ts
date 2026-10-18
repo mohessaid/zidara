@@ -9,4 +9,8 @@ import type { Proposal } from "./Proposal";
 import type { Response } from "./Response";
 import type { UserId } from "./UserId";
 
-export type EventBody = { "type": "quiz_submitted", learner: UserId, activity: ActivityId, variant: number, responses: Array<Response>, } | { "type": "answer_submitted", learner: UserId, activity: ActivityId, answer: string, } | { "type": "evidence_recorded", evidence: Evidence, } | { "type": "activity_assigned", learner: UserId, outcome: OutcomeId, activity: ActivityId, } | { "type": "teacher_notified", learner: UserId, outcome: OutcomeId, reason: NotifyReason, } | { "type": "proposal_made", proposal: Proposal, } | { "type": "proposal_decided", proposal: EventId, accept: boolean, } | { "type": "framework_changed", framework: FrameworkId, } | { "type": "undone", target: EventId, };
+export type EventBody = { "type": "quiz_submitted", learner: UserId, activity: ActivityId, variant: number, responses: Array<Response>, } | { "type": "answer_submitted", learner: UserId, activity: ActivityId, answer: string, } | { "type": "evidence_recorded", evidence: Evidence, 
+/**
+ * The proposal this mark came from, when an agent's proposal was applied or accepted.
+ */
+proposal?: EventId, } | { "type": "activity_assigned", learner: UserId, outcome: OutcomeId, activity: ActivityId, } | { "type": "teacher_notified", learner: UserId, outcome: OutcomeId, reason: NotifyReason, } | { "type": "proposal_made", proposal: Proposal, } | { "type": "proposal_decided", proposal: EventId, accept: boolean, } | { "type": "framework_changed", framework: FrameworkId, } | { "type": "undone", target: EventId, };

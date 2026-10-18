@@ -104,7 +104,7 @@ fn a_quiz_records_evidence_per_outcome_as_the_system() {
     let events = class.quiz_f2(3);
     assert!(matches!(events[0].body, EventBody::QuizSubmitted { .. }));
     assert_eq!(events[0].actor, learner(1));
-    let EventBody::EvidenceRecorded { evidence } = &events[1].body else {
+    let EventBody::EvidenceRecorded { evidence, .. } = &events[1].body else {
         panic!("{events:?}")
     };
     assert_eq!(events[1].actor, Actor::System);
@@ -360,7 +360,7 @@ fn a_confident_formative_mark_is_applied_by_the_agent() {
     );
     assert_eq!(events[1].actor, agent());
     assert!(
-        matches!(&events[1].body, EventBody::EvidenceRecorded { evidence } if evidence.score == Score::FULL)
+        matches!(&events[1].body, EventBody::EvidenceRecorded { evidence, .. } if evidence.score == Score::FULL)
     );
 }
 
@@ -390,7 +390,7 @@ fn an_unsure_mark_waits_for_the_teacher_who_accepts_it() {
     );
     assert_eq!(decided[1].actor, teacher());
     assert!(
-        matches!(&decided[1].body, EventBody::EvidenceRecorded { evidence } if evidence.score == Score::of(5_000))
+        matches!(&decided[1].body, EventBody::EvidenceRecorded { evidence, .. } if evidence.score == Score::of(5_000))
     );
     assert_eq!(
         fold(&class.log).proposals[&proposal].1,
@@ -691,7 +691,7 @@ fn answers_are_marked_against_the_version_asked() {
     };
     assert_eq!(*variant, 1);
     assert!(
-        matches!(&events[1].body, EventBody::EvidenceRecorded { evidence } if evidence.score == Score::FULL)
+        matches!(&events[1].body, EventBody::EvidenceRecorded { evidence, .. } if evidence.score == Score::FULL)
     );
     class.ok(
         &learner(1),
@@ -777,4 +777,55 @@ fn remediation_the_teacher_undid_stays_undone() {
         "{third:?}"
     );
     assert!(fold(&class.log).assignments.is_empty());
+}
+
+#[test]
+fn an_undone_mark_leaves_its_proposal_undone() {
+    let mut class = Class::new();
+    let answer = class.answer("multiply both by the same");
+    let applied = class.ok(
+        &agent(),
+        Command::ProposeAssessment {
+            answer,
+            assessment: assessment(10_000, 9_000),
+        },
+    );
+    let (proposal, evidence) = (applied[0].id, applied[1].id);
+    assert!(matches!(
+        applied[1].body,
+        EventBody::EvidenceRecorded { proposal: Some(p), .. } if p == proposal
+    ));
+    class.ok(&teacher(), Command::Undo { target: evidence });
+    assert_eq!(
+        fold(&class.log).proposals[&proposal].1,
+        ProposalStatus::Undone
+    );
+
+    // A mark the teacher accepted, then undid, reads undone too.
+    let second = class.answer("you multiply them");
+    let queued = class.ok(
+        &agent(),
+        Command::ProposeAssessment {
+            answer: second,
+            assessment: assessment(10_000, 1_000),
+        },
+    )[0]
+    .id;
+    let accepted = class.ok(
+        &teacher(),
+        Command::DecideProposal {
+            proposal: queued,
+            accept: true,
+        },
+    );
+    let recorded = accepted
+        .iter()
+        .find(|e| matches!(e.body, EventBody::EvidenceRecorded { .. }))
+        .unwrap()
+        .id;
+    class.ok(&teacher(), Command::Undo { target: recorded });
+    assert_eq!(
+        fold(&class.log).proposals[&queued].1,
+        ProposalStatus::Undone
+    );
 }

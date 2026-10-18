@@ -68,6 +68,7 @@ fn learner_bodies_name_their_learner() {
         },
         EventBody::EvidenceRecorded {
             evidence: evidence(),
+            proposal: None,
         },
         EventBody::ActivityAssigned {
             learner: user(1),
@@ -164,6 +165,7 @@ fn evidence_becomes_an_xapi_statement() {
     let s = statement(
         &event(EventBody::EvidenceRecorded {
             evidence: evidence(),
+            proposal: None,
         }),
         "equivalent-fractions",
     )

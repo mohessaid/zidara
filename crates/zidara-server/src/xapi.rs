@@ -6,7 +6,7 @@ use zidara_kernel::score::Score;
 
 /// One statement per piece of evidence; `None` for every other event.
 pub fn statement(event: &Event, lesson: &str) -> Option<Value> {
-    let EventBody::EvidenceRecorded { evidence } = &event.body else {
+    let EventBody::EvidenceRecorded { evidence, .. } = &event.body else {
         return None;
     };
     let raw = evidence.score.bp();

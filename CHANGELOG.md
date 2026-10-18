@@ -106,6 +106,8 @@ All notable changes to Zidara are recorded here. The format follows
   `cargo` is too old), a real `ZIDARA_SECRET` for `migrate` and `seed` (a placeholder is
   refused), the owner role over TCP, and the browser smoke check.
 - The docs quote the measured numbers of the final runs (they still quoted earlier ones).
+- The pitch video, re-rendered: the kernel is 150 KB, 95% of pages within 32 ms (it said 30, which one
+  load run exceeded), and the light grid for low-end phones.
 - Assessments carry what the rubric found as data (`met`), so the studio shows it in the
   teacher's language; a model's free-text rationale is shown as written.
 - Remediation a teacher undid is not assigned again by the rules: the teacher has the last word.

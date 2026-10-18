@@ -28,13 +28,13 @@ Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (dea
 - **Fair practice.** Quiz versions rotate per learner, enforced by the kernel; recovery after
   remediation counts.
 
-## The numbers (from `make gauntlet`, 16 October 2026; counts updated 18 October)
+## The numbers (from `make gauntlet`, 18 October 2026)
 
 | Gate | Result |
 |---|---|
 | Kernel and frameworks | 123 tests, also run on wasm32 |
 | Coverage | 100% of lines and functions, 180/180 branches (kernel, frameworks, server, wasm core) |
-| Mutation testing | 358 mutants (241 core, 117 server): every viable one caught |
+| Mutation testing | 360 mutants (243 core, 117 server): every viable one caught |
 | User stories | 18 scenarios in plain language (`features/`) |
 | Server, on real PostgreSQL | 57 tests, including 9 isolation tests |
 | Phone = server | one golden session, identical natively, in Node (wasm) and on the server |

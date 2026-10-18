@@ -35,6 +35,10 @@ offline, so it tests offline work and not this race.
 **A tool in the way.** A command wrapper on this machine compresses test output, and it
 swallowed Playwright's results: the suite exited green, but we could not see which tests had
 run. We now read Playwright's JSON report instead of its console.
+**The gauntlet, again.** After the fix, every gate ran in order on the final code: 123 core
+tests (and on wasm32), 18 stories, 57 server tests, 23 web unit tests, 12 browser tests, 100%
+of lines and 180/180 branches, 360 mutants (243 core, 117 server) with none missed, Lighthouse
+100/100, the map at 60 fps.
 **Lesson.** An architecture claim is worth one working example. Two measured runs were enough
 to say "half"; one would not have been. And splitting code adds a network request, and every
 network request can fail: a test that passes once has not proven a race is gone.

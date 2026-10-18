@@ -26,7 +26,7 @@ live form when submitting.
 | AI that augments teachers, not replaces them | the assessor agent proposes; only confident formative marks apply; summative marks are impossible for an agent (permission table); teachers accept, reject or undo (ADR 0004; browser test "an unsure answer waits for the teacher") |
 | Privacy by design for minors | PostgreSQL row-level security: learners see only their own work and name; classes never see each other (9 isolation tests; ADR 0006) |
 | Fair practice | quiz versions rotate per learner, enforced by the kernel; recovery after remediation counts (ADR 0007) |
-| Proven by tests, not trust | 123 kernel/framework tests (also run as wasm), 18 user stories, 57 server tests on real PostgreSQL, 23 web unit tests, 12 browser tests; 100% of lines and 180/180 branches; 358 mutants, every viable one caught |
+| Proven by tests, not trust | 123 kernel/framework tests (also run as wasm), 18 user stories, 57 server tests on real PostgreSQL, 23 web unit tests, 12 browser tests; 100% of lines and 180/180 branches; 360 mutants, every viable one caught |
 
 ## Question by question
 

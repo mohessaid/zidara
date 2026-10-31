@@ -14,6 +14,10 @@ export async function expectAccessible(page: Page, screen: string) {
   expect(results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`), screen).toEqual([]);
 }
 
+/** Under Cambridge-style, the scheme of work opens F3 in the third week of term (19 October
+ * 2026). Browser tests use the real clock, so they state the rule for any date. */
+export const F3_OPENS = Date.UTC(2026, 9, 19);
+
 export const stone = (page: Page, outcome: string) => page.locator(`[data-outcome="${outcome}"]`);
 
 /** The right answers to each version of quiz-f1: the option to pick, and the fraction to type. */

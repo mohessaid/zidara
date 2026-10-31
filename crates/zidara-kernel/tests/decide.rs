@@ -3,7 +3,7 @@ mod support;
 use wasm_bindgen_test::wasm_bindgen_test as test;
 
 use support::*;
-use zidara_kernel::activity::Response;
+use zidara_kernel::activity::{ActivityKind, Response};
 use zidara_kernel::decide::{Command, Envelope, KernelError, decide};
 use zidara_kernel::event::{Event, EventBody};
 use zidara_kernel::evidence::EvidenceKind;
@@ -828,4 +828,51 @@ fn an_undone_mark_leaves_its_proposal_undone() {
         fold(&class.log).proposals[&queued].1,
         ProposalStatus::Undone
     );
+}
+
+#[test]
+fn the_rubric_marks_each_open_answer_that_has_no_proposal_yet() {
+    let mut class = Class::new();
+    let first = class.answer("multiply both by the same number");
+    let second = class.answer("I add one");
+    // Answers to other kinds of activity, and answers already proposed, are not marked again.
+    class.quiz_f2(3);
+    class.ok(
+        &agent(),
+        Command::ProposeAssessment {
+            answer: first,
+            assessment: assessment(10_000, 9_000),
+        },
+    );
+    let marks = zidara_kernel::governance::rubric_marks(&class.log, &class.lesson);
+    assert_eq!(marks.len(), 1);
+    assert_eq!(marks[0].0, second);
+    let ActivityKind::OpenResponse { rubric, .. } = &class
+        .lesson
+        .activity(&ActivityId::new("explain-f2"))
+        .unwrap()
+        .kind
+    else {
+        panic!("explain-f2 is an open response");
+    };
+    assert_eq!(
+        marks[0].1,
+        zidara_kernel::governance::assess(rubric, "I add one")
+    );
+    // Answers to an activity the lesson does not have, or to one that is not an open
+    // response, are skipped, not marked.
+    let stray = |id, activity: &str| {
+        event(
+            id,
+            5_000,
+            learner(1),
+            EventBody::AnswerSubmitted {
+                learner: user(1),
+                activity: ActivityId::new(activity),
+                answer: "anything".into(),
+            },
+        )
+    };
+    let log = vec![stray(900, "gone"), stray(901, "quiz-f1")];
+    assert!(zidara_kernel::governance::rubric_marks(&log, &class.lesson).is_empty());
 }

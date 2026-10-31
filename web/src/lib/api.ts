@@ -7,6 +7,7 @@ import type { LessonPack } from "./kernel/types/LessonPack.ts";
 import type { StudioView } from "./kernel/types/StudioView.ts";
 import type { CohortMembership, Store } from "./store.ts";
 import type { SyncApi } from "./sync.ts";
+import { apiFetch } from "./transport.ts";
 
 export type Me = { id: string; display_name: string; cohorts: (CohortMembership & { tenant_id: string; framework: string })[] };
 export type Person = { id: string; display_name: string };
@@ -25,11 +26,11 @@ const PAGE = 500;
 export class Api implements SyncApi {
   constructor(
     readonly token: string,
-    private readonly fetcher: typeof fetch = (...args) => fetch(...args),
+    private readonly fetcher: typeof fetch = apiFetch,
   ) {}
 
   /** Demo sign-in by user id (the server allows it only when ZIDARA_DEMO_LOGIN=1). */
-  static async signIn(user: string, fetcher: typeof fetch = (...args) => fetch(...args)): Promise<Api> {
+  static async signIn(user: string, fetcher: typeof fetch = apiFetch): Promise<Api> {
     const { token } = await request<{ token: string }>(fetcher, "POST", "/api/login", undefined, { user_id: user });
     return new Api(token, fetcher);
   }

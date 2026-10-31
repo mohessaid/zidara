@@ -31,3 +31,4 @@ pitch/film/snapshots/
 !web/public/media/*.mp4
 !pitch/demo/*.mp4
 !pitch/solve/*.mp4
+dist-demo/

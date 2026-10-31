@@ -2,6 +2,7 @@
   import { app } from "../lib/app.svelte.ts";
   import { DEMO_PEOPLE } from "../lib/demo.ts";
   import { t } from "../lib/i18n/i18n.ts";
+  import { DEMO } from "../lib/transport.ts";
   import LanguagePicker from "../components/LanguagePicker.svelte";
 
   let busy = $state(false);
@@ -24,6 +25,7 @@
 
 <main>
   <div class="row"><h1>{t(app.locale, "signin.title")}</h1><span class="spacer"></span><LanguagePicker /></div>
+  {#if DEMO}<p class="card notice" data-testid="demo-notice">{t(app.locale, "demo.notice")}</p>{/if}
   {#if app.error}<p role="alert" class="state-needs_support">{app.error}</p>{/if}
   {#each groups as group (group.key)}
     <h2>{t(app.locale, group.key)}</h2>
@@ -44,6 +46,7 @@
 
 <style>
   .spacer { flex: 1; }
+  .notice { border-inline-start: 4px solid var(--in-progress); }
   .people { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
   .people button { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 1rem; }
   .avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--in-progress); color: #fff; display: grid; place-items: center; font-size: 24px; font-weight: 700; }

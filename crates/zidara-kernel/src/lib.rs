@@ -20,3 +20,4 @@ pub mod rules;
 pub mod score;
 pub mod state;
 pub mod view;
+pub mod visibility;

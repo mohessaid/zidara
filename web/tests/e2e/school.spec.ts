@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { expectAccessible, passQuizF1, signIn, stone } from "./helpers.ts";
+import { expectAccessible, F3_OPENS, passQuizF1, signIn, stone } from "./helpers.ts";
 
 test("sign-in is in Arabic, right to left, and accessible", async ({ page }) => {
   await page.goto("/");
@@ -170,6 +170,10 @@ test("switching the framework redraws the same learner's path", async ({ page, b
   // Same evidence, another pedagogy: practice no longer counts as mastery, and the scheme of
   // work, not mastery, opens outcomes: F3 waits for its week (the term began on 5 October).
   await expect(stone(page, "F1")).toHaveAttribute("data-state", "in_progress", { timeout: 15_000 });
-  await expect(stone(page, "F3")).toHaveAttribute("data-state", "locked");
-  await expect(stone(page, "F3")).toContainText("تُفتح يوم");
+  if (Date.now() < F3_OPENS) {
+    await expect(stone(page, "F3")).toHaveAttribute("data-state", "locked");
+    await expect(stone(page, "F3")).toContainText("تُفتح يوم");
+  } else {
+    await expect(stone(page, "F3")).toHaveAttribute("data-state", "not_started");
+  }
 });

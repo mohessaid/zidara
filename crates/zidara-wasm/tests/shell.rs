@@ -41,6 +41,13 @@ fn the_shell_forwards_to_the_kernel() {
         1
     );
     assert!(shell.next_variant("x", "quiz-f1").is_err());
+    assert!(
+        shell
+            .visible_events("00000000-0000-0000-0000-0000001ea001", "learner")
+            .unwrap()
+            .contains("quiz_submitted")
+    );
+    assert_eq!(shell.rubric_marks(), "[]");
     let log = shell.events();
     shell.load(&log).unwrap();
     assert_eq!(shell.events(), log);
@@ -54,4 +61,5 @@ fn errors_are_thrown_not_panicked() {
     assert!(shell.run("{", "{}").is_err());
     assert!(shell.learner_view("x", "en", NOW).is_err());
     assert!(shell.studio_view("{", "en", NOW).is_err());
+    assert!(shell.visible_events("x", "learner").is_err());
 }

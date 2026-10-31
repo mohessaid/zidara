@@ -254,3 +254,43 @@ fn the_phone_asks_the_kernel_which_version_is_due() {
         json!({ "status": "refused", "error": { "type": "wrong_variant", "expected": 1 } })
     );
 }
+
+#[test]
+fn a_shell_without_a_database_shows_each_person_what_the_server_would() {
+    let mut core = core();
+    core.run(&learner(), &quiz_f1(1, 2)).unwrap();
+    let yacine = "00000000-0000-0000-0000-0000001ea002";
+    let all = parse(&core.events()).as_array().unwrap().len();
+    let mine = parse(&core.visible_events(AMINA, "learner").unwrap());
+    assert_eq!(mine.as_array().unwrap().len(), all);
+    assert_eq!(
+        parse(&core.visible_events(yacine, "learner").unwrap()),
+        json!([])
+    );
+    let karims = parse(&core.visible_events(KARIM, "teacher").unwrap());
+    assert_eq!(karims.as_array().unwrap().len(), all);
+    assert!(
+        core.visible_events("not-a-user", "learner")
+            .unwrap_err()
+            .starts_with("user:")
+    );
+    assert!(
+        core.visible_events(AMINA, "head")
+            .unwrap_err()
+            .starts_with("role:")
+    );
+}
+
+#[test]
+fn the_rubric_marks_open_answers_awaiting_a_proposal() {
+    let mut core = core();
+    assert_eq!(parse(&core.rubric_marks()), json!([]));
+    let answer = json!({ "id": "00000000-0000-0000-0000-0000000000a1", "at": NOW, "command": {
+        "type": "submit_answer", "activity": "explain-f2", "answer": "multiply the top and bottom by the same number" } });
+    let result = parse(&core.run(&learner(), &answer.to_string()).unwrap());
+    let answer_id = result["events"][0]["id"].clone();
+    let marks = parse(&core.rubric_marks());
+    assert_eq!(marks.as_array().unwrap().len(), 1);
+    assert_eq!(marks[0]["answer"], answer_id);
+    assert_eq!(marks[0]["assessment"]["score"], 10_000);
+}

@@ -9,11 +9,12 @@ use zidara_frameworks::{Registry, demo_registry};
 use zidara_kernel::decide::{Env, Envelope, KernelError, decide, next_variant};
 use zidara_kernel::event::Event;
 use zidara_kernel::framework::FrameworkRegistry;
-use zidara_kernel::governance::Policy;
+use zidara_kernel::governance::{Assessment, Policy, rubric_marks};
 use zidara_kernel::ids::{ActivityId, CohortId, EventId, FrameworkId, IdGen, TenantId, UserId};
 use zidara_kernel::lesson::Lesson;
-use zidara_kernel::roles::Actor;
+use zidara_kernel::roles::{Actor, Role};
 use zidara_kernel::view::{learner_view, studio_view};
+use zidara_kernel::visibility::visible_to;
 
 #[derive(Deserialize)]
 struct Setup {
@@ -21,6 +22,12 @@ struct Setup {
     framework: FrameworkId,
     tenant: Uuid,
     cohort: Uuid,
+}
+
+#[derive(Serialize)]
+struct Mark {
+    answer: EventId,
+    assessment: Assessment,
 }
 
 #[derive(Serialize)]
@@ -117,6 +124,23 @@ impl Core {
             }
             Err(error) => Ok(to_json(&RunResult::Refused { error })),
         }
+    }
+
+    /// The log as `user` in `role` may read it (what the server's database would return).
+    pub fn visible_events(&self, user: &str, role: &str) -> Result<String, String> {
+        let user = Uuid::parse_str(user).map_err(|e| format!("user: {e}"))?;
+        let role: Role = serde_json::from_value(serde_json::Value::String(role.into()))
+            .map_err(|e| format!("role: {e}"))?;
+        Ok(to_json(&visible_to(&self.log, UserId(user), role)))
+    }
+
+    /// The rubric's mark for each open answer with no proposal yet: `[{ answer, assessment }]`.
+    pub fn rubric_marks(&self) -> String {
+        let marks: Vec<Mark> = rubric_marks(&self.log, &self.lesson)
+            .into_iter()
+            .map(|(answer, assessment)| Mark { answer, assessment })
+            .collect();
+        to_json(&marks)
     }
 
     /// The version of a quiz the learner must be shown next; the kernel refuses any other.

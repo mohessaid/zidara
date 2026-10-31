@@ -34,6 +34,20 @@ impl Shell {
         self.core.run(actor, envelope).map_err(|e| JsError::new(&e))
     }
 
+    /// The log as `user` in `role` may read it.
+    #[wasm_bindgen(js_name = visibleEvents)]
+    pub fn visible_events(&self, user: &str, role: &str) -> Result<String, JsError> {
+        self.core
+            .visible_events(user, role)
+            .map_err(|e| JsError::new(&e))
+    }
+
+    /// `[{ answer, assessment }]`: the rubric's mark for each open answer awaiting one.
+    #[wasm_bindgen(js_name = rubricMarks)]
+    pub fn rubric_marks(&self) -> String {
+        self.core.rubric_marks()
+    }
+
     /// The version of a quiz due for `user` (show that one; the kernel refuses others).
     #[wasm_bindgen(js_name = nextVariant)]
     pub fn next_variant(&self, user: &str, activity: &str) -> Result<u32, JsError> {

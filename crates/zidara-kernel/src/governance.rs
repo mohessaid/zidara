@@ -2,9 +2,13 @@
 
 use serde::{Deserialize, Serialize};
 
+use crate::activity::ActivityKind;
+use crate::event::Event;
 use crate::evidence::EvidenceKind;
 use crate::ids::{ActivityId, EventId, OutcomeId, UserId};
+use crate::lesson::Lesson;
 use crate::score::Score;
+use crate::state::fold;
 
 /// One thing a good answer mentions; any of the terms counts.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -50,6 +54,25 @@ pub const CLEAR: Score = Score::of(9_000);
 pub const MIXED: Score = Score::of(6_000);
 /// Too few words to judge.
 pub const TOO_SHORT: Score = Score::of(4_000);
+
+/// The rubric's mark for each open answer in `events` that has no proposal yet: the marking
+/// pass of an assessment agent with no model.
+pub fn rubric_marks(events: &[Event], lesson: &Lesson) -> Vec<(EventId, Assessment)> {
+    let state = fold(events);
+    state
+        .answers
+        .iter()
+        .filter(|(id, _)| !state.has_proposal_for(**id))
+        .filter_map(
+            |(id, answer)| match &lesson.activity(&answer.activity)?.kind {
+                ActivityKind::OpenResponse { rubric, .. } => {
+                    Some((*id, assess(rubric, &answer.text)))
+                }
+                _ => None,
+            },
+        )
+        .collect()
+}
 
 /// Deterministic first-pass marking against a rubric. Used offline, in tests, and as the
 /// fallback when no model is configured.

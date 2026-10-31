@@ -47,6 +47,8 @@ web: bridge
 	cd web && npx svelte-check --tsconfig ./tsconfig.json --fail-on-warnings
 	cd web && npx vitest run
 	cd web && npx vite build
+	# The real build carries none of the demo school (ADR 0009).
+	! grep -rl zidara.demo-school web/dist/assets
 
 # The whole story in a browser, against the real server on a fresh database. Stops the database after.
 e2e: web

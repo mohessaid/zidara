@@ -55,3 +55,15 @@ test("the whole school story runs in one browser, with no server", async ({ page
   // No call reached a server: every API path was answered inside the page.
   expect(api).toEqual([]);
 });
+
+test("after one visit, the demo opens and works with no network", async ({ page, context }) => {
+  await signIn(page, "yacine");
+  await expect(stone(page, "F1")).toBeVisible();
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await context.setOffline(true);
+  await page.reload();
+  await expect(stone(page, "F1")).toBeVisible();
+  await stone(page, "F1").click();
+  await passQuizF1(page);
+  await expect(page.getByRole("status").filter({ hasText: "أحسنت المحاولة" })).toBeVisible();
+});

@@ -38,9 +38,9 @@ Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (dea
 | User stories | 18 scenarios in plain language (`features/`) |
 | Server, on real PostgreSQL | 57 tests, including 9 isolation tests |
 | Phone = server | one golden session, identical natively, in Node (wasm) and on the server |
-| Web | 23 unit tests; 12 browser tests on the real server |
+| Web | 28 unit tests; 12 browser tests on the real server, 1 on the browser-only demo |
 | Accessibility | zero WCAG violations (axe, every screen); Lighthouse accessibility 100 |
-| Performance | Lighthouse mobile 100; map median 60 fps at 4× CPU throttle; kernel 150 KB gzipped |
+| Performance | Lighthouse mobile 100; map median 60 fps at 4× CPU throttle; kernel 164 KB gzipped |
 | Load (2 CPU cores, 300 learners in 10 classes) | p95 16–32 ms reads, 33–71 ms writes across runs, at 150 views/s + 50 answers/s; capacity ~690 requests/s |
 
 ## Run it
@@ -51,7 +51,7 @@ cd web && pnpm install && npx vite   # the app on :5173, proxied to the server
 make gauntlet               # every proof (Docker, Node, k6 and the Rust nightly needed)
 ```
 
-Deploying: `docs/deploy.md` (one binary serves the API and the app).
+Deploying: `docs/deploy.md`. One binary serves the API and the app. A demo build (`pnpm build:demo`) runs the whole school in the browser, as static files.
 
 ## What is here
 

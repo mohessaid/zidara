@@ -7,6 +7,12 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- The demo school in the browser (ADR 0009): `pnpm build:demo` builds the app with the school
+  inside the page, as static files any host can serve; `make demo` (and `ZIDARA_URL=… pnpm
+  demo` for a published link) runs the whole story with no server. The sign-in page says what
+  the demo does not show, in three languages.
+- `visibility::visible_to` and `governance::rubric_marks` in the kernel, exposed to the browser
+  (`visibleEvents`, `rubricMarks`); the server's `learner_of` now comes from the kernel.
 - The light experience: with data saver on, or a phone reporting 2 GB of memory or less, a learner
   starts in the table and the map's game engine is not loaded until asked for (ADR 0008). On a throttled
   phone: 40% less JS memory and half the main-thread work. If the map's code cannot arrive
@@ -128,6 +134,10 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Fixed
 
+- Browser tests no longer assume a date: under Cambridge-style, F3 opened on 19 October, and
+  the test that expected it locked would have failed from then on.
+- The Lighthouse runner starts Chromium without its sandbox, as Playwright does: AppArmor on
+  the updated kernel stopped the sandbox from starting.
 - A proposal whose mark a teacher undid now reads `undone`, not `applied` or `accepted`: evidence
   recorded from a proposal names it (`EvidenceRecorded.proposal`, omitted otherwise, so older
   logs read unchanged).

@@ -8,9 +8,9 @@ WASM_RUNNER := CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUNNER=wasm-bindgen-test-runn
 # crates/zidara-wasm/tests/shell.rs under `make wasm`.
 COVERAGE_SCOPE := --ignore-filename-regex 'zidara-acceptance|tests/|zidara-server/src/main.rs|zidara-wasm/src/shell.rs'
 
-.PHONY: gauntlet lint test acceptance wasm targets types bridge web e2e lighthouse load coverage mutants clean-containers db-up db-down serve
+.PHONY: gauntlet lint test acceptance wasm targets types bridge web e2e demo lighthouse load coverage mutants clean-containers db-up db-down serve
 
-gauntlet: lint test acceptance wasm targets types bridge web e2e lighthouse coverage mutants
+gauntlet: lint test acceptance wasm targets types bridge web e2e demo lighthouse coverage mutants
 
 lint:
 	cargo fmt --all --check
@@ -51,6 +51,11 @@ web: bridge
 # The whole story in a browser, against the real server on a fresh database. Stops the database after.
 e2e: web
 	cd web && npx playwright test; status=$$?; docker compose stop db > /dev/null; exit $$status
+
+# The demo build: the whole school in the browser, as static files (web/dist-demo). One story,
+# from a learner's work to the teacher's decision, with no request leaving the page.
+demo: web
+	cd web && npx playwright test -c playwright.static.config.ts
 
 # Lighthouse, mobile profile: performance >= 90, accessibility = 100.
 lighthouse: web

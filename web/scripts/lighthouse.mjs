@@ -6,7 +6,9 @@ import lighthouse from "lighthouse";
 import { launch } from "chrome-launcher";
 
 const url = process.argv[2] ?? "http://127.0.0.1:4173/";
-const chrome = await launch({ chromePath: chromium.executablePath(), chromeFlags: ["--headless=new", "--use-angle=gl", "--ignore-gpu-blocklist"] });
+// --no-sandbox, as Playwright launches its Chromium: Ubuntu's AppArmor rules (kernel 6.8.0-147)
+// stop the sandbox from starting. The page is our own build on localhost.
+const chrome = await launch({ chromePath: chromium.executablePath(), chromeFlags: ["--headless=new", "--no-sandbox", "--use-angle=gl", "--ignore-gpu-blocklist"] });
 try {
   const result = await lighthouse(url, { port: chrome.port, onlyCategories: ["performance", "accessibility"], formFactor: "mobile", output: "json" });
   const { categories, audits } = result.lhr;

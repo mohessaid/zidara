@@ -16,6 +16,27 @@ re-dated (submit 4 November, two days spare). Local `main` now holds the work. T
 shared with busy projects, so we cleared 32 GB of our own rebuildable build output first.
 **Lesson.** A date read once is a fact about that day. Re-read the source before planning on it.
 
+**The demo school.** With four more days, the most useful thing to build was a way for judges
+to try Zidara without a server. The server does three things on top of the kernel: it runs
+commands as the signed-in person, shows each person only what they may read, and lets the
+agent mark answers. All three are pure rules, so the two the browser lacked (visibility and
+rubric marking) moved into the kernel, and the demo uses them through the same wasm as the
+phone. The app does not know: the demo answers its `fetch` with the server's paths and codes.
+The real build was checked to carry none of it.
+**Two time bombs and a sandbox.** The demo's test expected F3 to be locked under
+Cambridge-style; F3 opened on 19 October, so the same check in the main browser suite had been
+failing silently since then (no one had run it). Both now state the rule for any date. The
+Lighthouse runner stopped starting Chrome: the machine's kernel was updated today and AppArmor
+now blocks Chromium's sandbox, so it runs without one, as Playwright already does.
+**A measurement we did not trust.** The frame-rate test first gave 48.6 fps, with the machine at
+load 15 on 8 cores from other projects; the light-experience numbers in the same run had slowed
+by the same factor. We waited: at load 3.5 it measured 60 fps, three runs out of three.
+**Numbers.** Lighthouse 100/100 for both builds. The browser kernel grew from 150 to 164 KB
+compressed (the rubric marker). 7 of 7 viable new mutants caught. 32 GB of our own build output
+cleared at the start.
+**Lesson.** Tests that read the clock expire. And a slow number on a shared machine is a fact
+about the machine until a quiet run says otherwise.
+
 ---
 
 ## 2026-10-18 — The light experience

@@ -10,7 +10,8 @@
     "check": "svelte-check --tsconfig ./tsconfig.json --fail-on-warnings",
     "test": "vitest run",
     "e2e": "playwright test",
-    "smoke": "playwright test -c playwright.deploy.config.ts"
+    "smoke": "playwright test -c playwright.deploy.config.ts",
+    "demo": "playwright test -c playwright.static.config.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",

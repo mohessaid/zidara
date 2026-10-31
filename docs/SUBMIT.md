@@ -10,7 +10,7 @@ side is ready.
 | 31 Oct | **Push the code to a repository the judges can open** (there is no remote yet; local `main` is now up to date) | the evidence pack links to the code | `gh repo create` then `git push -u origin main` |
 | 31 Oct | **Write to two or three schools or teachers** for a pilot letter or a quote, even one line by email | a named partner is the biggest gap in the application | `docs/pilot-plan.md` stage 0 |
 | 1 Nov | **Name checks**: trademarks, the domain, the app stores, meanings in other languages | a forced rename after submission costs the video and the text | `docs/naming.md` (research findings added there) |
-| 1 Nov | **Demo link: yes or no**, and where (see below) | a link lets judges try it; without it, the video is the proof | `docs/deploy.md` |
+| 1 Nov | **Demo link: yes or no**, and where. The demo build needs no server: it is static files on a free host (Cloudflare Pages, Netlify), at the root of a domain | a link lets judges try it; without it, the video is the proof | `docs/deploy.md`, "The demo link" |
 | 2 Nov | **Voice**: record your own narration, or keep the videos captioned | the pitch and lesson films are silent today | `tools/video` |
 | 2 Nov | **AI marking model**: Opus 5.5 (default, about $2.25 per learner a year) or Haiku 5.5 (about $0.06) | sets cost and accuracy; the policy keeps both safe | `docs/cost-model.md`, `ZIDARA_ASSESSOR_MODEL` |
 | 3 Nov | **Write the application in your own words**: problem, who it serves, your advantage, team, why Solve, business model | Solve reads for the applicant's own voice; you sign that nothing is misrepresented | `docs/solve-evidence.md`, `docs/impact-facts.md`, `docs/cost-model.md` |
@@ -23,5 +23,6 @@ side is ready.
 - Every number in the application should be one from `docs/solve-evidence.md`, which says
   where it is proven. The costs in `docs/cost-model.md` mix measurements and assumptions; say
   which is which.
-- The demo sign-in lets anyone act as anyone. If a link is public, say it is a demo with
-  invented learners.
+- The demo link runs in the visitor's browser with invented people. It shows the pedagogy and the
+  teacher's decisions; it does not prove the server's isolation, sync between devices or AI
+  marking. Cite the tests in `docs/solve-evidence.md` for those.

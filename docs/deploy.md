@@ -1,5 +1,11 @@
 # Deploying the prototype
 
+There are two ways to put Zidara online.
+
+- **The demo link (static, free):** the whole school runs in each visitor's browser. Any
+  static host works. See "The demo link" at the end.
+- **The real server:** below. It needs a VPS with PostgreSQL.
+
 One Rust binary serves the API and the web app (`ZIDARA_WEB_DIR`). It needs PostgreSQL 16 and,
 optionally, an Anthropic API key for the assessor (without one, the rubric marks). Measured on
 2 CPU cores: p95 16–32 ms for learner views, 33–71 ms for answers (across runs), at 150 views/s and 50 answers/s
@@ -104,3 +110,23 @@ cd web && ZIDARA_URL=https://zidara.example.org pnpm smoke     # 3 passed
 
 The demo sign-in lets anyone act as anyone; it is for showing the prototype only. Real use
 needs OIDC sign-in, a privacy review, and the data-protection rules of the country of use.
+
+## The demo link
+
+```bash
+scripts/build-wasm.sh
+(cd web && pnpm install --frozen-lockfile && pnpm build:demo)   # web/dist-demo
+```
+
+Serve `web/dist-demo` at the root of a domain with HTTPS. The service worker and the app
+expect to live at `/`, so use a host that serves a site at its root: Cloudflare Pages or
+Workers static assets, Netlify, or a GitHub Pages user site with a custom domain. A GitHub
+Pages project site lives under `/<repo>/` and would need the app rebuilt with that base path.
+The app has one page, so no routing rules are needed.
+
+Then run the demo's own story against it (the data stays in the test browser):
+
+```bash
+cd web && ZIDARA_URL=https://demo.example.org pnpm demo     # 1 passed
+```
+

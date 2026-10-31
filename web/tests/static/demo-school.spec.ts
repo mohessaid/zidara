@@ -52,5 +52,6 @@ test("the whole school story runs in one browser, with no server", async ({ page
   await signIn(page, "sara");
   await expect(stone(page, "F1")).toHaveAttribute("data-state", "not_started");
 
-  expect(api.filter((url) => !url.startsWith("http://127.0.0.1:4175/"))).toEqual([]);
+  // No call reached a server: every API path was answered inside the page.
+  expect(api).toEqual([]);
 });

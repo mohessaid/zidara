@@ -103,3 +103,8 @@ Known traps:
   --reporter=json`; use `rtk proxy git diff` for a diff a tool will parse (`cargo mutants
   --in-diff`).
 - Find a server to stop by its port (`ss -ltnp`), never with `pkill -f`.
+- Since kernel 6.8.0-147, AppArmor stops Chromium's sandbox when launched directly
+  (chrome-launcher); pass `--no-sandbox` as Playwright does (`web/scripts/lighthouse.mjs`).
+- Other projects share this machine. Run the gauntlet with `nice`, and re-measure the frame
+  rate at low load (`/proc/loadavg`) before believing a drop.
+- Browser tests use the real clock: never assert a calendar lock that a date will undo.

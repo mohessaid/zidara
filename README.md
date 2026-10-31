@@ -28,17 +28,17 @@ Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (dea
 - **Fair practice.** Quiz versions rotate per learner, enforced by the kernel; recovery after
   remediation counts.
 
-## The numbers (from `make gauntlet`, 18 October 2026)
+## The numbers (from `make gauntlet`, 31 October 2026)
 
 | Gate | Result |
 |---|---|
-| Kernel and frameworks | 123 tests, also run on wasm32 |
-| Coverage | 100% of lines and functions, 180/180 branches (kernel, frameworks, server, wasm core) |
-| Mutation testing | 360 mutants (243 core, 117 server): every viable one caught |
+| Kernel and frameworks | 125 tests, also run on wasm32 |
+| Coverage | 100% of lines and functions, 182/182 branches (kernel, frameworks, server, wasm core) |
+| Mutation testing | 368 mutants (253 core, 115 server): every viable one caught |
 | User stories | 18 scenarios in plain language (`features/`) |
-| Server, on real PostgreSQL | 57 tests, including 9 isolation tests |
+| Server, on real PostgreSQL | 58 tests, including 9 isolation tests |
 | Phone = server | one golden session, identical natively, in Node (wasm) and on the server |
-| Web | 28 unit tests; 12 browser tests on the real server, 1 on the browser-only demo |
+| Web | 28 unit tests; 12 browser tests on the real server, 2 on the browser-only demo (one of them offline) |
 | Accessibility | zero WCAG violations (axe, every screen); Lighthouse accessibility 100 |
 | Performance | Lighthouse mobile 100; map median 60 fps at 4× CPU throttle; kernel 164 KB gzipped |
 | Load (2 CPU cores, 300 learners in 10 classes) | p95 16–32 ms reads, 33–71 ms writes across runs, at 150 views/s + 50 answers/s; capacity ~690 requests/s |

@@ -4,6 +4,19 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-10-31 — The gauntlet, green on a shared machine
+
+**What happened.** The full gauntlet ran with the demo school in it, niced, while other projects
+loaded the machine (load 15–18 at the end).
+**The numbers.** 125 kernel and framework tests, 18 stories (161 steps), 58 server tests, 28 web
+unit tests, 12 browser tests on the server and 2 on the demo build; 182/182 branches; 368 mutants
+(253 core, 115 server), every viable one caught; Lighthouse 100/100; map median 60 fps. It took
+about 75 minutes, most of it mutation testing.
+**The lesson.** `nice` kept the run from slowing the other projects, and the frame-rate gate still
+held. Coverage and mutation builds leave about 14 GB in `target/`, so clear them after each run.
+
+---
+
 ## 2026-10-31 — Four more days, found by reading the page again
 
 **What happened.** Before the last push, we read Solve's challenge page again. It now says

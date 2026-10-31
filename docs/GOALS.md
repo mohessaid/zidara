@@ -1,6 +1,6 @@
-# Goals to 2 November 2026
+# Goals to 6 November 2026
 
-The Solve deadline is 2 November 2026, 12:00 noon ET. Each goal has a done-when test; a goal is
+The Solve deadline is 6 November 2026, 12:00 pm EST (the live page on 31 October; we planned for 2 November until then). Each goal has a done-when test; a goal is
 done only when that test passes and the record (changelog, journal) is updated. Tackled in order.
 
 | # | Goal | Target | Done when | Status |
@@ -14,7 +14,7 @@ done only when that test passes and the record (changelog, journal) is updated. 
 | G7 | **Application**: Solve text from `docs/solve-2027.md`, evidence, submission | 1 Nov | every criterion answered with evidence; submitted before the deadline | evidence ready 18 Oct: cost model (`cost-model.md`), pilot draft (`pilot-plan.md`), impact facts (`impact-facts.md`); the owner's dated checklist is `SUBMIT.md` |
 
 Needs the owner (cannot be done by an agent):
-- A partner or pilot setting, with a letter or quote (`docs/solve-2027.md` §Before 2 November).
+- A partner or pilot setting, with a letter or quote (`docs/solve-2027.md` §Before the deadline).
 - "Our advantage" in the owner's own words: communities, settings, relationships.
 - Name, trademark and domain checks (`docs/naming.md`).
 - The voice for the video, and the decision to publish a public demo link.

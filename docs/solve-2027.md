@@ -6,7 +6,7 @@ Page: https://solve.mit.edu/challenges/2027-global-learning-challenge (read 13 O
 
 > How can we close global education gaps while improving outcomes for every learner?
 
-- **Deadline:** 2 November 2026, 12:00 noon ET (applications opened 22 September 2026).
+- **Deadline:** 6 November 2026, 12:00 pm EST, as the page read on 31 October (on 13 October we read 2 November). Applications opened 22 September 2026.
 - **Stage:** Prototype, Pilot, Growth or Scale. **Concept-stage ideas are not eligible**
   (except for the Indigenous Communities Fellowship), so a working prototype is required.
 - **One solution per challenge** per team lead.
@@ -50,7 +50,7 @@ The builder knows the world the entry serves, firsthand. `TODO`: write it in you
 Name the communities and settings (countries, languages, connection conditions, school
 models), what you have seen there, and the relationships you can bring.
 
-## Before 2 November
+## Before the deadline
 
 1. **Prototype (required):** the kernel with two frameworks, one lesson (video, text, quiz),
    evidence and progress, an offline-capable client, and the test gauntlet.

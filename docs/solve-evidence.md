@@ -6,8 +6,9 @@ and the applicant must confirm nothing is "fabricated, exaggerated, or otherwise
 So this file holds facts, numbers and where each is proven. It is not text to paste.
 
 Source of the questions: Solve's "2027 Global Challenges: Application Questions" PDF.
-**Deadline:** the PDF says both 6 November (instructions) and 2 November (page 3); the challenge
-page says 2 November 2026, 12:00 noon ET. Treat **2 November** as binding. Confirm it on the
+**Deadline:** **6 November 2026, 12:00 pm EST** (17:00 UTC), as the challenge page read twice on
+31 October ("Solution Deadline: November 6, 2026 12:00pm EST"). The PDF also says 6 November in
+its instructions, and 2 November on page 3. Confirm it on the
 live form when submitting.
 
 ## Facts that hold today (each one checkable in this repository)

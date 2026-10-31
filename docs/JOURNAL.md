@@ -4,6 +4,20 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-10-31 — Four more days, found by reading the page again
+
+**What happened.** Before the last push, we read Solve's challenge page again. It now says
+"Solution Deadline: November 6, 2026 12:00pm EST", twice on the page. On 13 October we read 2
+November, and the application PDF gave both dates.
+**The problem.** Treating 2 November as binding was the safe reading, but our docs stated it as
+fact, and the owner's checklist was planned around it.
+**What we did.** Every doc now gives 6 November with the date we read it; the checklist is
+re-dated (submit 4 November, two days spare). Local `main` now holds the work. The machine was
+shared with busy projects, so we cleared 32 GB of our own rebuildable build output first.
+**Lesson.** A date read once is a fact about that day. Re-read the source before planning on it.
+
+---
+
 ## 2026-10-18 — The light experience
 
 **What happened.** The design says low-end phones get their own experience, and until today

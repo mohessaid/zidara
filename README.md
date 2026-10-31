@@ -7,7 +7,7 @@ apps.
 
 This repository is the working prototype for the [MIT Solve 2027 Global Learning
 Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (deadline
-2 November 2026, 12:00 pm ET).
+6 November 2026, 12:00 pm EST, per the live challenge page on 31 October).
 
 ## What works today
 

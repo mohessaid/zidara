@@ -2,6 +2,7 @@
 import type { AgentAction } from "./AgentAction";
 import type { Flag } from "./Flag";
 import type { FrameworkId } from "./FrameworkId";
+import type { LiveTally } from "./LiveTally";
 import type { OutcomeSummary } from "./OutcomeSummary";
 import type { QueuedProposal } from "./QueuedProposal";
 
@@ -9,4 +10,4 @@ export type StudioView = { framework: FrameworkId, outcomes: Array<OutcomeSummar
 /**
  * Evidence an agent recorded on its own; each can be undone.
  */
-agent_actions: Array<AgentAction>, };
+agent_actions: Array<AgentAction>, challenge: LiveTally | null, };

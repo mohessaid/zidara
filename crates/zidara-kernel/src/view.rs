@@ -4,6 +4,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use serde::{Deserialize, Serialize};
 
+use crate::activity::{Expected, Response};
 use crate::decide::{Env, KernelError, current_framework};
 use crate::event::Event;
 use crate::evidence::Evidence;
@@ -31,6 +32,31 @@ pub struct LearnerView {
     /// The first open outcome not yet achieved: where the learner goes next.
     pub next: Option<OutcomeId>,
     pub assigned: Vec<ActivityId>,
+    /// The live round's current question, when the teacher is running one.
+    pub challenge: Option<LiveQuestion>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
+pub struct LiveQuestion {
+    pub activity: ActivityId,
+    pub question: u32,
+    /// Whether this learner got it right, once they have answered.
+    pub answered: Option<bool>,
+}
+
+/// The live round as the teacher's board shows it: who has answered the current question, how
+/// many are right, and how many picked each option. Nobody is ranked.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
+pub struct LiveTally {
+    pub activity: ActivityId,
+    pub question: u32,
+    pub questions: u32,
+    pub answered: u32,
+    pub correct: u32,
+    /// For a choice question, how many picked each option; empty otherwise.
+    pub picks: Vec<u32>,
 }
 
 pub fn learner_view(
@@ -83,11 +109,20 @@ pub fn learner_view(
         .filter(|(l, _, _)| *l == learner)
         .map(|(_, _, a)| a.clone())
         .collect();
+    let challenge = state.challenge.map(|c| LiveQuestion {
+        answered: c
+            .answers
+            .get(&(learner, c.question))
+            .map(|(_, right)| *right),
+        activity: c.activity,
+        question: c.question,
+    });
     Ok(LearnerView {
         framework: framework.id(),
         outcomes,
         next,
         assigned: assigned.into_iter().collect(),
+        challenge,
     })
 }
 
@@ -134,6 +169,7 @@ pub struct StudioView {
     pub flags: Vec<Flag>,
     /// Evidence an agent recorded on its own; each can be undone.
     pub agent_actions: Vec<AgentAction>,
+    pub challenge: Option<LiveTally>,
 }
 
 pub fn studio_view(
@@ -197,12 +233,41 @@ pub fn studio_view(
             _ => None,
         })
         .collect();
+    let challenge = state.challenge.map(|c| {
+        let asked = env.lesson.questions(&c.activity);
+        let now: Vec<&(Response, bool)> = c
+            .answers
+            .iter()
+            .filter(|((_, q), _)| *q == c.question)
+            .map(|(_, answer)| answer)
+            .collect();
+        let options = match asked.get(c.question as usize).map(|q| &q.expected) {
+            Some(Expected::Choice { options, .. }) => options.len(),
+            _ => 0,
+        };
+        let picks = (0..options as u32)
+            .map(|k| {
+                now.iter()
+                    .filter(|(r, _)| *r == Response::Choice { index: k })
+                    .count() as u32
+            })
+            .collect();
+        LiveTally {
+            activity: c.activity,
+            question: c.question,
+            questions: asked.len() as u32,
+            answered: now.len() as u32,
+            correct: now.iter().filter(|(_, right)| *right).count() as u32,
+            picks,
+        }
+    });
     Ok(StudioView {
         framework: framework.id(),
         outcomes,
         queue,
         flags,
         agent_actions,
+        challenge,
     })
 }
 

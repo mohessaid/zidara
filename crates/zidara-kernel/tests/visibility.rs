@@ -71,3 +71,61 @@ fn learners_see_their_own_events_and_cohort_wide_ones_teachers_and_agents_see_al
         assert_eq!(ids(&visible_to(&log, user(9), role)), vec![1, 2, 3, 4, 5]);
     }
 }
+
+#[test]
+fn a_live_answer_is_its_learners_and_the_round_is_everyones() {
+    let round = EventId(Uuid::from_u128(1));
+    let answer = |id, n| {
+        event(
+            id,
+            12,
+            learner(n),
+            EventBody::ChallengeAnswered {
+                challenge: round,
+                learner: user(n),
+                question: 0,
+                response: zidara_kernel::activity::Response::Choice { index: 0 },
+                correct: true,
+            },
+        )
+    };
+    let log = vec![
+        event(
+            1,
+            10,
+            teacher(),
+            EventBody::ChallengeStarted {
+                activity: ActivityId::new("quiz-f1"),
+            },
+        ),
+        answer(2, 1),
+        answer(3, 2),
+        event(
+            4,
+            13,
+            teacher(),
+            EventBody::ChallengeAdvanced {
+                challenge: round,
+                question: 1,
+            },
+        ),
+        event(
+            5,
+            14,
+            teacher(),
+            EventBody::ChallengeEnded { challenge: round },
+        ),
+    ];
+    assert_eq!(
+        ids(&visible_to(&log, user(1), Role::Learner)),
+        vec![1, 2, 4, 5]
+    );
+    assert_eq!(
+        ids(&visible_to(&log, user(2), Role::Learner)),
+        vec![1, 3, 4, 5]
+    );
+    assert_eq!(
+        ids(&visible_to(&log, user(9), Role::Teacher)),
+        vec![1, 2, 3, 4, 5]
+    );
+}

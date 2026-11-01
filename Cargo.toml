@@ -31,6 +31,11 @@ lto = true
 codegen-units = 1
 opt-level = "s"
 
+# The browser's kernel: smallest code over fastest, since it is downloaded on every phone.
+[profile.wasm]
+inherits = "release"
+opt-level = "z"
+
 # Mutation testing builds a full copy of the workspace per job. Without debug info or
 # incremental state each copy is several times smaller (a full disk stopped a run once).
 [profile.mutants]

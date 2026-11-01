@@ -25,6 +25,7 @@ pub enum Permission {
     DecideProposal,
     Undo,
     ChangeFramework,
+    RunChallenge,
 }
 
 /// The permission table. Agents may propose and record formative marks, nothing more.
@@ -35,7 +36,12 @@ pub fn allows(role: Role, permission: Permission) -> bool {
         (Role::Learner, SubmitWork)
             | (
                 Role::Teacher,
-                RecordFormative | RecordSummative | DecideProposal | Undo | ChangeFramework
+                RecordFormative
+                    | RecordSummative
+                    | DecideProposal
+                    | Undo
+                    | ChangeFramework
+                    | RunChallenge
             )
             | (Role::AssessmentAgent, ProposeAssessment | RecordFormative)
             | (Role::System, RecordFormative | RecordSummative)

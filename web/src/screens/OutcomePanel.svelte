@@ -14,7 +14,7 @@
       (a) => a.outcomes.includes(outcome) && (a.role !== "remediation" || view.assigned.includes(a.id)),
     ),
   );
-  const ICONS = { video: "▶", reading: "📖", quiz: "✏️", open_response: "💬" } as const;
+  const ICONS = { video: "▶", reading: "📖", quiz: "✏️", open_response: "💬", explore: "🧩" } as const;
 </script>
 
 <section class="card" aria-labelledby="outcome-title">

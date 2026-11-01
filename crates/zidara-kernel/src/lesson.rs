@@ -4,7 +4,7 @@ use std::collections::BTreeSet;
 
 use serde::Deserialize;
 
-use crate::activity::{Activity, ActivityKind, ActivityRole, Expected};
+use crate::activity::{Activity, ActivityKind, ActivityRole, Expected, Question, Visual};
 use crate::ids::{ActivityId, OutcomeId};
 use crate::locale::Localized;
 use crate::outcome::{GraphError, Outcome, OutcomeGraph};
@@ -20,6 +20,13 @@ pub enum LessonError {
         activity: ActivityId,
         outcome: OutcomeId,
     },
+    #[error("question {question} in {activity:?} cannot be drawn or answered as it asks")]
+    BadLook {
+        activity: ActivityId,
+        question: String,
+    },
+    #[error("the toy in {0:?} cannot be drawn")]
+    BadToy(ActivityId),
     #[error("question {question} in {activity:?} has no option {correct}")]
     BadChoice {
         activity: ActivityId,
@@ -93,7 +100,21 @@ impl Lesson {
                             correct: *correct,
                         });
                     }
+                    let look = &question.look;
+                    if !look.visual.is_none_or(Visual::drawable)
+                        || !look.input.can_answer(&question.expected)
+                    {
+                        return Err(LessonError::BadLook {
+                            activity: activity.id.clone(),
+                            question: question.id.clone(),
+                        });
+                    }
                 }
+            }
+            if let ActivityKind::Explore { toy, .. } = &activity.kind
+                && !toy.drawable()
+            {
+                return Err(LessonError::BadToy(activity.id.clone()));
             }
         }
         Ok(Self {
@@ -110,6 +131,14 @@ impl Lesson {
 
     pub fn activities(&self) -> &[Activity] {
         &self.activities
+    }
+
+    /// The questions a live round on `activity` asks: the first version of a quiz, else none.
+    pub fn questions(&self, activity: &ActivityId) -> &[Question] {
+        match self.activity(activity).map(|a| &a.kind) {
+            Some(ActivityKind::Quiz { questions, .. }) => questions,
+            _ => &[],
+        }
     }
 
     /// The first remediation activity covering `outcome`, if the lesson has one.
@@ -134,7 +163,9 @@ fn referenced_outcomes(activity: &Activity) -> Vec<&OutcomeId> {
                 .map(|q| &q.outcome),
         ),
         ActivityKind::OpenResponse { outcome, .. } => refs.push(outcome),
-        ActivityKind::Video { .. } | ActivityKind::Reading { .. } => {}
+        ActivityKind::Video { .. }
+        | ActivityKind::Reading { .. }
+        | ActivityKind::Explore { .. } => {}
     }
     refs
 }

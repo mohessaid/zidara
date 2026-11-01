@@ -303,3 +303,90 @@ fn views_serialize_for_the_bridge() {
     let json = serde_json::to_string(&view).unwrap();
     assert!(json.contains(r#""state":"not_started""#), "{json}");
 }
+
+fn studio(log: &[Event], roster: &[UserId]) -> zidara_kernel::view::StudioView {
+    let (lesson, registry, framework) =
+        (lesson(), TestRegistry::standard(), FrameworkId::new("test"));
+    studio_view(roster, "en", log, &env(&lesson, &registry, &framework, 10)).unwrap()
+}
+
+fn learner_sees(log: &[Event], n: u128) -> Option<zidara_kernel::view::LiveQuestion> {
+    let (lesson, registry, framework) =
+        (lesson(), TestRegistry::standard(), FrameworkId::new("test"));
+    learner_view(user(n), "en", log, &env(&lesson, &registry, &framework, 10))
+        .unwrap()
+        .challenge
+}
+
+#[test]
+fn the_board_counts_the_live_answers_and_each_phone_knows_its_own() {
+    use zidara_kernel::activity::Response;
+    use zidara_kernel::view::{LiveQuestion, LiveTally};
+    let (mut log, mut ids) = (vec![], SequentialIds::default());
+    let roster = [user(1), user(2), user(3)];
+    assert_eq!(studio(&log, &roster).challenge, None);
+    assert_eq!(learner_sees(&log, 1), None);
+    let start = Command::StartChallenge {
+        activity: ActivityId::new("quiz-f1"),
+    };
+    run(&mut log, &mut ids, &teacher(), start);
+    let tally = |answered, correct, picks: Vec<u32>, question| LiveTally {
+        activity: ActivityId::new("quiz-f1"),
+        question,
+        questions: 2,
+        answered,
+        correct,
+        picks,
+    };
+    assert_eq!(
+        studio(&log, &roster).challenge,
+        Some(tally(0, 0, vec![0, 0, 0], 0))
+    );
+    let pick = |index| Command::AnswerChallenge {
+        question: 0,
+        response: Response::Choice { index },
+    };
+    run(&mut log, &mut ids, &learner(1), pick(0));
+    run(&mut log, &mut ids, &learner(2), pick(2));
+    run(&mut log, &mut ids, &learner(3), pick(0));
+    assert_eq!(
+        studio(&log, &roster).challenge,
+        Some(tally(3, 2, vec![2, 0, 1], 0))
+    );
+    let phone = |answered| {
+        Some(LiveQuestion {
+            activity: ActivityId::new("quiz-f1"),
+            question: 0,
+            answered,
+        })
+    };
+    assert_eq!(learner_sees(&log, 1), phone(Some(true)));
+    assert_eq!(learner_sees(&log, 2), phone(Some(false)));
+    assert_eq!(learner_sees(&log, 4), phone(None));
+    // The next question is a fraction: no options to count, and nobody has answered it yet.
+    run(&mut log, &mut ids, &teacher(), Command::NextQuestion);
+    assert_eq!(
+        studio(&log, &roster).challenge,
+        Some(tally(0, 0, vec![], 1))
+    );
+    let fraction = Command::AnswerChallenge {
+        question: 1,
+        response: Response::Fraction { num: 3, den: 8 },
+    };
+    run(&mut log, &mut ids, &learner(1), fraction);
+    assert_eq!(
+        studio(&log, &roster).challenge,
+        Some(tally(1, 1, vec![], 1))
+    );
+    assert_eq!(
+        learner_sees(&log, 1),
+        Some(LiveQuestion {
+            activity: ActivityId::new("quiz-f1"),
+            question: 1,
+            answered: Some(true)
+        })
+    );
+    run(&mut log, &mut ids, &teacher(), Command::EndChallenge);
+    assert_eq!(studio(&log, &roster).challenge, None);
+    assert_eq!(learner_sees(&log, 1), None);
+}

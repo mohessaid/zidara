@@ -10,7 +10,7 @@ const ROLES: [Role; 4] = [
     Role::AssessmentAgent,
     Role::System,
 ];
-const PERMISSIONS: [Permission; 7] = [
+const PERMISSIONS: [Permission; 8] = [
     Permission::SubmitWork,
     Permission::RecordFormative,
     Permission::RecordSummative,
@@ -18,6 +18,7 @@ const PERMISSIONS: [Permission; 7] = [
     Permission::DecideProposal,
     Permission::Undo,
     Permission::ChangeFramework,
+    Permission::RunChallenge,
 ];
 
 /// The whole table, so any change to who may do what fails here first.
@@ -32,6 +33,7 @@ fn the_permission_table_is_exactly_this() {
         (Teacher, DecideProposal),
         (Teacher, Undo),
         (Teacher, ChangeFramework),
+        (Teacher, RunChallenge),
         (AssessmentAgent, ProposeAssessment),
         (AssessmentAgent, RecordFormative),
         (System, RecordFormative),

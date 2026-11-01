@@ -15,14 +15,18 @@ pub fn learner_of(body: &EventBody, known: &BTreeMap<EventId, Option<UserId>>) -
         EventBody::QuizSubmitted { learner, .. }
         | EventBody::AnswerSubmitted { learner, .. }
         | EventBody::ActivityAssigned { learner, .. }
-        | EventBody::TeacherNotified { learner, .. } => Some(*learner),
+        | EventBody::TeacherNotified { learner, .. }
+        | EventBody::ChallengeAnswered { learner, .. } => Some(*learner),
         EventBody::EvidenceRecorded { evidence, .. } => Some(evidence.learner),
         EventBody::ProposalMade { proposal } => Some(proposal.learner),
         EventBody::ProposalDecided {
             proposal: target, ..
         }
         | EventBody::Undone { target } => known.get(target).copied().flatten(),
-        EventBody::FrameworkChanged { .. } => None,
+        EventBody::FrameworkChanged { .. }
+        | EventBody::ChallengeStarted { .. }
+        | EventBody::ChallengeAdvanced { .. }
+        | EventBody::ChallengeEnded { .. } => None,
     }
 }
 

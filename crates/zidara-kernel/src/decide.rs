@@ -5,7 +5,9 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::activity::{Activity, ActivityKind, Response, mark, version};
+use std::collections::BTreeMap;
+
+use crate::activity::{Activity, ActivityKind, Question, Response, mark, version};
 use crate::event::{Event, EventBody};
 use crate::evidence::{Evidence, EvidenceKind};
 use crate::framework::{Framework, FrameworkRegistry};
@@ -17,7 +19,7 @@ use crate::lesson::Lesson;
 use crate::roles::{Actor, Permission, Role};
 use crate::rules::{Action, evaluate};
 use crate::score::Score;
-use crate::state::{CohortState, ProposalStatus, fold_refs};
+use crate::state::{Challenge, CohortState, ProposalStatus, fold_refs};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "ts", derive(ts_rs::TS), ts(export))]
@@ -55,6 +57,18 @@ pub enum Command {
     ChangeFramework {
         framework: FrameworkId,
     },
+    /// Start a live round on a quiz (teachers).
+    StartChallenge {
+        activity: ActivityId,
+    },
+    NextQuestion,
+    /// Answer the live round's current question (learners, once each).
+    AnswerChallenge {
+        question: u32,
+        response: Response,
+    },
+    /// End the round: each learner's answers become practice evidence.
+    EndChallenge,
 }
 
 /// A command as a shell sends it. `id` makes a retry harmless; `at` is when the person acted.
@@ -106,6 +120,14 @@ pub enum KernelError {
     UnknownFramework { framework: FrameworkId },
     #[error("this attempt must use version {expected} of the quiz")]
     WrongVariant { expected: u32 },
+    #[error("no live round is running")]
+    NoChallenge,
+    #[error("a live round is already running")]
+    ChallengeRunning,
+    #[error("that is not the live round's current question")]
+    NotThisQuestion,
+    #[error("this question is already answered")]
+    AlreadyAnswered,
 }
 
 pub fn decide(
@@ -155,6 +177,12 @@ pub fn decide(
         }
         Command::Undo { target } => undo(&mut batch, actor, target)?,
         Command::ChangeFramework { framework } => change_framework(&mut batch, actor, framework)?,
+        Command::StartChallenge { activity } => start_challenge(&mut batch, actor, activity)?,
+        Command::NextQuestion => next_question(&mut batch, actor)?,
+        Command::AnswerChallenge { question, response } => {
+            answer_challenge(&mut batch, actor, question, response)?
+        }
+        Command::EndChallenge => end_challenge(&mut batch, actor)?,
     }
     Ok(batch.events)
 }
@@ -511,5 +539,108 @@ fn change_framework(
         return Err(KernelError::UnknownFramework { framework });
     }
     b.push(actor.clone(), EventBody::FrameworkChanged { framework });
+    Ok(())
+}
+
+fn running(b: &Batch<'_, '_>) -> Result<Challenge, KernelError> {
+    b.state().challenge.ok_or(KernelError::NoChallenge)
+}
+
+fn start_challenge(
+    b: &mut Batch<'_, '_>,
+    actor: &Actor,
+    id: ActivityId,
+) -> Result<(), KernelError> {
+    require(actor, Permission::RunChallenge)?;
+    if !matches!(activity(b.env, &id)?.kind, ActivityKind::Quiz { .. }) {
+        return Err(KernelError::WrongActivityKind { activity: id });
+    }
+    if b.state().challenge.is_some() {
+        return Err(KernelError::ChallengeRunning);
+    }
+    b.push(actor.clone(), EventBody::ChallengeStarted { activity: id });
+    Ok(())
+}
+
+fn next_question(b: &mut Batch<'_, '_>, actor: &Actor) -> Result<(), KernelError> {
+    require(actor, Permission::RunChallenge)?;
+    let round = running(b)?;
+    let question = round.question + 1;
+    if question as usize >= b.env.lesson.questions(&round.activity).len() {
+        return Err(KernelError::NotThisQuestion);
+    }
+    b.push(
+        actor.clone(),
+        EventBody::ChallengeAdvanced {
+            challenge: round.id,
+            question,
+        },
+    );
+    Ok(())
+}
+
+fn answer_challenge(
+    b: &mut Batch<'_, '_>,
+    actor: &Actor,
+    question: u32,
+    response: Response,
+) -> Result<(), KernelError> {
+    require(actor, Permission::SubmitWork)?;
+    let learner = person(actor)?;
+    let round = running(b)?;
+    let asked = b.env.lesson.questions(&round.activity);
+    let Some(current) = asked
+        .get(question as usize)
+        .filter(|_| question == round.question)
+    else {
+        return Err(KernelError::NotThisQuestion);
+    };
+    if round.answers.contains_key(&(learner, question)) {
+        return Err(KernelError::AlreadyAnswered);
+    }
+    let correct = current.expected.accepts(&response);
+    b.push(
+        actor.clone(),
+        EventBody::ChallengeAnswered {
+            challenge: round.id,
+            learner,
+            question,
+            response,
+            correct,
+        },
+    );
+    Ok(())
+}
+
+fn end_challenge(b: &mut Batch<'_, '_>, actor: &Actor) -> Result<(), KernelError> {
+    require(actor, Permission::RunChallenge)?;
+    let round = running(b)?;
+    b.push(
+        actor.clone(),
+        EventBody::ChallengeEnded {
+            challenge: round.id,
+        },
+    );
+    let asked = b.env.lesson.questions(&round.activity);
+    // What each learner answered, in question order (the map is ordered by learner, then question).
+    let mut answered: BTreeMap<UserId, (Vec<Question>, Vec<Response>)> = BTreeMap::new();
+    for ((learner, question), (response, _)) in round.answers {
+        let entry = answered.entry(learner).or_default();
+        entry.0.extend(asked.get(question as usize).cloned());
+        entry.1.push(response);
+    }
+    // A live round is practice, whatever the quiz is for.
+    for (learner, (questions, responses)) in answered {
+        for (outcome, score) in mark(&questions, &responses).unwrap_or_default() {
+            let evidence = Evidence {
+                learner,
+                outcome,
+                activity: round.activity.clone(),
+                score,
+                kind: EvidenceKind::Formative,
+            };
+            b.record(Actor::System, evidence, None)?;
+        }
+    }
     Ok(())
 }

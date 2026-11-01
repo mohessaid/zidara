@@ -4,15 +4,15 @@
 set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$root"
-cargo build -q -p zidara-wasm --release --target wasm32-unknown-unknown
-raw="target/wasm32-unknown-unknown/release/zidara_wasm.wasm"
+cargo build -q -p zidara-wasm --profile wasm --target wasm32-unknown-unknown
+raw="target/wasm32-unknown-unknown/wasm/zidara_wasm.wasm"
 web="web/src/lib/kernel/pkg"
 node="target/wasm-node"
 rm -rf "$web" "$node"
 wasm-bindgen --target web --out-dir "$web" "$raw"
 wasm-bindgen --target nodejs --out-dir "$node" "$raw"
 for dir in "$web" "$node"; do
-  npx -y -q -p binaryen@132 wasm-opt -Os --enable-bulk-memory --enable-nontrapping-float-to-int \
+  npx -y -q -p binaryen@132 wasm-opt -Oz --enable-bulk-memory --enable-nontrapping-float-to-int \
     "$dir/zidara_wasm_bg.wasm" -o "$dir/zidara_wasm_bg.wasm"
 done
 bytes=$(wc -c < "$web/zidara_wasm_bg.wasm")

@@ -4,6 +4,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use serde::{Deserialize, Serialize};
 
+use crate::activity::Response;
 use crate::event::{Event, EventBody};
 use crate::evidence::Evidence;
 use crate::governance::{Decision, Proposal};
@@ -30,6 +31,19 @@ pub struct Answer {
     pub text: String,
 }
 
+/// Each learner's answer to each question of a live round, and whether it was right.
+pub type LiveAnswers = BTreeMap<(UserId, u32), (Response, bool)>;
+
+/// The live round running in a class.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Challenge {
+    /// The event that started it.
+    pub id: EventId,
+    pub activity: ActivityId,
+    pub question: u32,
+    pub answers: LiveAnswers,
+}
+
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct CohortState {
     pub framework: Option<FrameworkId>,
@@ -41,6 +55,7 @@ pub struct CohortState {
     pub notifications: BTreeSet<(UserId, OutcomeId, NotifyReason)>,
     /// Assignments a teacher undid: the rules do not assign them again.
     pub dismissed: BTreeSet<(UserId, OutcomeId, ActivityId)>,
+    pub challenge: Option<Challenge>,
 }
 
 impl CohortState {
@@ -83,6 +98,8 @@ pub fn fold_refs<'a>(events: impl IntoIterator<Item = &'a Event>) -> CohortState
         .collect();
     let mut state = CohortState::default();
     let mut unmarked = BTreeSet::new();
+    // Live answers by round: an answer may sort before its round's start.
+    let mut live: BTreeMap<EventId, LiveAnswers> = BTreeMap::new();
     for event in ordered.iter().filter(|e| undone.contains(&e.id)) {
         match &event.body {
             EventBody::ActivityAssigned {
@@ -159,8 +176,43 @@ pub fn fold_refs<'a>(events: impl IntoIterator<Item = &'a Event>) -> CohortState
                     .insert((*learner, outcome.clone(), *reason));
             }
             EventBody::FrameworkChanged { framework } => state.framework = Some(framework.clone()),
+            EventBody::ChallengeStarted { activity } => {
+                state.challenge = Some(Challenge {
+                    id: event.id,
+                    activity: activity.clone(),
+                    question: 0,
+                    answers: BTreeMap::new(),
+                });
+            }
+            EventBody::ChallengeAdvanced {
+                challenge,
+                question,
+            } => {
+                if let Some(running) = state.challenge.as_mut().filter(|c| c.id == *challenge) {
+                    running.question = *question;
+                }
+            }
+            EventBody::ChallengeAnswered {
+                challenge,
+                learner,
+                question,
+                response,
+                correct,
+            } => {
+                live.entry(*challenge)
+                    .or_default()
+                    .insert((*learner, *question), (response.clone(), *correct));
+            }
+            EventBody::ChallengeEnded { challenge } => {
+                if state.challenge.as_ref().is_some_and(|c| c.id == *challenge) {
+                    state.challenge = None;
+                }
+            }
             EventBody::QuizSubmitted { .. } | EventBody::Undone { .. } => {}
         }
+    }
+    if let Some(running) = state.challenge.as_mut() {
+        running.answers = live.remove(&running.id).unwrap_or_default();
     }
     for proposal in unmarked {
         if let Some(entry) = state.proposals.get_mut(&proposal) {

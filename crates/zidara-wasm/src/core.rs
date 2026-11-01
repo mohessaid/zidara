@@ -6,6 +6,7 @@ use std::collections::BTreeSet;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use zidara_frameworks::{Registry, demo_registry};
+use zidara_kernel::activity::{ActivityKind, Response, version};
 use zidara_kernel::decide::{Env, Envelope, KernelError, decide, next_variant};
 use zidara_kernel::event::Event;
 use zidara_kernel::framework::FrameworkRegistry;
@@ -152,6 +153,35 @@ impl Core {
             &ActivityId::new(activity),
             &self.lesson,
         ))
+    }
+
+    /// Whether `response` (JSON) answers question `index` of version `variant` of a quiz: the
+    /// kernel's own marking, for feedback the moment a learner answers. It records nothing;
+    /// evidence still comes only from submitting the quiz.
+    pub fn check(
+        &self,
+        activity: &str,
+        variant: u32,
+        index: u32,
+        response: &str,
+    ) -> Result<bool, String> {
+        let response: Response = parse("response", response)?;
+        let ActivityKind::Quiz {
+            questions,
+            variants,
+            ..
+        } = &self
+            .lesson
+            .activity(&ActivityId::new(activity))
+            .ok_or_else(|| format!("no quiz {activity}"))?
+            .kind
+        else {
+            return Err(format!("no quiz {activity}"));
+        };
+        version(questions, variants, variant)
+            .and_then(|asked| asked.get(index as usize))
+            .map(|question| question.expected.accepts(&response))
+            .ok_or_else(|| format!("no question {index} in version {variant} of {activity}"))
     }
 
     /// Views are drawn at `now`, the shell's clock (calendar locks depend on it).

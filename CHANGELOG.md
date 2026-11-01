@@ -7,6 +7,18 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- Live rounds in the kernel: a teacher starts a round on a quiz, every phone in the class shows
+  its questions at the teacher's pace, the kernel marks each answer as it arrives, and ending
+  the round turns each learner's answers into practice evidence the class's framework judges.
+  The board counts answers and picks per option; nobody is ranked. Answers name their round,
+  so a phone whose clock is behind cannot put an answer in another round.
+- Questions can carry a look: a picture (a bar, a circle, or two bars to compare), a way to
+  answer (type, shade a cut bar, or cut and shade), and an explanation shown after answering.
+  The lesson refuses a look that cannot be drawn or cannot give the answer.
+- An explore step with a toy (fold a strip, a fraction wall): something to play with before
+  practising, recording no evidence.
+- The phone's kernel can check one answer at once (`check`), with the kernel's own marking;
+  evidence still comes only from submitting the quiz.
 - The real server runs at https://zidara.72-61-103-134.sslip.io (ADR 0010): its own user,
   database and roles on a shared machine, one Caddy file, and a clean school every night.
 - The demo school is published at https://zidara.pages.dev and the code at
@@ -112,6 +124,8 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Changed
 
+- The browser's kernel is built with its own size profile (`opt-level = "z"`, `wasm-opt -Oz`).
+  It is 184 KB gzipped, up from 164 KB: serde's code for the new tagged enums.
 - `docs/deploy.md`, after a rehearsal on a fresh database: Rust from rustup (a distribution's
   `cargo` is too old), a real `ZIDARA_SECRET` for `migrate` and `seed` (a placeholder is
   refused), the owner role over TCP, and the browser smoke check.

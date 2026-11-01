@@ -294,3 +294,48 @@ fn the_rubric_marks_open_answers_awaiting_a_proposal() {
     assert_eq!(marks[0]["answer"], answer_id);
     assert_eq!(marks[0]["assessment"]["score"], 10_000);
 }
+
+#[test]
+fn the_phone_checks_one_answer_with_the_kernels_marking() {
+    let core = core();
+    // quiz-f1 version 0: a choice (the first option is right), then 3/8 exactly.
+    assert_eq!(
+        core.check("quiz-f1", 0, 0, r#"{"type":"choice","index":0}"#),
+        Ok(true)
+    );
+    assert_eq!(
+        core.check("quiz-f1", 0, 0, r#"{"type":"choice","index":1}"#),
+        Ok(false)
+    );
+    assert_eq!(
+        core.check("quiz-f1", 0, 1, r#"{"type":"fraction","num":3,"den":8}"#),
+        Ok(true)
+    );
+    assert_eq!(
+        core.check("quiz-f1", 0, 1, r#"{"type":"fraction","num":6,"den":16}"#),
+        Ok(false)
+    );
+    // It checks nothing that is not there, and records nothing.
+    assert_eq!(
+        core.check("quiz-f1", 0, 2, r#"{"type":"choice","index":0}"#),
+        Err("no question 2 in version 0 of quiz-f1".into())
+    );
+    assert_eq!(
+        core.check("quiz-f1", 9, 0, r#"{"type":"choice","index":0}"#),
+        Err("no question 0 in version 9 of quiz-f1".into())
+    );
+    assert_eq!(
+        core.check("reading-halves", 0, 0, r#"{"type":"choice","index":0}"#),
+        Err("no quiz reading-halves".into())
+    );
+    assert_eq!(
+        core.check("nope", 0, 0, r#"{"type":"choice","index":0}"#),
+        Err("no quiz nope".into())
+    );
+    assert!(
+        core.check("quiz-f1", 0, 0, "{")
+            .unwrap_err()
+            .starts_with("response")
+    );
+    assert_eq!(core.events(), "[]");
+}

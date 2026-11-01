@@ -16,6 +16,7 @@ fn question(outcome: &str, expected: Expected) -> Question {
         outcome: OutcomeId::new(outcome),
         prompt: Localized::default(),
         expected,
+        look: Look::default(),
     }
 }
 

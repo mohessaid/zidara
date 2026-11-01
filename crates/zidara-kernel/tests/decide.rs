@@ -876,3 +876,284 @@ fn the_rubric_marks_each_open_answer_that_has_no_proposal_yet() {
     let log = vec![stray(900, "gone"), stray(901, "quiz-f1")];
     assert!(zidara_kernel::governance::rubric_marks(&log, &class.lesson).is_empty());
 }
+
+fn start(class: &mut Class, quiz: &str) -> EventId {
+    let events = class.ok(
+        &teacher(),
+        Command::StartChallenge {
+            activity: ActivityId::new(quiz),
+        },
+    );
+    assert_eq!(
+        bodies(&events),
+        [&EventBody::ChallengeStarted {
+            activity: ActivityId::new(quiz)
+        }]
+    );
+    assert_eq!(events[0].actor, teacher());
+    events[0].id
+}
+
+fn live(question: u32, response: Response) -> Command {
+    Command::AnswerChallenge { question, response }
+}
+
+fn choice(index: u32) -> Response {
+    Response::Choice { index }
+}
+
+fn scores(events: &[Event]) -> Vec<(UserId, OutcomeId, Score, EvidenceKind)> {
+    events
+        .iter()
+        .filter_map(|e| match &e.body {
+            EventBody::EvidenceRecorded { evidence, .. } => {
+                assert_eq!(e.actor, Actor::System);
+                Some((
+                    evidence.learner,
+                    evidence.outcome.clone(),
+                    evidence.score,
+                    evidence.kind,
+                ))
+            }
+            _ => None,
+        })
+        .collect()
+}
+
+#[test]
+fn a_live_round_goes_question_by_question_and_ends_in_practice_evidence() {
+    let mut class = Class::new();
+    let round = start(&mut class, "quiz-f1");
+    // quiz-f1: a choice (the first option is right), then 3/8 exactly.
+    let right = class.ok(&learner(1), live(0, choice(0)));
+    assert_eq!(
+        bodies(&right),
+        [&EventBody::ChallengeAnswered {
+            challenge: round,
+            learner: user(1),
+            question: 0,
+            response: choice(0),
+            correct: true,
+        }]
+    );
+    assert_eq!(right[0].actor, learner(1));
+    let wrong = class.ok(&learner(2), live(0, choice(1)));
+    assert!(matches!(
+        wrong[0].body,
+        EventBody::ChallengeAnswered { correct: false, .. }
+    ));
+    let next = class.ok(&teacher(), Command::NextQuestion);
+    assert_eq!(
+        bodies(&next),
+        [&EventBody::ChallengeAdvanced {
+            challenge: round,
+            question: 1
+        }]
+    );
+    class.ok(&learner(1), live(1, frac(3, 8)));
+    let end = class.ok(&teacher(), Command::EndChallenge);
+    assert_eq!(end[0].body, EventBody::ChallengeEnded { challenge: round });
+    assert_eq!(end[0].actor, teacher());
+    let f1 = OutcomeId::new("F1");
+    assert_eq!(
+        scores(&end),
+        [
+            (user(1), f1.clone(), Score::FULL, EvidenceKind::Formative),
+            (user(2), f1.clone(), Score::ZERO, EvidenceKind::Formative),
+        ]
+    );
+    assert!(end.iter().all(|e| match &e.body {
+        EventBody::EvidenceRecorded { evidence, .. } =>
+            evidence.activity == ActivityId::new("quiz-f1"),
+        _ => true,
+    }));
+    // Not an attempt at the quiz: the version due is unchanged, and the round is over.
+    assert_eq!(class.due("quiz-f1"), 0);
+    assert_eq!(fold(&class.log).challenge, None);
+}
+
+#[test]
+fn a_live_round_on_a_test_is_still_practice() {
+    let mut class = Class::new();
+    start(&mut class, "checkpoint");
+    // The checkpoint asks 2/5 exactly first.
+    class.ok(&learner(1), live(0, frac(2, 5)));
+    let end = class.ok(&teacher(), Command::EndChallenge);
+    assert_eq!(
+        scores(&end),
+        [(
+            user(1),
+            OutcomeId::new("F1"),
+            Score::FULL,
+            EvidenceKind::Formative
+        )]
+    );
+}
+
+#[test]
+fn nobody_answered_means_no_evidence() {
+    let mut class = Class::new();
+    start(&mut class, "quiz-f1");
+    let end = class.ok(&teacher(), Command::EndChallenge);
+    assert_eq!(end.len(), 1);
+}
+
+#[test]
+fn a_live_round_refuses_what_does_not_fit() {
+    let mut class = Class::new();
+    let refused =
+        |class: &mut Class, actor: &Actor, command: Command| class.run(actor, command).unwrap_err();
+    let start_on = |quiz: &str| Command::StartChallenge {
+        activity: ActivityId::new(quiz),
+    };
+    // Only teachers run rounds; only learners answer, as people.
+    assert_eq!(
+        refused(&mut class, &learner(1), start_on("quiz-f1")),
+        KernelError::Forbidden {
+            role: Role::Learner,
+            permission: Permission::RunChallenge
+        }
+    );
+    for command in [Command::NextQuestion, Command::EndChallenge] {
+        assert!(matches!(
+            refused(&mut class, &learner(1), command),
+            KernelError::Forbidden { .. }
+        ));
+    }
+    // Nothing to advance, end or answer yet.
+    for command in [Command::NextQuestion, Command::EndChallenge] {
+        assert_eq!(
+            refused(&mut class, &teacher(), command),
+            KernelError::NoChallenge
+        );
+    }
+    assert_eq!(
+        refused(&mut class, &learner(1), live(0, choice(0))),
+        KernelError::NoChallenge
+    );
+    // Only a quiz can be played.
+    assert_eq!(
+        refused(&mut class, &teacher(), start_on("reading-halves")),
+        KernelError::WrongActivityKind {
+            activity: ActivityId::new("reading-halves")
+        }
+    );
+    assert_eq!(
+        refused(&mut class, &teacher(), start_on("nope")),
+        KernelError::UnknownActivity {
+            activity: ActivityId::new("nope")
+        }
+    );
+    start(&mut class, "quiz-f1");
+    assert_eq!(
+        refused(&mut class, &teacher(), start_on("quiz-f2")),
+        KernelError::ChallengeRunning
+    );
+    assert!(matches!(
+        refused(&mut class, &teacher(), live(0, choice(0))),
+        KernelError::Forbidden { .. }
+    ));
+    assert_eq!(
+        refused(&mut class, &agent(), live(0, choice(0))),
+        KernelError::Forbidden {
+            role: Role::AssessmentAgent,
+            permission: Permission::SubmitWork
+        }
+    );
+    let system = Actor::System;
+    assert!(matches!(
+        refused(&mut class, &system, live(0, choice(0))),
+        KernelError::Forbidden { .. }
+    ));
+    // Not ahead of the board, not twice.
+    assert_eq!(
+        refused(&mut class, &learner(1), live(1, frac(3, 8))),
+        KernelError::NotThisQuestion
+    );
+    class.ok(&learner(1), live(0, choice(2)));
+    assert_eq!(
+        refused(&mut class, &learner(1), live(0, choice(0))),
+        KernelError::AlreadyAnswered
+    );
+    // Past the last question there is nothing to show.
+    class.ok(&teacher(), Command::NextQuestion);
+    assert_eq!(
+        refused(&mut class, &teacher(), Command::NextQuestion),
+        KernelError::NotThisQuestion
+    );
+    // Not behind it either.
+    assert_eq!(
+        refused(&mut class, &learner(2), live(0, choice(0))),
+        KernelError::NotThisQuestion
+    );
+    assert_eq!(
+        refused(&mut class, &learner(2), live(2, choice(0))),
+        KernelError::NotThisQuestion
+    );
+    // Once it ends, a new round starts fresh: last round's answers do not count in it.
+    class.ok(&teacher(), Command::EndChallenge);
+    start(&mut class, "quiz-f1");
+    class.ok(&learner(1), live(0, choice(0)));
+}
+
+#[test]
+fn live_answers_belong_to_their_round_whatever_the_clock_says() {
+    let started = event(
+        10,
+        100,
+        teacher(),
+        EventBody::ChallengeStarted {
+            activity: ActivityId::new("quiz-f1"),
+        },
+    );
+    let round = started.id;
+    let other = EventId(Uuid::from_u128(77));
+    // The phone's clock was behind: its answer sorts before the round started.
+    let early = event(
+        11,
+        50,
+        learner(1),
+        EventBody::ChallengeAnswered {
+            challenge: round,
+            learner: user(1),
+            question: 0,
+            response: choice(0),
+            correct: true,
+        },
+    );
+    // An answer, a step and an end for another round change nothing here.
+    let stray = event(
+        12,
+        120,
+        learner(2),
+        EventBody::ChallengeAnswered {
+            challenge: other,
+            learner: user(2),
+            question: 0,
+            response: choice(0),
+            correct: true,
+        },
+    );
+    let step = event(
+        13,
+        130,
+        teacher(),
+        EventBody::ChallengeAdvanced {
+            challenge: other,
+            question: 1,
+        },
+    );
+    let end = event(
+        14,
+        140,
+        teacher(),
+        EventBody::ChallengeEnded { challenge: other },
+    );
+    let state = fold(&[started, early, stray, step, end]);
+    let running = state.challenge.unwrap();
+    assert_eq!((running.id, running.question), (round, 0));
+    assert_eq!(
+        running.answers.into_iter().collect::<Vec<_>>(),
+        [((user(1), 0), (choice(0), true))]
+    );
+}

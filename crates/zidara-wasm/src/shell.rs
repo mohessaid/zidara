@@ -56,6 +56,19 @@ impl Shell {
             .map_err(|e| JsError::new(&e))
     }
 
+    /// Whether `response` answers one question: feedback at once, nothing recorded.
+    pub fn check(
+        &self,
+        activity: &str,
+        variant: u32,
+        index: u32,
+        response: &str,
+    ) -> Result<bool, JsError> {
+        self.core
+            .check(activity, variant, index, response)
+            .map_err(|e| JsError::new(&e))
+    }
+
     #[wasm_bindgen(js_name = learnerView)]
     pub fn learner_view(&self, user: &str, locale: &str, now: f64) -> Result<String, JsError> {
         self.core

@@ -69,4 +69,25 @@ pub enum EventBody {
     Undone {
         target: EventId,
     },
+    /// A teacher started a live round on a quiz: every phone in the class shows its questions,
+    /// one at a time, at the teacher's pace.
+    ChallengeStarted {
+        activity: ActivityId,
+    },
+    ChallengeAdvanced {
+        challenge: EventId,
+        question: u32,
+    },
+    /// One learner's answer in a live round. It names its round, so a phone whose clock is
+    /// behind cannot put it in another one.
+    ChallengeAnswered {
+        challenge: EventId,
+        learner: UserId,
+        question: u32,
+        response: Response,
+        correct: bool,
+    },
+    ChallengeEnded {
+        challenge: EventId,
+    },
 }

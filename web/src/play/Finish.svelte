@@ -15,7 +15,7 @@
   const info = $derived(view?.outcomes.find((o) => o.outcome === outcome));
   const state = $derived(info?.judgement.state ?? "in_progress");
   const earned = $derived(info ? stars(info.judgement) : { n: 0, of: 0 });
-  const events = $derived((void app.version, app.kernel!.events()));
+  const events = $derived(app.events());
   const total = $derived(xp(events, app.me!.id, (a, v, i, r) => app.kernel!.check(a, v, i, r)));
   const days = $derived(streak(events, app.me!.id, Date.now()));
   const help = $derived((app.pack?.activities ?? []).filter((a) => a.role === "remediation" && a.outcomes.includes(outcome) && view?.assigned.includes(a.id)));

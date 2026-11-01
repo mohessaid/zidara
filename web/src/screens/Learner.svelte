@@ -39,7 +39,7 @@
   // must still have the lesson's code (offline first).
   void session().catch(() => undefined);
   void livePhone().catch(() => undefined);
-  const events = $derived((void app.version, app.kernel?.events() ?? []));
+  const events = $derived(app.events());
   const points = $derived(app.me && app.kernel ? xp(events, app.me.id, (a, v, i, r) => app.kernel!.check(a, v, i, r)) : 0);
   const days = $derived(app.me ? streak(events, app.me.id, now) : 0);
   // While a round runs, the phone asks the server every second and a half.

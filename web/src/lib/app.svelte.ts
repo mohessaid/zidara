@@ -5,6 +5,7 @@ import { direction, isLocale, type Locale } from "./i18n/i18n.ts";
 import { Kernel, loadKernel } from "./kernel/kernel.ts";
 import type { Actor } from "./kernel/types/Actor.ts";
 import type { Command } from "./kernel/types/Command.ts";
+import type { Event } from "./kernel/types/Event.ts";
 import type { LearnerView } from "./kernel/types/LearnerView.ts";
 import type { LessonPack } from "./kernel/types/LessonPack.ts";
 import { openStore, type Store } from "./store.ts";
@@ -79,6 +80,17 @@ class App {
   get actor(): Actor | undefined {
     if (!this.me || !this.cohort) return undefined;
     return { kind: "human", user: this.me.id, role: this.cohort.role };
+  }
+
+  #events: { version: number; events: Event[] } | undefined;
+
+  /** The kernel's log, read once per change: the screens that need it (XP, the streak) share
+   *  one copy instead of each asking the kernel to serialise the whole log again. */
+  events(): Event[] {
+    const version = this.version;
+    if (!this.kernel) return [];
+    if (this.#events?.version !== version) this.#events = { version, events: this.kernel.events() };
+    return this.#events.events;
   }
 
   learnerView(now = Date.now()): LearnerView | undefined {

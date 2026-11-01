@@ -66,11 +66,19 @@ impl School {
         ];
         let lessons: Vec<(Lesson, &'static str)> = packs
             .into_iter()
-            .map(|pack| (serde_json::from_str(pack).expect("the demo lessons are valid"), pack))
+            .map(|pack| {
+                (
+                    serde_json::from_str(pack).expect("the demo lessons are valid"),
+                    pack,
+                )
+            })
             .collect();
         Self {
             packs: lessons.iter().map(|(l, p)| (l.id.clone(), *p)).collect(),
-            lessons: lessons.into_iter().map(|(l, _)| (l.id.clone(), l)).collect(),
+            lessons: lessons
+                .into_iter()
+                .map(|(l, _)| (l.id.clone(), l))
+                .collect(),
             registry: zidara_frameworks::demo_registry(),
             policy: Policy::STANDARD,
         }

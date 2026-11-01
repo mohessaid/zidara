@@ -6,6 +6,8 @@ licence does not allow a free product for children.
 | Asset | Source | Licence |
 |---|---|---|
 | `lessons/equivalent-fractions.json` (text, questions, all versions, transcripts) | Written for Zidara; fraction answers checked by script | Zidara project |
+| `lessons/how-zidara-works.json` (text, questions, explanations, rubric) | Written for Zidara; checked by the kernel's lesson validation | Zidara project |
+| Sounds in the app (`web/src/play/sound.svelte.ts`) | Synthesised in the browser from code (Web Audio oscillators); no recordings | Zidara project |
 | `web/public/media/fractions-intro.{ar,fr,en}.mp4` ("What is a fraction?", 36 s, no sound) | Drawn from code: `tools/video/fractions.html`, rendered by `tools/video/render.mjs` (Chromium + ffmpeg/x264) | Zidara project |
 | App icon (`web/public/icon*.{svg,png}`) | Drawn for Zidara, colours from `docs/art-bible.md` | Zidara project |
 | Noto Sans Arabic (UI and film type) | Google Noto fonts, via `@fontsource/noto-sans-arabic` | SIL Open Font License 1.1 |

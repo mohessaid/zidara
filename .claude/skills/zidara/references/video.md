@@ -26,7 +26,7 @@ Solve allows an optional video of 2 minutes at most, on public YouTube or Vimeo.
    minute), plus the dead time for each beat. Total ≤ 115 s.
 5. **Audio-only pass**: read the narration with the screen off. Rewrite every sentence that
    only makes sense with the picture ("as you can see here").
-6. **Off screen**: a client, Moodle internals, another client, real children's names or faces,
+6. **Off screen**: other clients and projects, real children's names or faces,
    API keys, internal hostnames.
 7. Captions are burned in for silent autoplay, in English, with an Arabic version if time allows.
 

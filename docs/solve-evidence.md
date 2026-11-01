@@ -88,8 +88,8 @@ compiled to wasm for the browser; axum + PostgreSQL with row-level security; Sve
 offline PWA; Claude as an optional marker behind a rubric fallback. *How we know*: the facts
 table. Technologies: Software and Mobile Applications; Generative AI.
 
-**Business model (300 words).** *Owner.* The design note says it is not built to be sold to
-a client; the horizon is another client reusing it across e-learning projects.
+**Business model (300 words).** *Owner.* The design note says it is not built to be sold; the
+model is the owner's to state.
 
 ## Still needed from the owner (no agent can supply these honestly)
 

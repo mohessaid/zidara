@@ -56,6 +56,5 @@ models), what you have seen there, and the relationships you can bring.
    evidence and progress, an offline-capable client, and the test gauntlet.
 2. **One partner or pilot setting**, even small, with a letter or quote.
 3. **The application text**, using the tables above.
-4. **A short video:** cut from `pitch/film`, with every mention of a client, Moodle internals and
-   another client removed.
+4. **A short video:** our own, made for Solve (`pitch/solve`).
 5. **Name checks** (`naming.md`).

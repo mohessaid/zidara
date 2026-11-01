@@ -7,6 +7,8 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- The demo school is published at https://zidara.pages.dev and the code at
+  https://github.com/mohessaid/zidara.
 - The demo school in the browser (ADR 0009): `pnpm build:demo` builds the app with the school
   inside the page, as static files any host can serve; `make demo` (and `ZIDARA_URL=… pnpm
   demo` for a published link) runs the whole story with no server. The sign-in page says what

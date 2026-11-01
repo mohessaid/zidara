@@ -63,8 +63,9 @@ numbers; link the repository or the demo.
 
 **Beneficiaries served now.** 0 (be honest; Solve says it doesn't change your chances).
 
-**Website/app.** Either a public demo link that stays up (decision for the owner: the existing
-Hostinger server could host it), or upload the pitch video (100 s) as the proof point.
+**Website/app.** https://zidara.pages.dev, the demo school in the browser (static, on Cloudflare
+Pages; its two browser tests pass against the live address), and the code at
+https://github.com/mohessaid/zidara. The pitch video (100 s) is the other proof point.
 
 **Well-positioned team (300 words).** *Owner only.* Solve wants engagement with the target
 population: who you have talked to, how many, and what changed because of them. Kanonix and

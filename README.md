@@ -9,6 +9,10 @@ This repository is the working prototype for the [MIT Solve 2027 Global Learning
 Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (deadline
 6 November 2026, 12:00 pm EST, per the live challenge page on 31 October).
 
+- **Try it:** https://zidara.pages.dev (the demo school, in your browser: no sign-up, invented
+  people, works offline after one visit; pick a learner, then the teacher Karim).
+- **Code:** https://github.com/mohessaid/zidara
+
 ## What works today
 
 - **One lesson, two pedagogies.** "Equivalent fractions" for ages 9–11, under mastery learning

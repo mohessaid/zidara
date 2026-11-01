@@ -127,6 +127,17 @@ The app has one page, so no routing rules are needed.
 Then run the demo's own story against it (the data stays in the test browser):
 
 ```bash
-cd web && ZIDARA_URL=https://demo.example.org pnpm demo     # 1 passed
+cd web && ZIDARA_URL=https://zidara.pages.dev pnpm demo     # 2 passed
 ```
+
+The published demo is on Cloudflare Pages:
+
+```bash
+wrangler pages project create zidara --production-branch main --force   # once
+wrangler pages deploy web/dist-demo --project-name zidara --branch main
+```
+
+Since late 2026, `pages project create` hands new projects to Workers and fails for a folder
+of static files with "Missing entry-point to Worker script or to assets directory"; `--force`
+creates a classic Pages project, as wrangler's own notice says.
 

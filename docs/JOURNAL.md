@@ -4,6 +4,25 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-01 — Public, clean, and a link anyone can open
+
+**What happened.** With the other project's material gone and history rewritten, we deleted the
+first GitHub repository (it still held the old commits, reachable by hash) and created it again,
+public. We also removed that project's framing from the design note. The demo school went up on
+Cloudflare Pages.
+**The problem.** `wrangler pages project create` now hands new projects to Workers and failed
+with "Missing entry-point to Worker script or to assets directory", deploying nothing.
+**What we did.** We followed wrangler's own notice and used `--force` for a classic Pages
+project, then deployed `web/dist-demo` (57 files, 2.6 MB). The demo's two browser tests ran
+against the live address and passed: the whole story with no server, and offline after one
+visit.
+**The numbers.** A search of every commit for that project's names finds nothing; 2/2 live tests
+pass.
+**The lesson.** Test the published thing, not only the build: the same Playwright story runs
+against any URL with `ZIDARA_URL`.
+
+---
+
 ## 2026-11-01 — Another project's pitch, published by mistake
 
 **What happened.** We pushed the code to a new public GitHub repository. Within minutes the owner

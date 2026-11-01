@@ -17,6 +17,8 @@ declare global {
 }
 
 test("the map holds its frame rate through a level transition on an economy phone", async ({ page, context }) => {
+  // Three full sessions on a phone throttled four times: more than the default minute.
+  test.setTimeout(150_000);
   const cdp = await context.newCDPSession(page);
   await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
   await cdp.send("Network.emulateNetworkConditions", {

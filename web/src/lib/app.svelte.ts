@@ -49,7 +49,10 @@ class App {
       void this.syncNow();
     });
     addEventListener("offline", () => (this.sync.online = false));
-    setInterval(() => void this.syncNow(), 20_000);
+    // Every 6 s while the page is on screen (so a live round reaches every phone quickly; an
+    // empty sync is a few bytes), never while it is hidden; at once when it comes back.
+    setInterval(() => document.visibilityState === "visible" && void this.syncNow(), 6_000);
+    document.addEventListener("visibilitychange", () => document.visibilityState === "visible" && void this.syncNow());
     this.ready = true;
   }
 
@@ -85,11 +88,24 @@ class App {
 
   /** Runs a command offline-first, then tries to sync. Returns the kernel's verdict. */
   async run(command: Command) {
-    const result = await act(this.store!, this.kernel!, this.cohort!.id, this.actor!, command);
+    // A plain copy: commands built from a screen's state are proxies, which IndexedDB cannot store.
+    const result = await act(this.store!, this.kernel!, this.cohort!.id, this.actor!, $state.snapshot(command) as Command);
     this.version++;
     await this.#countOutbox();
     await this.syncNow();
     return result;
+  }
+
+  #live: ReturnType<typeof setInterval> | undefined;
+
+  /** While a live round runs, sync every 1.5 s instead of every 20 s, so the board and the
+   *  phones keep pace with the teacher. */
+  followLive(on: boolean) {
+    if (on && !this.#live) this.#live = setInterval(() => void this.syncNow(), 1_500);
+    if (!on && this.#live) {
+      clearInterval(this.#live);
+      this.#live = undefined;
+    }
   }
 
   #queue: Promise<unknown> = Promise.resolve();

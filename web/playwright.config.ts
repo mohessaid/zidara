@@ -8,7 +8,7 @@ export default defineConfig({
   retries: 0,
   timeout: 60_000,
   reporter: [["list"]],
-  use: { baseURL: "http://127.0.0.1:4173", ...devices["Pixel 7"], locale: "ar" },
+  use: { baseURL: "http://127.0.0.1:4173", ...devices["Pixel 7"], locale: "ar", screenshot: "only-on-failure" },
   webServer: [
     { command: "bash ../scripts/e2e-server.sh", url: "http://127.0.0.1:18080/api/me", timeout: 300_000, reuseExistingServer: false },
     {

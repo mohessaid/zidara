@@ -6,6 +6,7 @@
   import type { Command } from "../lib/kernel/types/Command.ts";
   import type { StudioView } from "../lib/kernel/types/StudioView.ts";
   import Header from "../components/Header.svelte";
+  import LiveBoard from "./LiveBoard.svelte";
 
   let studio: StudioView | undefined = $state();
   let people: Person[] = $state([]);
@@ -41,9 +42,14 @@
     busy = false;
   }
 
+  // Every 5 s, and every 1.5 s while a live round runs so the board keeps pace with the class.
   onMount(() => {
     void refresh();
-    const timer = setInterval(refresh, 5_000);
+    let ticks = 0;
+    const timer = setInterval(() => {
+      ticks++;
+      if (studio?.challenge || ticks % 3 === 0) void refresh();
+    }, 1_500);
     return () => clearInterval(timer);
   });
   $effect(() => {
@@ -57,6 +63,8 @@
 <main class="studio" data-framework={studio?.framework}>
   {#if refusal}<p role="alert" class="state-needs_support">{refusal}</p>{/if}
   {#if studio}
+    <LiveBoard tally={studio.challenge} learners={people.length} {busy} run={command} />
+
     <section class="card" aria-labelledby="progress">
       <h2 id="progress">{t(app.locale, "studio.progress")}</h2>
       <ul class="bars">

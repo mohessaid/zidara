@@ -27,14 +27,47 @@ const F1_ANSWERS = [
   { choice: 2, num: "4", den: "7" },
 ] as const;
 
-/** Opens quiz-f1 from the F1 panel and answers whichever version the kernel shows, correctly. */
-export async function passQuizF1(page: Page) {
-  await page.getByRole("button", { name: /تمرين: أجزاء من كلّ/ }).click();
-  const variant = Number(await page.locator("form[data-variant]").getAttribute("data-variant"));
+export const button = (page: Page, name: string) => page.getByRole("button", { name, exact: true });
+
+/** Checks the answer on screen, then moves on. */
+async function checkAndGo(page: Page) {
+  await button(page, "تحقّق").click();
+  await button(page, "تابع").click();
+}
+
+/** Plays the F1 session from its stone: the film, the reading, then whichever version of
+ * quiz-f1 the kernel shows, answered right. Ends on the finish screen. Returns the version. */
+export async function playF1(page: Page) {
+  await stone(page, "F1").click();
+  await button(page, "تابع").click();
+  await button(page, "تابع").click();
+  const variant = Number(await page.locator("[data-variant]").getAttribute("data-variant"));
   const answer = F1_ANSWERS[variant]!;
-  await page.getByRole("radio").nth(answer.choice).check();
+  await page.getByRole("radio").nth(answer.choice).click();
+  await checkAndGo(page);
   await page.getByRole("spinbutton", { name: "البسط" }).fill(answer.num);
   await page.getByRole("spinbutton", { name: "المقام" }).fill(answer.den);
-  await page.getByRole("button", { name: "تحقّق من إجاباتي" }).click();
+  await checkAndGo(page);
+  await expect(page.getByRole("heading", { name: "أصبحت تستطيع هذا!" })).toBeVisible();
   return variant;
+}
+
+export const backToPath = (page: Page) => button(page, "رجوع إلى الطريق").click();
+
+/** Plays F2 up to its open answer (any answers to the quiz), and sends `text`. */
+export async function explainF2(page: Page, text: string) {
+  await stone(page, "F2").click();
+  await button(page, "تابع").click();
+  await button(page, "اطوِها إلى نصفين").click();
+  await button(page, "اطوِها إلى نصفين").click();
+  await button(page, "تابع").click();
+  for (let q = 0; q < 3; q++) {
+    const more = page.getByRole("button", { name: "أجزاء أكثر" });
+    if (await more.count()) await more.click();
+    await page.locator(".cell").first().click();
+    await checkAndGo(page);
+  }
+  await page.getByRole("textbox").fill(text);
+  await button(page, "أرسل إلى معلّمي").click();
+  await expect(page.getByRole("status").filter({ hasText: "أُرسلت!" })).toBeVisible();
 }

@@ -2,7 +2,7 @@
 // throttled 4x, "fast 4G". The Quest map must hold 60 fps through a level transition, with no
 // long task over 50 ms. Uses Sara (class 4 B) so the school story is untouched.
 import { expect, test } from "@playwright/test";
-import { passQuizF1, signIn, stone } from "./helpers.ts";
+import { backToPath, playF1, signIn, stone } from "./helpers.ts";
 
 // A real GPU (this machine's Intel HD 630), as a phone has. Headless Chromium otherwise renders
 // WebGL in software (SwiftShader), which measured the CPU pretending to be a GPU: 2.4 s of
@@ -35,9 +35,7 @@ test("the map holds its frame rate through a level transition on an economy phon
   // Three level transitions, judged by the median: one run on a busy laptop is too noisy.
   const runs: { fps: number; worstTask: number; worstFrame: number }[] = [];
   for (let attempt = 0; attempt < 3; attempt++) {
-    await stone(page, "F1").click();
-    await passQuizF1(page);
-    await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
+    await playF1(page);
     // Start measuring, then step back onto the map: the stone redraws (the transition).
     await page.evaluate(() => {
       // Each measurement owns its arrays; earlier frame loops and observers stop writing.
@@ -57,7 +55,7 @@ test("the map holds its frame rate through a level transition on an economy phon
       };
       requestAnimationFrame(tick);
     });
-    await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
+    await backToPath(page);
     await expect(stone(page, "F1")).toHaveAttribute("data-state", "achieved");
     await page.waitForTimeout(1_500);
     const { frames, long } = await page.evaluate(() => ({ frames: window.__frames, long: window.__long }));

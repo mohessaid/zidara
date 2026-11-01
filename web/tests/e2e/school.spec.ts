@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { expectAccessible, F3_OPENS, passQuizF1, signIn, stone } from "./helpers.ts";
+import { backToPath, button, expectAccessible, explainF2, F3_OPENS, playF1, signIn, stone } from "./helpers.ts";
 
 test("sign-in is in Arabic, right to left, and accessible", async ({ page }) => {
   await page.goto("/");
@@ -55,15 +55,10 @@ test("offline work is kept, then syncs to the server when the network returns", 
   await expect(page.getByTestId("sync")).toHaveText(/كل شيء محفوظ/);
   await expect(stone(page, "F1")).toBeVisible();
   await context.setOffline(true);
-  await stone(page, "F1").click();
-  await page.getByRole("button", { name: /تمرين: أجزاء من كلّ/ }).click();
-  await expectAccessible(page, "quiz");
-  await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
-  await passQuizF1(page);
-  await expect(page.getByRole("status").filter({ hasText: "أحسنت المحاولة" })).toBeVisible();
+  await playF1(page);
+  await expectAccessible(page, "finish");
+  await backToPath(page);
   await expect(page.getByTestId("sync")).toHaveText(/غير متصل|في انتظار/);
-  await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
-  await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
   // The phone's kernel already knows: F1 is mastered and F2 opens, with no network.
   await expect(stone(page, "F1")).toHaveAttribute("data-state", "achieved");
   await expect(stone(page, "F2")).toHaveAttribute("data-state", "not_started");
@@ -93,15 +88,23 @@ test("after one visit, the app opens with no network at all", async ({ page, con
   await context.setOffline(false);
 });
 
-test("a retake shows another version of the quiz", async ({ page }) => {
+test("a session is one step at a time, checked at once, and a retake shows another version", async ({ page }) => {
   await signIn(page, "yacine");
   await stone(page, "F1").click();
-  expect(await passQuizF1(page)).toBe(0);
-  await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
-  const first = await page.getByRole("button", { name: /تمرين: أجزاء من كلّ/ }).count();
-  expect(first).toBe(1);
-  expect(await passQuizF1(page)).toBe(1);
-  await expect(page.locator("form[data-variant] legend").first()).toContainText("كعكة");
+  await expect(page.getByRole("dialog")).toBeVisible();
+  await expectAccessible(page, "session: film");
+  await button(page, "تابع").click();
+  await button(page, "تابع").click();
+  // A wrong first try: the kernel says so at once, gently, with the answer and why.
+  await page.getByRole("radio").nth(1).click();
+  await button(page, "تحقّق").click();
+  await expect(page.getByRole("status").filter({ hasText: "ليس تمامًا" })).toContainText("1/4");
+  await expectAccessible(page, "session: feedback");
+  // Leaving mid-quiz records nothing: the first version is still due.
+  await button(page, "أغلق وارجع إلى الطريق").click();
+  expect(await playF1(page)).toBe(0);
+  await backToPath(page);
+  expect(await playF1(page)).toBe(1);
 });
 
 test("a learner of another class sees none of it", async ({ page }) => {
@@ -135,18 +138,12 @@ test("an unsure answer waits for the teacher, who accepts it", async ({ page, br
   await expect(studio.getByRole("heading", { name: "إجابات تنتظر قرارك" })).toBeVisible();
 
   await signIn(page, "yacine");
-  await stone(page, "F1").click();
-  await passQuizF1(page);
-  await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
-  await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
-  await stone(page, "F2").click();
-  await page.getByRole("button", { name: /اشرح بكلماتك/ }).click();
-  await page.getByRole("textbox").fill("هو نفس الشيء");
-  await page.getByRole("button", { name: "أرسل إلى معلّمي" }).click();
-  await expect(page.getByRole("status").filter({ hasText: "وصلت إجابتك" })).toBeVisible();
+  await playF1(page);
+  await backToPath(page);
+  await explainF2(page, "هو نفس الشيء");
 
   const proposal = studio.getByTestId("proposal").filter({ hasText: "هو نفس الشيء" });
-  await expect(proposal).toBeVisible({ timeout: 20_000 });
+  await expect(proposal).toBeVisible({ timeout: 30_000 });
   await expectAccessible(studio, "studio");
   await proposal.getByRole("button", { name: "اقبل" }).click();
   await expect(proposal).toHaveCount(0, { timeout: 10_000 });

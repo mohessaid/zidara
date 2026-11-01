@@ -47,7 +47,7 @@ fn the_demo_pack_is_valid() {
     assert_eq!(lesson.id, "equivalent-fractions");
     assert_eq!(lesson.title.get("ar"), "الكسور المتكافئة");
     assert_eq!(lesson.graph.len(), 3);
-    assert_eq!(lesson.activities().len(), 8);
+    assert_eq!(lesson.activities().len(), 10);
     assert!(lesson.activity(&ActivityId::new("quiz-f1")).is_some());
     assert!(lesson.activity(&ActivityId::new("nope")).is_none());
 }

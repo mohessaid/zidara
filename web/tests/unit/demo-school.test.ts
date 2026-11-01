@@ -98,4 +98,21 @@ describe("the demo school in the browser", () => {
     const missing = await school.fetch("/api/nothing", { headers: { authorization: `Bearer ${api.token}` } });
     expect([missing.status, await missing.json()]).toEqual([404, { error: "not found" }]);
   });
+
+  it("plays a live round across two tabs that share the school", async () => {
+    const storage = memory();
+    const board = await Api.signIn(karim, new DemoSchool(pack, storage, () => NOW).fetch);
+    const phone = await Api.signIn(amina, new DemoSchool(pack, storage, () => NOW).fetch);
+    // The phone's tab loaded before the round started; it still sees it.
+    await phone.events(A);
+    await board.commands(A, [{ actor: { kind: "system" }, envelope: envelope({ type: "start_challenge", activity: "quiz-f1" }) }]);
+    const seen = (await phone.events(A)).map((e) => e.body.type);
+    expect(seen).toEqual(["challenge_started"]);
+    const [answered] = await phone.commands(A, [{ actor: { kind: "system" }, envelope: envelope({ type: "answer_challenge", question: 0, response: { type: "choice", index: 0 } }) }]);
+    expect(answered!.outcome.status).toBe("applied");
+    expect((await board.studio(A, "en")).challenge).toMatchObject({ activity: "quiz-f1", question: 0, answered: 1, correct: 1, picks: [1, 0, 0] });
+    await board.commands(A, [{ actor: { kind: "system" }, envelope: envelope({ type: "end_challenge" }) }]);
+    const evidence = (await phone.events(A)).filter((e) => e.body.type === "evidence_recorded");
+    expect(evidence).toHaveLength(1);
+  });
 });

@@ -44,7 +44,8 @@ const forbidden = () => new Refusal(403, "your role cannot see this");
 const notFound = () => new Refusal(404, "not found");
 
 export class DemoSchool {
-  readonly #saved: Saved;
+  #saved: Saved;
+  #seen: string | null;
   /** One kernel per class for the page's life: each holds the lesson and log in wasm memory. */
   readonly #kernels = new Map<string, Kernel>();
 
@@ -53,7 +54,18 @@ export class DemoSchool {
     private readonly storage: Storage,
     private readonly now: () => number = Date.now,
   ) {
-    this.#saved = JSON.parse(storage.getItem(KEY) ?? "{}") as Saved;
+    this.#seen = storage.getItem(KEY);
+    this.#saved = JSON.parse(this.#seen ?? "{}") as Saved;
+  }
+
+  /** Another tab (a teacher's board, a learner's phone) may have changed the school since:
+   *  read it again, so two tabs play one live round together. */
+  #refresh() {
+    const now = this.storage.getItem(KEY);
+    if (now === this.#seen) return;
+    this.#seen = now;
+    this.#saved = JSON.parse(now ?? "{}") as Saved;
+    this.#kernels.clear();
   }
 
   /** A `fetch` for the app's `Api`: same paths, same JSON, same status codes as the server. */
@@ -62,6 +74,7 @@ export class DemoSchool {
     const body: unknown = typeof init?.body === "string" ? JSON.parse(init.body) : undefined;
     const token = new Headers(init?.headers).get("authorization")?.replace(/^Bearer /, "");
     try {
+      this.#refresh();
       return json(this.#route(init?.method ?? "GET", url, token, body));
     } catch (error) {
       if (error instanceof Refusal) return json({ error: error.error }, error.status);
@@ -132,7 +145,8 @@ export class DemoSchool {
       kernel.run(AGENT, { id: crypto.randomUUID(), at: this.now(), command: { type: "propose_assessment", answer, assessment } });
     }
     saved.log = kernel.events();
-    this.storage.setItem(KEY, JSON.stringify(this.#saved));
+    this.#seen = JSON.stringify(this.#saved);
+    this.storage.setItem(KEY, this.#seen);
     return results;
   }
 

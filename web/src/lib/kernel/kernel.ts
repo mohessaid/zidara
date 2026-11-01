@@ -10,6 +10,7 @@ import type { FrameworkId } from "./types/FrameworkId.ts";
 import type { KernelError } from "./types/KernelError.ts";
 import type { LearnerView } from "./types/LearnerView.ts";
 import type { LessonPack } from "./types/LessonPack.ts";
+import type { Response } from "./types/Response.ts";
 import type { Role } from "./types/Role.ts";
 import type { StudioView } from "./types/StudioView.ts";
 import type { TenantId } from "./types/TenantId.ts";
@@ -41,6 +42,12 @@ export class Kernel {
   /** The version of a quiz due for `user`: show it, and send its number with the answers. */
   nextVariant(user: UserId, activity: string): number {
     return this.#shell.nextVariant(user, activity);
+  }
+
+  /** Whether `response` answers question `index` of version `variant`: the kernel's own
+   *  marking, for feedback at once. It records nothing. */
+  check(activity: string, variant: number, index: number, response: Response): boolean {
+    return this.#shell.check(activity, variant, index, JSON.stringify(response));
   }
 
   learnerView(user: UserId, locale: string, now: number): LearnerView {

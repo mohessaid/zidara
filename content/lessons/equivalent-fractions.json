@@ -116,6 +116,18 @@
                   "en": "4/1"
                 }
               ]
+            },
+            "look": {
+              "visual": {
+                "type": "circle",
+                "parts": 4,
+                "shaded": 1
+              },
+              "explain": {
+                "ar": "قُسمت البيتزا إلى 4 أجزاء متساوية وأُكل جزء واحد: ‎1/4‎.",
+                "fr": "La pizza est coupée en 4 parts égales et on en mange 1 : 1/4.",
+                "en": "The pizza is cut into 4 equal parts and 1 is eaten: 1/4."
+              }
             }
           },
           {
@@ -130,6 +142,18 @@
               "type": "exactly",
               "num": 3,
               "den": 8
+            },
+            "look": {
+              "visual": {
+                "type": "bar",
+                "parts": 8,
+                "shaded": 3
+              },
+              "explain": {
+                "ar": "البسط 3 هو عدد الأجزاء الملوّنة، والمقام 8 هو عدد الأجزاء المتساوية كلّها.",
+                "fr": "Le numérateur 3 compte les parts colorées ; le dénominateur 8 compte toutes les parts égales.",
+                "en": "The numerator, 3, counts the coloured parts; the denominator, 8, counts all the equal parts."
+              }
             }
           }
         ],
@@ -157,6 +181,18 @@
                     "en": "1/5"
                   }
                 ]
+              },
+              "look": {
+                "visual": {
+                  "type": "circle",
+                  "parts": 6,
+                  "shaded": 1
+                },
+                "explain": {
+                  "ar": "6 أجزاء متساوية، وأُكل جزء واحد: ‎1/6‎.",
+                  "fr": "6 parts égales, on en mange 1 : 1/6.",
+                  "en": "6 equal parts, 1 is eaten: 1/6."
+                }
               }
             },
             {
@@ -171,6 +207,18 @@
                 "type": "exactly",
                 "num": 2,
                 "den": 5
+              },
+              "look": {
+                "visual": {
+                  "type": "bar",
+                  "parts": 5,
+                  "shaded": 2
+                },
+                "explain": {
+                  "ar": "البسط 2 هو عدد الأجزاء الملوّنة، والمقام 5 هو عدد الأجزاء المتساوية كلّها.",
+                  "fr": "Le numérateur 2 compte les parts colorées ; le dénominateur 5 compte toutes les parts égales.",
+                  "en": "The numerator, 2, counts the coloured parts; the denominator, 5, counts all the equal parts."
+                }
               }
             }
           ],
@@ -197,6 +245,18 @@
                     "en": "3/8"
                   }
                 ]
+              },
+              "look": {
+                "visual": {
+                  "type": "bar",
+                  "parts": 8,
+                  "shaded": 3
+                },
+                "explain": {
+                  "ar": "‏3 أقلام من 8: ‎3/8‎. البسط ما أخذناه، والمقام الكلّ.",
+                  "fr": "3 crayons sur 8 : 3/8. En haut ce qu'on prend, en bas le tout.",
+                  "en": "3 pencils out of 8: 3/8. On top what was taken, below the whole."
+                }
               }
             },
             {
@@ -211,10 +271,45 @@
                 "type": "exactly",
                 "num": 4,
                 "den": 7
+              },
+              "look": {
+                "visual": {
+                  "type": "bar",
+                  "parts": 7,
+                  "shaded": 4
+                },
+                "explain": {
+                  "ar": "البسط 4 هو عدد الأجزاء الملوّنة، والمقام 7 هو عدد الأجزاء المتساوية كلّها.",
+                  "fr": "Le numérateur 4 compte les parts colorées ; le dénominateur 7 compte toutes les parts égales.",
+                  "en": "The numerator, 4, counts the coloured parts; the denominator, 7, counts all the equal parts."
+                }
               }
             }
           ]
         ]
+      }
+    },
+    {
+      "id": "explore-fold",
+      "title": {
+        "ar": "نطوي الورقة",
+        "fr": "Plier le papier",
+        "en": "Fold the paper"
+      },
+      "outcomes": [
+        "F2"
+      ],
+      "kind": {
+        "type": "explore",
+        "toy": {
+          "type": "fold",
+          "folds": 3
+        },
+        "body": {
+          "ar": "نصف هذا الشريط ملوّن. اطوِه إلى نصفين، ثم مرة أخرى، وراقب الكسر. هل تغيّرت كمية الورق الملوّن؟",
+          "fr": "La moitié de cette bande est coloriée. Plie-la en deux, puis encore, et regarde la fraction. La quantité de papier colorié a-t-elle changé ?",
+          "en": "Half of this strip is coloured. Fold it in half, then again, and watch the fraction. Did the amount of coloured paper change?"
+        }
       }
     },
     {
@@ -243,6 +338,22 @@
               "type": "exactly",
               "num": 2,
               "den": 4
+            },
+            "look": {
+              "visual": {
+                "type": "bar",
+                "parts": 2,
+                "shaded": 1
+              },
+              "input": {
+                "type": "shade",
+                "parts": 4
+              },
+              "explain": {
+                "ar": "اضرب البسط والمقام في نفس العدد 2: ‎1/2 = 2/4‎. نفس الطول، لكن بأجزاء أصغر.",
+                "fr": "Multiplie le haut et le bas par le même nombre, 2 : 1/2 = 2/4. Même longueur, en parts plus petites.",
+                "en": "Multiply the top and the bottom by the same number, 2: 1/2 = 2/4. The same length, in smaller parts."
+              }
             }
           },
           {
@@ -257,6 +368,22 @@
               "type": "exactly",
               "num": 4,
               "den": 6
+            },
+            "look": {
+              "visual": {
+                "type": "bar",
+                "parts": 3,
+                "shaded": 2
+              },
+              "input": {
+                "type": "shade",
+                "parts": 6
+              },
+              "explain": {
+                "ar": "اضرب البسط والمقام في نفس العدد 2: ‎2/3 = 4/6‎. نفس الطول، لكن بأجزاء أصغر.",
+                "fr": "Multiplie le haut et le bas par le même nombre, 2 : 2/3 = 4/6. Même longueur, en parts plus petites.",
+                "en": "Multiply the top and the bottom by the same number, 2: 2/3 = 4/6. The same length, in smaller parts."
+              }
             }
           },
           {
@@ -271,6 +398,22 @@
               "type": "equivalent_to",
               "num": 3,
               "den": 4
+            },
+            "look": {
+              "visual": {
+                "type": "bar",
+                "parts": 4,
+                "shaded": 3
+              },
+              "input": {
+                "type": "cut",
+                "max": 12
+              },
+              "explain": {
+                "ar": "اضرب البسط والمقام في نفس العدد: ‎6/8‎ أو ‎9/12‎ كلاهما يساوي ‎3/4‎.",
+                "fr": "Multiplie le haut et le bas par le même nombre : 6/8 ou 9/12 valent 3/4.",
+                "en": "Multiply the top and the bottom by the same number: 6/8 and 9/12 both equal 3/4."
+              }
             }
           }
         ],
@@ -288,6 +431,22 @@
                 "type": "exactly",
                 "num": 2,
                 "den": 6
+              },
+              "look": {
+                "visual": {
+                  "type": "bar",
+                  "parts": 3,
+                  "shaded": 1
+                },
+                "input": {
+                  "type": "shade",
+                  "parts": 6
+                },
+                "explain": {
+                  "ar": "اضرب البسط والمقام في نفس العدد 2: ‎1/3 = 2/6‎. نفس الطول، لكن بأجزاء أصغر.",
+                  "fr": "Multiplie le haut et le bas par le même nombre, 2 : 1/3 = 2/6. Même longueur, en parts plus petites.",
+                  "en": "Multiply the top and the bottom by the same number, 2: 1/3 = 2/6. The same length, in smaller parts."
+                }
               }
             },
             {
@@ -302,6 +461,22 @@
                 "type": "exactly",
                 "num": 6,
                 "den": 8
+              },
+              "look": {
+                "visual": {
+                  "type": "bar",
+                  "parts": 4,
+                  "shaded": 3
+                },
+                "input": {
+                  "type": "shade",
+                  "parts": 8
+                },
+                "explain": {
+                  "ar": "اضرب البسط والمقام في نفس العدد 2: ‎3/4 = 6/8‎. نفس الطول، لكن بأجزاء أصغر.",
+                  "fr": "Multiplie le haut et le bas par le même nombre, 2 : 3/4 = 6/8. Même longueur, en parts plus petites.",
+                  "en": "Multiply the top and the bottom by the same number, 2: 3/4 = 6/8. The same length, in smaller parts."
+                }
               }
             },
             {
@@ -316,6 +491,22 @@
                 "type": "equivalent_to",
                 "num": 2,
                 "den": 5
+              },
+              "look": {
+                "visual": {
+                  "type": "bar",
+                  "parts": 5,
+                  "shaded": 2
+                },
+                "input": {
+                  "type": "cut",
+                  "max": 10
+                },
+                "explain": {
+                  "ar": "اضرب البسط والمقام في نفس العدد: ‎4/10‎ أو ‎6/15‎ كلاهما يساوي ‎2/5‎.",
+                  "fr": "Multiplie le haut et le bas par le même nombre : 4/10 ou 6/15 valent 2/5.",
+                  "en": "Multiply the top and the bottom by the same number: 4/10 and 6/15 both equal 2/5."
+                }
               }
             }
           ],
@@ -332,6 +523,22 @@
                 "type": "exactly",
                 "num": 3,
                 "den": 12
+              },
+              "look": {
+                "visual": {
+                  "type": "bar",
+                  "parts": 4,
+                  "shaded": 1
+                },
+                "input": {
+                  "type": "shade",
+                  "parts": 12
+                },
+                "explain": {
+                  "ar": "اضرب البسط والمقام في نفس العدد 3: ‎1/4 = 3/12‎. نفس الطول، لكن بأجزاء أصغر.",
+                  "fr": "Multiplie le haut et le bas par le même nombre, 3 : 1/4 = 3/12. Même longueur, en parts plus petites.",
+                  "en": "Multiply the top and the bottom by the same number, 3: 1/4 = 3/12. The same length, in smaller parts."
+                }
               }
             },
             {
@@ -346,6 +553,22 @@
                 "type": "exactly",
                 "num": 4,
                 "den": 10
+              },
+              "look": {
+                "visual": {
+                  "type": "bar",
+                  "parts": 5,
+                  "shaded": 2
+                },
+                "input": {
+                  "type": "shade",
+                  "parts": 10
+                },
+                "explain": {
+                  "ar": "اضرب البسط والمقام في نفس العدد 2: ‎2/5 = 4/10‎. نفس الطول، لكن بأجزاء أصغر.",
+                  "fr": "Multiplie le haut et le bas par le même nombre, 2 : 2/5 = 4/10. Même longueur, en parts plus petites.",
+                  "en": "Multiply the top and the bottom by the same number, 2: 2/5 = 4/10. The same length, in smaller parts."
+                }
               }
             },
             {
@@ -360,6 +583,22 @@
                 "type": "equivalent_to",
                 "num": 5,
                 "den": 6
+              },
+              "look": {
+                "visual": {
+                  "type": "bar",
+                  "parts": 6,
+                  "shaded": 5
+                },
+                "input": {
+                  "type": "cut",
+                  "max": 12
+                },
+                "explain": {
+                  "ar": "اضرب البسط والمقام في نفس العدد: ‎10/12‎ أو ‎15/18‎ كلاهما يساوي ‎5/6‎.",
+                  "fr": "Multiplie le haut et le bas par le même nombre : 10/12 ou 15/18 valent 5/6.",
+                  "en": "Multiply the top and the bottom by the same number: 10/12 and 15/18 both equal 5/6."
+                }
               }
             }
           ]
@@ -415,6 +654,36 @@
       }
     },
     {
+      "id": "explore-wall",
+      "title": {
+        "ar": "جدار الكسور",
+        "fr": "Le mur des fractions",
+        "en": "The fraction wall"
+      },
+      "outcomes": [
+        "F3"
+      ],
+      "kind": {
+        "type": "explore",
+        "toy": {
+          "type": "wall",
+          "rows": [
+            2,
+            3,
+            4,
+            6,
+            8,
+            12
+          ]
+        },
+        "body": {
+          "ar": "كلّ صفّ هو نفس الكلّ، مقسومًا بطريقة مختلفة. المس قطعة: الصفوف التي تضيء تُظهر كسورًا متساوية. أيّهما أطول، ‎1/3‎ أم ‎1/4‎؟",
+          "fr": "Chaque rangée est le même tout, coupé autrement. Touche une brique : les rangées qui s'allument montrent des fractions égales. Lequel est le plus long, 1/3 ou 1/4 ?",
+          "en": "Every row is the same whole, cut differently. Tap a brick: the rows that light up show equal fractions. Which is longer, 1/3 or 1/4?"
+        }
+      }
+    },
+    {
       "id": "quiz-f3",
       "outcomes": [
         "F3"
@@ -447,6 +716,24 @@
                   "en": "3/5"
                 }
               ]
+            },
+            "look": {
+              "visual": {
+                "type": "pair",
+                "top": {
+                  "parts": 3,
+                  "shaded": 2
+                },
+                "bottom": {
+                  "parts": 5,
+                  "shaded": 3
+                }
+              },
+              "explain": {
+                "ar": "نفس الكلّ: الجزء الملوّن الأطول هو الكسر الأكبر، ‎2/3‎ أكبر من ‎3/5‎.",
+                "fr": "Même tout : la partie colorée la plus longue est la plus grande fraction. 2/3 est plus grand que 3/5.",
+                "en": "Same whole: the longer coloured part is the bigger fraction. 2/3 is bigger than 3/5."
+              }
             }
           },
           {
@@ -468,6 +755,24 @@
                   "en": "1/3"
                 }
               ]
+            },
+            "look": {
+              "visual": {
+                "type": "pair",
+                "top": {
+                  "parts": 4,
+                  "shaded": 1
+                },
+                "bottom": {
+                  "parts": 3,
+                  "shaded": 1
+                }
+              },
+              "explain": {
+                "ar": "كلّما قسمنا الكلّ إلى أجزاء أكثر، صغر كلّ جزء: ‎1/4‎ أصغر من ‎1/3‎.",
+                "fr": "Plus on coupe le tout en parts nombreuses, plus chaque part est petite : 1/4 est plus petit que 1/3.",
+                "en": "The more parts you cut the whole into, the smaller each part: 1/4 is smaller than 1/3."
+              }
             }
           }
         ],
@@ -492,6 +797,24 @@
                     "en": "1/2"
                   }
                 ]
+              },
+              "look": {
+                "visual": {
+                  "type": "pair",
+                  "top": {
+                    "parts": 5,
+                    "shaded": 2
+                  },
+                  "bottom": {
+                    "parts": 2,
+                    "shaded": 1
+                  }
+                },
+                "explain": {
+                  "ar": "نفس الكلّ: الجزء الملوّن الأطول هو الكسر الأكبر، ‎1/2‎ أكبر من ‎2/5‎.",
+                  "fr": "Même tout : la partie colorée la plus longue est la plus grande fraction. 1/2 est plus grand que 2/5.",
+                  "en": "Same whole: the longer coloured part is the bigger fraction. 1/2 is bigger than 2/5."
+                }
               }
             },
             {
@@ -513,6 +836,24 @@
                     "en": "2/3"
                   }
                 ]
+              },
+              "look": {
+                "visual": {
+                  "type": "pair",
+                  "top": {
+                    "parts": 4,
+                    "shaded": 3
+                  },
+                  "bottom": {
+                    "parts": 3,
+                    "shaded": 2
+                  }
+                },
+                "explain": {
+                  "ar": "‏3/4‎ ينقصه ربع ليكتمل، و‏2/3‎ ينقصه ثلث، والثلث أكبر: ‎2/3‎ أصغر.",
+                  "fr": "Il manque un quart à 3/4 et un tiers à 2/3, et un tiers est plus grand : 2/3 est plus petit.",
+                  "en": "3/4 is a quarter short of the whole and 2/3 is a third short, and a third is more: 2/3 is smaller."
+                }
               }
             }
           ],
@@ -536,6 +877,24 @@
                     "en": "1/2"
                   }
                 ]
+              },
+              "look": {
+                "visual": {
+                  "type": "pair",
+                  "top": {
+                    "parts": 8,
+                    "shaded": 5
+                  },
+                  "bottom": {
+                    "parts": 2,
+                    "shaded": 1
+                  }
+                },
+                "explain": {
+                  "ar": "نفس الكلّ: الجزء الملوّن الأطول هو الكسر الأكبر، ‎5/8‎ أكبر من ‎1/2‎.",
+                  "fr": "Même tout : la partie colorée la plus longue est la plus grande fraction. 5/8 est plus grand que 1/2.",
+                  "en": "Same whole: the longer coloured part is the bigger fraction. 5/8 is bigger than 1/2."
+                }
               }
             },
             {
@@ -557,6 +916,24 @@
                     "en": "1/4"
                   }
                 ]
+              },
+              "look": {
+                "visual": {
+                  "type": "pair",
+                  "top": {
+                    "parts": 5,
+                    "shaded": 1
+                  },
+                  "bottom": {
+                    "parts": 4,
+                    "shaded": 1
+                  }
+                },
+                "explain": {
+                  "ar": "كلّما قسمنا الكلّ إلى أجزاء أكثر، صغر كلّ جزء: ‎1/5‎ أصغر من ‎1/4‎.",
+                  "fr": "Plus on coupe le tout en parts nombreuses, plus chaque part est petite : 1/5 est plus petit que 1/4.",
+                  "en": "The more parts you cut the whole into, the smaller each part: 1/5 is smaller than 1/4."
+                }
               }
             }
           ]
@@ -605,6 +982,12 @@
               "type": "equivalent_to",
               "num": 2,
               "den": 5
+            },
+            "look": {
+              "input": {
+                "type": "cut",
+                "max": 10
+              }
             }
           },
           {

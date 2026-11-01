@@ -7,6 +7,20 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- A lesson player in the style of Duolingo and Brilliant: tapping a stone opens a session, one
+  step per screen, with a progress bar. Quiz questions come one at a time and are checked at
+  once by the kernel's own marking, with a gentle "let's look again", the answer and why; the
+  first try at each question is what is submitted as evidence. Fractions are answered by
+  shading or cutting bars, questions show bars and round shapes, and two toys (folding a strip,
+  a fraction wall) come before practice. The finish screen shows what the class's framework now
+  says, with stars, XP and the streak, both read from the log.
+- Live rounds in the app: the teacher's studio has a board to project (pick a quiz, start, show
+  the answer with each option's count, next, end with the class's result); every phone in the
+  class follows within seconds. Phones sync every 6 s while on screen and every 1.5 s during a
+  round.
+- Sounds synthesised in the browser (no files), with a mute switch; no losing sounds.
+- The lesson pack: every quiz question, in every version, has a picture, an answer input and an
+  explanation in Arabic, French and English; two explore steps were added.
 - Live rounds in the kernel: a teacher starts a round on a quiz, every phone in the class shows
   its questions at the teacher's pace, the kernel marks each answer as it arrives, and ending
   the round turns each learner's answers into practice evidence the class's framework judges.
@@ -152,6 +166,8 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Fixed
 
+- Commands built from a screen's state are copied before they are stored: IndexedDB cannot
+  store Svelte's state proxies ("could not be cloned").
 - Material from another project's pitch is removed from the repository and its history, and the
   design note (`docs/proposal.md`) no longer carries that project's framing.
 - Browser tests no longer assume a date: under Cambridge-style, F3 opened on 19 October, and

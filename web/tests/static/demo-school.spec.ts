@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { expectAccessible, F3_OPENS, passQuizF1, signIn, stone } from "../e2e/helpers.ts";
+import { backToPath, expectAccessible, explainF2, F3_OPENS, playF1, signIn, stone } from "../e2e/helpers.ts";
 
 async function signOut(page: import("@playwright/test").Page) {
   await page.getByRole("button", { name: "خروج" }).click();
@@ -16,18 +16,12 @@ test("the whole school story runs in one browser, with no server", async ({ page
 
   // A learner masters F1, then writes an open answer the rubric is unsure of.
   await signIn(page, "amina");
-  await stone(page, "F1").click();
-  await passQuizF1(page);
-  await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
-  await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
+  await playF1(page);
+  await backToPath(page);
   await expect(stone(page, "F1")).toHaveAttribute("data-state", "achieved");
-  await stone(page, "F2").click();
-  await page.getByRole("button", { name: /اشرح بكلماتك/ }).click();
-  await page.getByRole("textbox").fill("هو نفس الشيء");
-  await page.getByRole("button", { name: "أرسل إلى معلّمي" }).click();
-  await expect(page.getByRole("status").filter({ hasText: "وصلت إجابتك" })).toBeVisible();
+  await explainF2(page, "هو نفس الشيء");
   await expect(page.getByTestId("sync")).toHaveText(/كل شيء محفوظ/);
-  await page.getByRole("button", { name: /رجوع إلى الطريق/ }).first().click();
+  await page.getByRole("button", { name: "أغلق وارجع إلى الطريق", exact: true }).click();
   await signOut(page);
 
   // The teacher accepts the queued answer, then switches the class to Cambridge-style.
@@ -63,7 +57,6 @@ test("after one visit, the demo opens and works with no network", async ({ page,
   await context.setOffline(true);
   await page.reload();
   await expect(stone(page, "F1")).toBeVisible();
-  await stone(page, "F1").click();
-  await passQuizF1(page);
-  await expect(page.getByRole("status").filter({ hasText: "أحسنت المحاولة" })).toBeVisible();
+  // The session's code, the toys and the sounds were cached on the first visit too.
+  await playF1(page);
 });

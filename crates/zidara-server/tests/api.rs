@@ -27,6 +27,10 @@ struct Api {
 }
 
 async fn api(demo_login: bool) -> Api {
+    api_with(demo_login, 1000).await
+}
+
+async fn api_with(demo_login: bool, guest_limit: i64) -> Api {
     let db = db().await;
     let keys = Keys::from_secret(b"api test secret, long enough to sign");
     let passes: Arc<zidara_server::agent::Passes> = Default::default();
@@ -39,6 +43,7 @@ async fn api(demo_login: bool) -> Api {
         agent: db.seed.agent,
         passes: passes.clone(),
         demo_login,
+        guest_limit,
     };
     Api {
         router: app(state),
@@ -438,4 +443,127 @@ async fn answers_that_arrive_during_a_marking_pass_get_one_more_pass() {
         tokio::time::sleep(Duration::from_millis(50)).await;
     }
     panic!("both answers should be marked");
+}
+
+/// Starts as a guest; returns the token and the guest's id.
+async fn guest(api: &Api) -> (StatusCode, String, Uuid) {
+    let request = Request::post("/api/guest").body(Body::empty()).unwrap();
+    let response = api.router.clone().oneshot(request).await.unwrap();
+    let status = response.status();
+    let bytes = response.into_body().collect().await.unwrap().to_bytes();
+    let body: Value = serde_json::from_slice(&bytes).unwrap_or(Value::Null);
+    let token = body["token"].as_str().unwrap_or_default().to_owned();
+    let id = zidara_server::auth::verify(&api.keys, &token, zidara_kernel::ids::Timestamp(NOW))
+        .unwrap_or_default();
+    (status, token, id)
+}
+
+#[tokio::test]
+async fn a_guest_learns_in_both_open_classes_and_nowhere_else() {
+    let api = api(true).await;
+    let s = api.db.seed;
+    let (status, _, me) = guest(&api).await;
+    assert_eq!(status, StatusCode::OK);
+    let (_, other, _) = guest(&api).await;
+    assert_ne!(other, "", "a second guest is a second person");
+    let (status, view) = api.call("GET", "/api/me", Some(me), None).await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(view["display_name"], "Guest");
+    assert_eq!(
+        view["cohorts"],
+        json!([
+            { "id": s.c, "tenant_id": s.tenant, "name": "Discover Zidara", "lesson_id": "how-zidara-works", "framework": "mastery", "role": "learner" },
+            { "id": s.d, "tenant_id": s.tenant, "name": "Open fractions", "lesson_id": "equivalent-fractions", "framework": "mastery", "role": "learner" },
+        ])
+    );
+    let (status, results) = api
+        .call(
+            "POST",
+            &format!("/api/cohorts/{}/commands", s.d),
+            Some(me),
+            Some(json!([quiz_f2(0, 3)])),
+        )
+        .await;
+    assert_eq!(status, StatusCode::OK);
+    assert_eq!(results[0]["outcome"]["status"], "applied");
+    for uri in [
+        format!("/api/cohorts/{}/learner-view", s.a),
+        format!("/api/cohorts/{}/studio", s.d),
+    ] {
+        let (status, _) = api.call("GET", &uri, Some(me), None).await;
+        assert_eq!(status, StatusCode::FORBIDDEN, "{uri}");
+    }
+    // Omar teaches the open class: he sees the guest; Amina's teacher does not.
+    let (_, roster) = api
+        .call(
+            "GET",
+            &format!("/api/cohorts/{}/roster", s.c),
+            Some(s.omar),
+            None,
+        )
+        .await;
+    assert!(
+        roster
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|p| p["id"] == json!(me))
+    );
+    let (_, roster) = api
+        .call(
+            "GET",
+            &format!("/api/cohorts/{}/roster", s.a),
+            Some(s.karim),
+            None,
+        )
+        .await;
+    assert!(
+        !roster
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|p| p["id"] == json!(me))
+    );
+}
+
+#[tokio::test]
+async fn guests_need_demo_mode_and_room() {
+    let closed = api_without_demo().await;
+    assert_eq!(guest(&closed).await.0, StatusCode::NOT_FOUND);
+    let full = api_with(true, 1).await;
+    assert_eq!(guest(&full).await.0, StatusCode::OK);
+    let (status, token, _) = guest(&full).await;
+    assert_eq!(status, StatusCode::SERVICE_UNAVAILABLE);
+    assert_eq!(token, "");
+}
+
+#[tokio::test]
+async fn the_nightly_reset_removes_guests_and_their_work_but_keeps_the_school() {
+    let api = api(true).await;
+    let s = api.db.seed;
+    let (_, _, me) = guest(&api).await;
+    api.call(
+        "POST",
+        &format!("/api/cohorts/{}/commands", s.d),
+        Some(me),
+        Some(json!([quiz_f2(0, 3)])),
+    )
+    .await;
+    sqlx::query("select private.reset_demo()")
+        .execute(&api.db.owner)
+        .await
+        .unwrap();
+    let left: (i64, i64, i64, i64) = sqlx::query_as(
+        "select (select count(*) from users where guest), (select count(*) from users),
+                (select count(*) from events), (select count(*) from memberships)",
+    )
+    .fetch_one(&api.db.owner)
+    .await
+    .unwrap();
+    assert_eq!(left, (0, 8, 0, 11));
+    // The app itself cannot reset the school.
+    let refused = sqlx::query("select private.reset_demo()")
+        .execute(&api.db.app)
+        .await;
+    assert!(refused.is_err());
 }

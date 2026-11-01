@@ -15,5 +15,5 @@
 </label>
 
 <style>
-  select { min-height: 48px; border-radius: var(--radius); border: 2px solid var(--ink); padding: 0 0.5rem; background: var(--surface); }
+  select { min-height: 48px; border-radius: 12px; border: 2px solid var(--line); border-bottom-width: 4px; padding: 0 0.75rem; background: var(--surface); font-weight: 700; color: var(--muted); }
 </style>

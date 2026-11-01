@@ -7,6 +7,16 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- Guests (ADR 0012): the front page offers the two courses as cards, and one tap starts a
+  guest learner in it, with no account and no names. `POST /api/guest` makes a learner in every
+  open class through `private.join_as_guest`, the only way the app can write users, capped at
+  2 000 guests until the nightly reset; the browser demo does the same. A guest switches
+  courses from the menu. The demo classes (named people, teachers) moved to `#classes`.
+- A path in the style of Duolingo: a unit banner, round levels winding down the screen, the next
+  one glowing with a START bubble, gold when mastered, locked levels that say why when tapped,
+  and a trophy at the end. A game bar shows the course, the streak and the points.
+- Bizra, the guide: a seed with a sprout, drawn in SVG, who reads to the learner in a speech
+  bubble, cheers mastery and encourages after a miss.
 - A second track, "How Zidara works", for anyone: how work becomes evidence and a verdict, what
   switching the teaching approach does, and what the AI may and may not do, in Arabic, French
   and English. Its open answer is marked by the governed assistant it describes. It has its own
@@ -38,7 +48,7 @@ All notable changes to Zidara are recorded here. The format follows
   practising, recording no evidence.
 - The phone's kernel can check one answer at once (`check`), with the kernel's own marking;
   evidence still comes only from submitting the quiz.
-- The real server runs at https://zidara.72-61-103-134.sslip.io (ADR 0010): its own user,
+- The real server runs at https://zidara.ta9in.com (ADR 0010): its own user,
   database and roles on a shared machine, one Caddy file, and a clean school every night.
 - The demo school is published at https://zidara.pages.dev and the code at
   https://github.com/mohessaid/zidara.
@@ -143,6 +153,11 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Changed
 
+- New look (ADR 0012): white ground, chunky buttons with a solid edge, one rounded typeface for
+  Arabic and Latin (Baloo Bhaijaan 2), brighter colours kept to WCAG AA, a feedback sheet that
+  rises in green or blue, and finish cards for the session's points, all points and the streak.
+- The nightly reset of the hosted sandbox is `private.reset_demo()`, which also removes guests.
+- The real server is at https://zidara.ta9in.com; the interim sslip.io address is gone.
 - The browser's kernel is built with its own size profile (`opt-level = "z"`, `wasm-opt -Oz`).
   It is 184 KB gzipped, up from 164 KB: serde's code for the new tagged enums.
 - `docs/deploy.md`, after a rehearsal on a fresh database: Rust from rustup (a distribution's
@@ -169,8 +184,14 @@ All notable changes to Zidara are recorded here. The format follows
 - The `Framework` and `FrameworkRegistry` traits require `Send + Sync`, so a school's
   frameworks can be shared across server threads.
 
+### Removed
+
+- The PixiJS map, GSAP, the table view and the light experience: the HTML path replaces them.
+
 ### Fixed
 
+- The points in the learner's bar stayed at 0 after a session until a reload: the value
+  short-circuited on the kernel, which is not reactive, before reading the log.
 - A poll that brings nothing new reloads and redraws nothing, and the log is read once per change
   for XP and the streak: with polls every few seconds, idle syncs were redrawing every screen.
 - A live answer that reaches the server after the teacher moved on is dropped quietly instead of

@@ -37,9 +37,15 @@ pub struct AppState {
     pub agent: uuid::Uuid,
     /// One marking pass per class at a time.
     pub passes: Arc<agent::Passes>,
-    /// Sign in by user id, for demos only.
+    /// Sign in by user id, and start as a guest, for demos only.
     pub demo_login: bool,
+    /// How many guests may exist until the nightly reset (ADR 0012).
+    pub guest_limit: i64,
 }
+
+/// Guests the hosted sandbox takes in a day: enough for a busy demo day, small enough that an
+/// open endpoint cannot fill the database.
+pub const GUEST_LIMIT: i64 = 2_000;
 
 pub fn app(state: AppState) -> axum::Router {
     routes::router(state)

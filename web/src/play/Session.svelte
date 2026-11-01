@@ -13,6 +13,7 @@
   import Answer from "./Answer.svelte";
   import Finish from "./Finish.svelte";
   import Fold from "./Fold.svelte";
+  import Mascot from "./Mascot.svelte";
   import Picture from "./Picture.svelte";
   import Wall from "./Wall.svelte";
   import { sound } from "./sound.svelte.ts";
@@ -160,10 +161,16 @@
               <details><summary>{t(app.locale, "video.transcript")}</summary><p>{text(step.kind.transcript)}</p></details>
             {/if}
           {:else if step.kind.type === "reading"}
-            <p class="reading">{text(step.kind.body)}</p>
+            <div class="speaker">
+              <Mascot size={88} mood="think" />
+              <p class="reading bubble">{text(step.kind.body)}</p>
+            </div>
             {#if step.kind.audio}<audio controls preload="none" src={`/${step.kind.audio}`}></audio>{/if}
           {:else if step.kind.type === "explore"}
-            <p class="reading">{text(step.kind.body)}</p>
+            <div class="speaker">
+              <Mascot size={72} mood={explored ? "happy" : "idle"} />
+              <p class="reading bubble">{text(step.kind.body)}</p>
+            </div>
             {#if step.kind.toy.type === "fold"}
               <Fold folds={step.kind.toy.folds} ondone={() => (explored = true)} />
             {:else}
@@ -183,13 +190,14 @@
     <footer class="sheet" class:right={verdict === true} class:again={verdict === false}>
       {#if verdict !== undefined && question}
         <div class="feedback" role="status">
+          <span class="badge" aria-hidden="true">{verdict ? "✓" : "↻"}</span>
           <p class="headline">
             {#if verdict}{t(app.locale, PRAISE[(q + at) % PRAISE.length]!)}{:else}{t(app.locale, "feedback.again")}{/if}
           </p>
           {#if !verdict}<p>{t(app.locale, "feedback.answer")} <bdi dir="ltr" class="solution">{answerOf(question)}</bdi></p>{/if}
           {#if lookOf(question).explain}<p>{text(lookOf(question).explain ?? undefined)}</p>{/if}
         </div>
-        <button class="primary big" onclick={nextQuestion} disabled={busy}>{t(app.locale, "session.continue")}</button>
+        <button class="primary big" class:blue={!verdict} onclick={nextQuestion} disabled={busy}>{t(app.locale, "session.continue")}</button>
       {:else if step.kind.type === "quiz"}
         <button class="primary big" onclick={check} disabled={!response}>{t(app.locale, "session.check")}</button>
       {:else if step.kind.type === "open_response" && !sent}
@@ -203,28 +211,49 @@
 
 <style>
   .session { position: fixed; inset: 0; background: var(--paper); display: flex; flex-direction: column; z-index: 10; overflow-y: auto; }
-  .bar { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; max-width: 720px; width: 100%; margin: 0 auto; }
-  .close, .mute { border: none; background: none; font-size: 24px; padding: 0; }
-  .progress { flex: 1; height: 18px; background: #e6dcc8; border-radius: 999px; overflow: hidden; }
-  .progress span { display: block; height: 100%; background: var(--achieved); border-radius: 999px; transition: width 300ms ease; }
-  .combo { font-weight: 700; font-size: 20px; color: var(--needs-support); }
-  .step { flex: 1; width: 100%; max-width: 720px; margin: 0 auto; padding: 0.5rem 1rem 1rem; animation: enter 220ms ease both; }
-  .kicker { margin: 0; color: var(--locked); font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
-  h2 { font-size: 26px; margin: 0.25rem 0 1rem; }
+  .bar { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; max-width: 760px; width: 100%; margin: 0 auto; }
+  .close, .mute { border: none; background: none; font-size: 26px; padding: 0; color: var(--muted); }
+  .close:active, .mute:active { transform: none; }
+  .progress { flex: 1; height: 18px; background: var(--line); border-radius: 999px; overflow: hidden; }
+  .progress span {
+    display: block; height: 100%; background: #3fb950; border-radius: 999px; transition: width 400ms cubic-bezier(.3,1.4,.5,1);
+    background-image: linear-gradient(transparent 22%, rgba(255,255,255,0.35) 22%, rgba(255,255,255,0.35) 42%, transparent 42%);
+  }
+  .combo { font-weight: 800; font-size: 20px; color: #c25e00; animation: pop 300ms ease both; }
+  .step { flex: 1; width: 100%; max-width: 760px; margin: 0 auto; padding: 0.5rem 1rem 1.5rem; animation: enter 260ms ease both; }
+  .kicker { margin: 0; color: var(--agent); font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+  h2 { font-size: 28px; margin: 0.25rem 0 1rem; line-height: 1.25; }
   .reading { font-size: 21px; display: block; }
+  .speaker { display: flex; align-items: flex-start; gap: 0.75rem; }
+  .speaker :global(.mascot) { flex: none; }
+  .bubble {
+    position: relative; margin: 0.5rem 0 0; padding: 0.9rem 1.1rem; border: 2px solid var(--line); border-radius: var(--radius);
+    background: var(--surface); line-height: 1.55;
+  }
+  .bubble::before {
+    content: ""; position: absolute; inset-inline-start: -10px; top: 1.5rem; width: 16px; height: 16px;
+    background: var(--surface); border-inline-start: 2px solid var(--line); border-bottom: 2px solid var(--line); transform: rotate(45deg);
+  }
+  :global([dir="rtl"]) .bubble::before { transform: rotate(-45deg); }
   video { width: 100%; border-radius: var(--radius); background: #000; }
-  textarea { width: 100%; font-size: 20px; border: 3px solid var(--ink); border-radius: var(--radius); padding: 0.75rem; }
+  textarea { width: 100%; font-size: 20px; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: var(--radius); padding: 0.75rem; background: #f7f7f7; }
   .agent { color: var(--agent); font-weight: 700; }
-  .sheet { position: sticky; bottom: 0; padding: 1rem; border-top: 2px solid #e6dcc8; background: var(--surface); display: grid; gap: 0.5rem; }
-  .sheet > * { width: 100%; max-width: 720px; margin: 0 auto; }
-  .sheet.right { background: #e3f3ea; border-color: var(--achieved); }
-  .sheet.again { background: #e7f0fb; border-color: var(--in-progress); }
-  .feedback p { margin: 0.2rem 0; font-size: 19px; }
-  .headline { font-weight: 700; font-size: 24px !important; }
-  .right .headline { color: var(--achieved); }
-  .again .headline { color: var(--in-progress); }
-  .solution { font-weight: 700; }
-  :global(button.big) { min-height: 56px; font-size: 22px; border-bottom-width: 6px; border-bottom-color: #164b8a; }
-  .right :global(button.big) { background: var(--achieved); border-color: var(--achieved); border-bottom-color: #155c3a; }
-  @keyframes enter { from { opacity: 0; transform: translateY(8px); } }
+  .sheet { position: sticky; bottom: 0; padding: 1rem 1rem 1.25rem; border-top: 2px solid var(--line); background: var(--surface); display: grid; gap: 0.75rem; }
+  .sheet > * { width: 100%; max-width: 760px; margin: 0 auto; }
+  .sheet.right { background: var(--mint); border-color: transparent; animation: rise 220ms ease both; }
+  .sheet.again { background: var(--sky); border-color: transparent; animation: rise 220ms ease both; }
+  .feedback { display: grid; grid-template-columns: auto 1fr; column-gap: 0.75rem; align-items: center; }
+  .feedback > p { grid-column: 2; }
+  .badge { grid-row: span 3; width: 56px; height: 56px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-size: 30px; font-weight: 800; }
+  .right .badge { color: var(--achieved); }
+  .again .badge { color: var(--blue-edge); }
+  .feedback p { margin: 0.1rem 0; font-size: 19px; }
+  .headline { font-weight: 800; font-size: 26px !important; }
+  .right .headline { color: #1a7431; }
+  .again .headline { color: var(--blue-edge); }
+  .solution { font-weight: 800; }
+  :global(button.big) { min-height: 56px; font-size: 20px; }
+  @keyframes enter { from { opacity: 0; transform: translateY(10px); } }
+  @keyframes rise { from { transform: translateY(100%); } }
+  @keyframes pop { from { transform: scale(0.4); } }
 </style>

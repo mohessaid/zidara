@@ -15,8 +15,11 @@ const CLASSES = [
   { id: "00000000-0000-0000-0000-00000000c00a", name: "Class 4 A", lesson: "equivalent-fractions" },
   { id: "00000000-0000-0000-0000-00000000c00b", name: "Class 4 B", lesson: "equivalent-fractions" },
   { id: "00000000-0000-0000-0000-00000000c00c", name: "Discover Zidara", lesson: "how-zidara-works" },
+  { id: "00000000-0000-0000-0000-00000000c00d", name: "Open fractions", lesson: "equivalent-fractions" },
 ] as const;
-const [A, B, C] = [CLASSES[0].id, CLASSES[1].id, CLASSES[2].id];
+const [A, B, C, D] = [CLASSES[0].id, CLASSES[1].id, CLASSES[2].id, CLASSES[3].id];
+/** The open classes a guest joins, in the server's order (by name). */
+const OPEN = [C, D];
 
 /** The server's seed (`crates/zidara-server/src/seed.rs`). */
 export const PEOPLE = [
@@ -29,8 +32,11 @@ export const PEOPLE = [
   { name: "omar", id: "00000000-0000-0000-0000-0000007ec001", display_name: "Omar", cohort: C, role: "teacher" },
 ] as const satisfies readonly { name: string; id: string; display_name: string; cohort: string; role: Role }[];
 
+type Member = { id: string; display_name: string; cohort: string; role: Role };
+
 const AGENT: Actor = { kind: "agent", agent: "assessor", role: "assessment_agent" };
 const KEY = "zidara.demo-school";
+const GUESTS = "zidara.demo-guests";
 
 type Saved = Record<string, { log: Event[]; applied: string[] }>;
 type Storage = { getItem(key: string): string | null; setItem(key: string, value: string): void };
@@ -94,22 +100,31 @@ export class DemoSchool {
       if (!person) throw unauthorized();
       return { token: person.id };
     }
-    const person = PEOPLE.find((p) => p.id === token);
+    if (method === "POST" && path === "/api/guest") {
+      const id = crypto.randomUUID();
+      this.storage.setItem(GUESTS, JSON.stringify([...this.#guests(), id]));
+      return { token: id };
+    }
+    const memberships = this.#memberships(token);
+    const person = memberships[0];
     if (!person) throw unauthorized();
     if (method === "GET" && path === "/api/me") {
-      const cohort = CLASSES.find((c) => c.id === person.cohort)!;
       return {
         id: person.id,
         display_name: person.display_name,
-        cohorts: [{ id: cohort.id, tenant_id: TENANT, name: cohort.name, lesson_id: cohort.lesson, framework: "mastery", role: person.role }],
+        cohorts: memberships.map((m) => {
+          const cohort = CLASSES.find((c) => c.id === m.cohort)!;
+          return { id: cohort.id, tenant_id: TENANT, name: cohort.name, lesson_id: cohort.lesson, framework: "mastery", role: m.role };
+        }),
       };
     }
     const pack = this.#packs.find((p) => path === `/api/packs/${p.id}`);
     if (method === "GET" && pack) return pack;
     const [, cohort, action] = /^\/api\/cohorts\/([^/]+)\/([a-z]+)$/.exec(path) ?? [];
     if (!cohort || !CLASSES.some((c) => c.id === cohort)) throw notFound();
-    if (person.cohort !== cohort) throw notMember();
-    const actor: Actor = { kind: "human", user: person.id, role: person.role };
+    const member = memberships.find((m) => m.cohort === cohort);
+    if (!member) throw notMember();
+    const actor: Actor = { kind: "human", user: member.id, role: member.role };
     const kernel = this.#kernel(cohort);
     if (method === "POST" && action === "commands") return this.#commands(cohort, kernel, actor, body as Envelope[]);
     if (method === "GET" && action === "events") {
@@ -117,18 +132,32 @@ export class DemoSchool {
       const limit = Number(url.searchParams.get("limit") ?? 500);
       const seq = new Map(kernel.events().map((e, i) => [e.id, i]));
       return kernel
-        .visibleEvents(person.id, person.role)
+        .visibleEvents(member.id, member.role)
         .map((event) => ({ seq: seq.get(event.id)!, event }))
         .filter((row) => row.seq > after)
         .slice(0, limit);
     }
-    if (person.role !== "teacher") throw forbidden();
-    const learners = PEOPLE.filter((p) => p.cohort === cohort && p.role === "learner").sort((a, b) => a.display_name.localeCompare(b.display_name));
+    if (member.role !== "teacher") throw forbidden();
+    const learners = this.#everyone().filter((p) => p.cohort === cohort && p.role === "learner").sort((a, b) => a.display_name.localeCompare(b.display_name));
     if (method === "GET" && action === "studio") {
       return kernel.studioView(learners.map((p) => p.id), url.searchParams.get("locale") ?? "ar", this.now());
     }
     if (method === "GET" && action === "roster") return learners.map((p) => ({ id: p.id, display_name: p.display_name }));
     throw notFound();
+  }
+
+  #guests(): string[] {
+    return JSON.parse(this.storage.getItem(GUESTS) ?? "[]") as string[];
+  }
+
+  /** Everyone's memberships: the seeded people, and each guest in every open class. */
+  #everyone(): Member[] {
+    const guests = this.#guests().flatMap((id) => OPEN.map((cohort): Member => ({ id, display_name: "Guest", cohort, role: "learner" })));
+    return [...PEOPLE, ...guests];
+  }
+
+  #memberships(token: string | undefined): Member[] {
+    return this.#everyone().filter((m) => m.id === token);
   }
 
   #commands(cohort: string, kernel: Kernel, actor: Actor, envelopes: Envelope[]) {

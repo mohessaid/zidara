@@ -58,6 +58,7 @@ async fn run(command: &str, config: Config) -> Result<(), Box<dyn std::error::Er
                 agent: config.agent,
                 passes: Default::default(),
                 demo_login: config.demo_login,
+                guest_limit: zidara_server::GUEST_LIMIT,
             };
             let listener = tokio::net::TcpListener::bind(&config.addr).await?;
             println!("zidara-server listening on {} ({config:?})", config.addr);

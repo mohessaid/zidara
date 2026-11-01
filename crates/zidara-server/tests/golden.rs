@@ -36,6 +36,7 @@ async fn the_server_reaches_the_views_the_phone_computed() {
         agent: Uuid::nil(),
         passes: Default::default(),
         demo_login: false,
+        guest_limit: 0,
     });
     let cohort = session["setup"]["cohort"].as_str().unwrap();
     let learner: Uuid = session["learner"].as_str().unwrap().parse().unwrap();

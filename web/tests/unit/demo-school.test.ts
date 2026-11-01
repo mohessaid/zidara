@@ -38,6 +38,26 @@ describe("the demo school in the browser", () => {
     });
   });
 
+  it("starts guests in both open classes, each a new person, kept out of the others", async () => {
+    const storage = memory();
+    const school = new DemoSchool(pack, storage, () => NOW);
+    const guest = await Api.guest(school.fetch);
+    const other = await Api.guest(school.fetch);
+    expect(other.token).not.toBe(guest.token);
+    const me = await guest.me();
+    expect(me.display_name).toBe("Guest");
+    expect(me.cohorts.map((c) => [c.name, c.lesson_id, c.role])).toEqual([
+      ["Discover Zidara", "how-zidara-works", "learner"],
+      ["Open fractions", "equivalent-fractions", "learner"],
+    ]);
+    const D = me.cohorts[1]!.id;
+    const [result] = await guest.commands(D, [{ actor: { kind: "system" }, envelope: explain("the same amount") }]);
+    expect(result!.outcome.status).toBe("applied");
+    await expect(guest.events(A)).rejects.toMatchObject({ status: 403 });
+    // Another tab of the same browser still knows the guest.
+    expect((await new Api(guest.token, new DemoSchool(pack, storage, () => NOW).fetch).me()).id).toBe(me.id);
+  });
+
   it("applies commands as the signed-in person, marks open answers with the rubric, and keeps learners apart", async () => {
     const school = new DemoSchool(pack, memory(), () => NOW);
     const asAmina = await Api.signIn(amina, school.fetch);

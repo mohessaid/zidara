@@ -24,7 +24,7 @@ side is ready.
   where it is proven. The costs in `docs/cost-model.md` mix measurements and assumptions; say
   which is which.
 - The demo link runs in the visitor's browser with invented people. It shows the pedagogy and the
-  teacher's decisions. The real server (https://zidara.72-61-103-134.sslip.io) shows sync between
+  teacher's decisions. The real server (https://zidara.ta9in.com) shows sync between
   devices and live rounds; it marks with the rubric, not a paid model. Cite the tests in
   `docs/solve-evidence.md` for isolation and AI marking.
 - To show a live round: open the real server as Karim on a laptop and as Amina on a phone.

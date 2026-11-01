@@ -4,6 +4,12 @@ Pillars: **clarity** (a child knows what to do next without reading), **warmth**
 is a friendly place to try and fail), **honesty** (the game shows what the learner can do,
 never more).
 
+> **Revised 1 November 2026 (ADR 0012).** White ground, chunky buttons, brighter colours (the
+> tokens and their contrast ratios are in `web/src/app.css`), Baloo Bhaijaan 2 for every
+> language, and the path drawn in HTML and CSS, with Bizra the seed as guide. The pillars and
+> the rules on honesty, feedback and sound below are unchanged; where a colour, a font or
+> PixiJS is named below, the ADR and `app.css` win.
+
 ## 1. Identity
 
 A hand-drawn path across a sunlit landscape, where every stone you cross is something you

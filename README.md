@@ -9,12 +9,13 @@ This repository is the working prototype for the [MIT Solve 2027 Global Learning
 Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (deadline
 6 November 2026, 12:00 pm EST, per the live challenge page on 31 October).
 
-- **Try it:** https://zidara.pages.dev (the demo school, in your browser: no sign-up, invented
-  people, works offline after one visit). Sign in as **Lina** to learn how Zidara works by
-  playing it, or as **Amina** for the fractions track, then as the teacher **Karim**.
-- **The real server:** https://zidara.72-61-103-134.sslip.io (PostgreSQL, three classes kept apart
-  by the database; the school is emptied every night). For a live round, open it as Karim on a
-  laptop and as Amina and Yacine on two phones.
+- **Try it:** https://zidara.ta9in.com. Pick a course and start: no account, no names. "How
+  Zidara works" teaches the idea by playing it; "Equivalent fractions" is a complete maths
+  track. The real server (PostgreSQL, classes kept apart by the database, emptied every night).
+- **Teachers and live rounds:** the "demo classes" link at the bottom of the front page. Open
+  it as Karim on a laptop and as Amina and Yacine on two phones for a live round.
+- **The same app with no server:** https://zidara.pages.dev runs the whole school inside your
+  browser and works offline after one visit.
 - **Code:** https://github.com/mohessaid/zidara
 
 ## What works today

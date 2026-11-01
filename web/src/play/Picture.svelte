@@ -51,5 +51,5 @@
   .picture { display: block; width: min(100%, 360px); margin: 0.75rem auto; overflow: visible; }
   .circle { width: min(60%, 200px); }
   rect, path { fill: var(--surface); stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; }
-  .on { fill: var(--in-progress); }
+  .on { fill: #ff9600; }
 </style>

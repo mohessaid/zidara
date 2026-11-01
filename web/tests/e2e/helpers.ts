@@ -3,8 +3,9 @@ import AxeBuilder from "@axe-core/playwright";
 
 export const PEOPLE = { amina: "أمينة", yacine: "ياسين", sara: "سارة", karim: "كريم" } as const;
 
+/** Signs in one of the demo classes' people (#classes); the front door is for guests. */
 export async function signIn(page: Page, who: keyof typeof PEOPLE) {
-  await page.goto("/");
+  await page.goto("/#classes");
   await page.getByRole("button", { name: new RegExp(`الدخول باسم ${PEOPLE[who]}`) }).click();
 }
 
@@ -50,6 +51,12 @@ export async function playF1(page: Page) {
   await checkAndGo(page);
   await expect(page.getByRole("heading", { name: "أصبحت تستطيع هذا!" })).toBeVisible();
   return variant;
+}
+
+/** Starts as a guest on the course `lesson`, from the front door. */
+export async function startAsGuest(page: Page, lesson = "equivalent-fractions") {
+  await page.goto("/");
+  await page.locator(`[data-lesson="${lesson}"]`).click();
 }
 
 export const backToPath = (page: Page) => button(page, "رجوع إلى الطريق").click();

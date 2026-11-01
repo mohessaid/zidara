@@ -24,6 +24,7 @@
 </script>
 
 <main>
+  <p><a href="#start" class="back">‹ {t(app.locale, "welcome.back")}</a></p>
   <div class="row"><h1>{t(app.locale, "signin.title")}</h1><span class="spacer"></span><LanguagePicker /></div>
   {#if DEMO}<p class="card notice" data-testid="demo-notice">{t(app.locale, "demo.notice")}</p>{/if}
   {#if app.error}<p role="alert" class="state-needs_support">{app.error}</p>{/if}
@@ -46,6 +47,7 @@
 
 <style>
   .spacer { flex: 1; }
+  .back { color: var(--blue-edge); font-weight: 700; }
   .notice { border-inline-start: 4px solid var(--in-progress); }
   .people { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
   .people button { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 1rem; }

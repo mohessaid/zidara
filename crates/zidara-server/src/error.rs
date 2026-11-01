@@ -17,6 +17,8 @@ pub enum ApiError {
     Forbidden,
     #[error("not found")]
     NotFound,
+    #[error("the demo is full for today; try again tomorrow")]
+    Full,
     #[error("the cohort's lesson {0:?} is not loaded")]
     UnknownLesson(String),
     #[error(transparent)]
@@ -33,6 +35,7 @@ impl IntoResponse for ApiError {
             ApiError::Unauthorized => StatusCode::UNAUTHORIZED,
             ApiError::NotMember | ApiError::Forbidden => StatusCode::FORBIDDEN,
             ApiError::NotFound => StatusCode::NOT_FOUND,
+            ApiError::Full => StatusCode::SERVICE_UNAVAILABLE,
             ApiError::UnknownLesson(_)
             | ApiError::Kernel(_)
             | ApiError::Database(_)

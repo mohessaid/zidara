@@ -18,13 +18,14 @@ act as anyone and write to the database.
   `zidara_owner`. No other project's role or database is touched.
 - Caddy gets one file, `/etc/caddy/sites.d/zidara.caddy`, the convention the server already
   uses; changes are checked with `caddy validate` and applied with `reload`, never `restart`.
-- The address is `zidara.72-61-103-134.sslip.io` until a DNS record exists (the Cloudflare
-  login available can read the `nasa9.com` zone but not edit it).
+- The address is `zidara.ta9in.com` (a DNS-only A record; Caddy gets its own certificate).
+  An interim `sslip.io` address was used for a few hours on 1 November and then removed at the
+  owner's request.
 - **No model marks open answers on the public sandbox**: no API key is set, so the rubric marks,
   as in the browser demo. A public sign-in that can trigger paid calls is a cost and abuse
   surface; the model path is proven by the server's tests.
-- A systemd timer empties the school every night (`truncate events, applied_envelopes`; the
-  people and classes stay), so each day starts clean.
+- A systemd timer empties the school every night (`private.reset_demo()`: every event goes,
+  and every guest (ADR 0012); the seeded people and classes stay), so each day starts clean.
 - Load tests (`tools/load`) are never run against it.
 
 ## Consequences

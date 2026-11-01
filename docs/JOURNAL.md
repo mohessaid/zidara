@@ -4,6 +4,46 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-01 — "I don't see no Duolingo": guests, a real path, and a domain
+
+**What happened.** The owner opened the published app and was angry, rightly. The front page was
+a list of invented pupils; after picking one, the map area was blank; and the server's address
+was an `sslip.io` name they never asked for. They asked for: no sslip.io, the domain
+`zidara.ta9in.com`, no pupils on show, guests who can start lessons at once, and a look people
+recognise from Duolingo, Brilliant and Kahoot.
+
+**The problems.**
+- *The address.* I had used `sslip.io` because I could not edit the `nasa9.com` zone. I should
+  have asked for a domain instead of publishing a workaround the owner had not seen. The Caddy
+  site was switched to `zidara.ta9in.com` at once and the sslip.io name stopped answering; the
+  other sites on the server kept answering throughout (`caddy validate`, then `reload`).
+- *The blank map.* Reproduced headless: after sign-in the PixiJS map had drawn nothing. Every
+  test of the map ran with a real GPU and waited for a stone; nobody had looked at the first
+  seconds a visitor sees. A game engine for three stones was the wrong tool for an economy phone.
+- *Stuck points.* The new top bar showed 0 points after a session that earned 10; a reload fixed
+  it. The derived value read `app.kernel` (not reactive) first and short-circuited, so on the
+  first run, before the kernel arrived, it never subscribed to the log. Found by looking at the
+  screenshots, not by a test; the guest e2e test now checks the points without a reload.
+
+**What we did.** Guests (ADR 0012): a `security definer` function is the only way the app can
+create people, only into open classes, capped at 2 000 until the nightly reset, which is now a
+function too and removes guests. The front page is a guide, one promise and two course cards.
+The map became an HTML path: unit banner, winding round levels, a glowing START, gold mastery,
+locks that explain themselves, a trophy. Bizra, a seed with a sprout, reads to the learner and
+cheers. New type (Baloo Bhaijaan 2, one rounded face for Arabic and Latin) and chunky buttons.
+PixiJS, GSAP and the table view are gone.
+
+**Numbers.** Server API tests 13 of 13 (three new: guests in both open classes and nowhere
+else, demo mode and the cap, the reset keeps the school). Web unit tests 34 of 34. Static demo
+3 of 3. axe found three contrast failures in the first draft (white on the bright green at 16 px,
+the green START, the blue links); all fixed by darker shades, not by hiding text.
+
+**Lesson.** Look at the product the way a stranger meets it: the first screen, the first five
+seconds, on a phone, before signing in. Tests that start from a signed-in pupil never saw what
+the owner saw. And never publish an address, a name or a workaround the owner has not seen.
+
+---
+
 ## 2026-11-01 — Green again
 
 **What happened.** With idle polls doing nothing, the browser stage passed: 13 of 13, and the map

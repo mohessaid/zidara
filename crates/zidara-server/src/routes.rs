@@ -23,6 +23,7 @@ use crate::xapi::statement;
 pub fn router(state: AppState) -> Router {
     Router::new()
         .route("/api/login", post(login))
+        .route("/api/guest", post(guest))
         .route("/api/me", get(me))
         .route("/api/packs/{id}", get(pack))
         .route("/api/cohorts/{id}/commands", post(commands))
@@ -79,6 +80,23 @@ async fn login(
     }
     Ok(Json(
         json!({ "token": issue(&state.keys, body.user_id, state.clock.now()) }),
+    ))
+}
+
+/// Starts a guest: a new learner in every open class, with no name and no password (ADR 0012).
+async fn guest(State(state): State<AppState>) -> Result<Json<Value>, ApiError> {
+    if !state.demo_login {
+        return Err(ApiError::NotFound);
+    }
+    let mut tx = state.pool.begin().await?;
+    let guest: Option<Uuid> = sqlx::query_scalar("select private.join_as_guest($1::integer)")
+        .bind(state.guest_limit)
+        .fetch_one(&mut *tx)
+        .await?;
+    tx.commit().await?;
+    let guest = guest.ok_or(ApiError::Full)?;
+    Ok(Json(
+        json!({ "token": issue(&state.keys, guest, state.clock.now()) }),
     ))
 }
 

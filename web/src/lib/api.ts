@@ -35,6 +35,12 @@ export class Api implements SyncApi {
     return new Api(token, fetcher);
   }
 
+  /** Starts as a guest: a new learner in every open class (ADR 0012). */
+  static async guest(fetcher: typeof fetch = apiFetch): Promise<Api> {
+    const { token } = await request<{ token: string }>(fetcher, "POST", "/api/guest", undefined, {});
+    return new Api(token, fetcher);
+  }
+
   me = () => this.#get<Me>("/api/me");
   studio = (cohort: string, locale: string) => this.#get<StudioView>(`/api/cohorts/${cohort}/studio?locale=${locale}`);
   roster = (cohort: string) => this.#get<Person[]>(`/api/cohorts/${cohort}/roster`);

@@ -41,7 +41,7 @@ class App {
     const session = await this.store.session();
     if (session) {
       this.api = new Api(session.token);
-      await this.#enter(session.cohorts[0]?.id).catch(() => this.signOut());
+      await this.#enter(session.cohort ?? session.cohorts[0]?.id).catch(() => this.signOut());
     } else {
       setTimeout(() => void this.#kernel(), 2_000);
     }
@@ -66,10 +66,30 @@ class App {
 
   async signIn(user: string) {
     this.error = undefined;
-    this.api = await Api.signIn(user);
-    const me = await this.api.me();
-    await this.store!.saveSession({ token: this.api.token, user: me.id, displayName: me.display_name, cohorts: me.cohorts });
-    await this.#enter(me.cohorts[0]?.id, me);
+    await this.#begin(await Api.signIn(user));
+  }
+
+  /** Starts learning without an account, on the course whose lesson is `lesson` (ADR 0012). */
+  async guest(lesson: string) {
+    this.error = undefined;
+    await this.#begin(await Api.guest(), lesson);
+  }
+
+  async #begin(api: Api, lesson?: string) {
+    this.api = api;
+    const me = await api.me();
+    const cohort = me.cohorts.find((c) => c.lesson_id === lesson) ?? me.cohorts[0];
+    await this.store!.saveSession({ token: api.token, user: me.id, displayName: me.display_name, cohorts: me.cohorts, cohort: cohort?.id });
+    await this.#enter(cohort?.id, me);
+  }
+
+  /** Moves to another of this person's classes (a guest's other course). */
+  async switchCohort(id: string) {
+    if (id === this.cohort?.id) return;
+    const session = await this.store!.session();
+    if (session) await this.store!.saveSession({ ...session, cohort: id });
+    this.kernel = this.pack = undefined;
+    await this.#enter(id, this.me);
   }
 
   async signOut() {

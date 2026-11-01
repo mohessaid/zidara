@@ -7,7 +7,8 @@ import type { Event } from "./kernel/types/Event.ts";
 import type { KernelError } from "./kernel/types/KernelError.ts";
 
 export type CohortMembership = { id: string; name: string; lesson_id: string; role: "learner" | "teacher" | "assessment_agent" };
-export type Session = { token: string; user: string; displayName: string; cohorts: CohortMembership[] };
+/** `cohort`: the class last open (a guest has two courses). */
+export type Session = { token: string; user: string; displayName: string; cohorts: CohortMembership[]; cohort?: string };
 export type Outgoing = { id: string; cohort: string; actor: Actor; envelope: Envelope; refused?: KernelError };
 
 interface Schema extends DBSchema {

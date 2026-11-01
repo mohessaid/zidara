@@ -1,7 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { backToPath, expectAccessible, explainF2, F3_OPENS, playF1, signIn, stone } from "../e2e/helpers.ts";
+import { backToPath, expectAccessible, explainF2, F3_OPENS, playF1, signIn, startAsGuest, stone } from "../e2e/helpers.ts";
 
 async function signOut(page: import("@playwright/test").Page) {
+  // A learner's sign-out is in the menu; a teacher's is in the header.
+  const menu = page.getByRole("button", { name: "القائمة" });
+  if (await menu.count()) await menu.click();
   await page.getByRole("button", { name: "خروج" }).click();
   await expect(page.getByRole("heading", { name: "من أنت؟" })).toBeVisible();
 }
@@ -10,7 +13,7 @@ test("the whole school story runs in one browser, with no server", async ({ page
   const api: string[] = [];
   page.on("request", (r) => r.url().includes("/api/") && api.push(r.url()));
 
-  await page.goto("/");
+  await page.goto("/#classes");
   await expect(page.getByTestId("demo-notice")).toContainText("يعمل كلّه في متصفّحك");
   await expectAccessible(page, "demo sign-in");
 
@@ -47,6 +50,15 @@ test("the whole school story runs in one browser, with no server", async ({ page
   await expect(stone(page, "F1")).toHaveAttribute("data-state", "not_started");
 
   // No call reached a server: every API path was answered inside the page.
+  expect(api).toEqual([]);
+});
+
+test("a guest learns in the static demo too, with no server", async ({ page }) => {
+  const api: string[] = [];
+  page.on("request", (r) => r.url().includes("/api/") && api.push(r.url()));
+  await startAsGuest(page, "how-zidara-works");
+  await expect(stone(page, "Z1")).toHaveAttribute("data-state", "not_started");
+  await expectAccessible(page, "demo guest path");
   expect(api).toEqual([]);
 });
 

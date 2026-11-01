@@ -103,12 +103,8 @@
 
 <style>
   .tiles { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
-  .tile {
-    min-height: 72px; font-size: 26px; font-weight: 700; border-width: 3px; border-bottom-width: 6px;
-    transition: transform 120ms ease;
-  }
-  .tile:active:not(:disabled) { transform: translateY(3px); border-bottom-width: 3px; }
-  .tile[aria-checked="true"] { border-color: var(--in-progress); background: #e7f0fb; }
+  .tile { min-height: 76px; font-size: 26px; font-weight: 800; border-width: 2px 2px 5px; border-radius: 18px; }
+  .tile[aria-checked="true"] { border-color: #84d8ff; border-bottom-color: #4fb8ef; background: var(--sky); color: var(--blue-edge); }
   /* Sentences rather than numbers: one per row, at reading size. */
   .long { grid-template-columns: 1fr; }
   .long .tile { font-size: 20px; min-height: 60px; text-align: start; justify-content: flex-start; padding: 0.6rem 1rem; }
@@ -118,15 +114,16 @@
   .live .tile[aria-checked="true"] { outline: 4px solid var(--ink); outline-offset: 3px; }
   .shape { font-size: 30px; }
   .fraction { display: flex; width: fit-content; flex-direction: column; align-items: center; gap: 0.4rem; margin: 0 auto; }
-  .fraction input { width: 6rem; min-height: 60px; font-size: 32px; text-align: center; border: 3px solid var(--ink); border-radius: var(--radius); }
+  .fraction input { width: 6rem; min-height: 64px; font-size: 34px; font-weight: 800; text-align: center; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: var(--radius); background: #f7f7f7; }
+  .fraction input:focus { border-color: #84d8ff; background: #fff; }
   .line { width: 7rem; height: 4px; background: var(--ink); border-radius: 2px; }
   .shade { display: grid; gap: 0.75rem; justify-items: center; }
   .stepper { display: flex; align-items: center; gap: 1rem; }
   .stepper button { font-size: 28px; font-weight: 700; width: 56px; }
   .stepper output { font-size: 22px; font-weight: 700; min-width: 7rem; text-align: center; }
   .cells { display: flex; width: min(100%, 420px); gap: 4px; }
-  .cell { flex: 1; min-width: 0; min-height: 64px; padding: 0; border-radius: 8px; transition: background 120ms ease; }
-  .cell.on { background: var(--in-progress); border-color: var(--in-progress); }
+  .cell { flex: 1; min-width: 0; min-height: 72px; padding: 0; border-radius: 10px; transition: background 120ms ease; }
+  .cell.on { background: #ff9600; border-color: #c76a00; }
   .cell:disabled, .tile:disabled { opacity: 1; }
   .count { font-size: 28px; font-weight: 700; margin: 0; }
 </style>

@@ -1,15 +1,39 @@
 import { expect, test } from "@playwright/test";
-import { backToPath, button, expectAccessible, explainF2, F3_OPENS, playF1, signIn, stone } from "./helpers.ts";
+import { backToPath, button, expectAccessible, explainF2, F3_OPENS, playF1, signIn, startAsGuest, stone } from "./helpers.ts";
 
-test("sign-in is in Arabic, right to left, and accessible", async ({ page }) => {
+test("the front door is in Arabic, right to left, accessible, and lists no one", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
-  await expect(page.getByRole("heading", { name: "من أنت؟" })).toBeVisible();
-  await expectAccessible(page, "sign-in");
+  await expect(page.getByRole("heading", { name: "تعلّم وأنت تلعب." })).toBeVisible();
+  await expect(page.getByText("أمينة")).toHaveCount(0);
+  await expectAccessible(page, "front door");
   await page.getByRole("combobox").selectOption("fr");
   await expect(page.locator("html")).toHaveAttribute("dir", "ltr");
-  await expect(page.getByRole("heading", { name: "Qui es-tu ?" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Apprends en jouant." })).toBeVisible();
   await page.getByRole("combobox").selectOption("ar");
+  // The demo classes are one small link away, for teachers.
+  await page.getByRole("link", { name: "للمعلّمين: الأقسام التجريبية" }).click();
+  await expect(page.getByRole("heading", { name: "من أنت؟" })).toBeVisible();
+  await expectAccessible(page, "demo classes");
+});
+
+test("a guest starts a course in one tap, learns, and can switch to the other course", async ({ page }) => {
+  await startAsGuest(page);
+  await expect(page.getByRole("heading", { name: "الكسور المتكافئة" }).first()).toBeVisible();
+  await expect(stone(page, "F1")).toHaveAttribute("data-state", "not_started");
+  await expectAccessible(page, "guest path");
+  await playF1(page);
+  await backToPath(page);
+  await expect(stone(page, "F1")).toHaveAttribute("data-state", "achieved");
+  // Points come from the log at once, not after a reload.
+  await expect(page.getByRole("group", { name: "نقاطك وأيامك المتتالية" })).toContainText("النقاط 20");
+  await page.getByRole("button", { name: "القائمة" }).click();
+  await page.getByRole("button", { name: /كيف تعمل زيدارا/ }).click();
+  await expect(stone(page, "Z1")).toHaveAttribute("data-state", "not_started");
+  // Back on fractions, the work is still there.
+  await page.getByRole("button", { name: "القائمة" }).click();
+  await page.getByRole("button", { name: /الكسور المتكافئة/ }).click();
+  await expect(stone(page, "F1")).toHaveAttribute("data-state", "achieved");
 });
 
 test("a learner sees the path, mirrored for Arabic, with locks explained", async ({ page }) => {
@@ -19,35 +43,10 @@ test("a learner sees the path, mirrored for Arabic, with locks explained", async
   await expect(stone(page, "F2")).toContainText("تُفتح بعد إتقان");
   const [first, last] = [await stone(page, "F1").boundingBox(), await stone(page, "F3").boundingBox()];
   expect(first!.x).toBeGreaterThan(last!.x);
-  await expectAccessible(page, "quest");
-  await page.getByRole("button", { name: "الجدول" }).click();
-  await expect(page.getByRole("table")).toBeVisible();
-  await expectAccessible(page, "grid");
-});
-
-test("with data saver on, the light experience starts without the game engine", async ({ page }) => {
-  await page.addInitScript(() => Object.defineProperty(navigator, "connection", { value: { saveData: true } }));
-  await signIn(page, "amina");
-  await expect(page.getByRole("table")).toBeVisible();
-  await expect(page.getByRole("button", { name: "الجدول" })).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator("canvas")).toHaveCount(0);
-  await expectAccessible(page, "light");
-  // The map is one tap away, and loads only then.
-  await page.getByRole("button", { name: "الطريق" }).click();
-  await expect(stone(page, "F1")).toBeVisible();
-  await expect(page.locator("canvas")).toHaveCount(1);
-});
-
-test("if the map cannot load, the learner gets the table and can try again", async ({ page }) => {
-  // The connection drops between the screen and the map: the map's code never arrives.
-  await page.route("**/assets/Quest-*.js", (route) => route.abort());
-  await signIn(page, "amina");
-  await expect(page.getByRole("table")).toBeVisible();
-  await expect(page.getByRole("status").filter({ hasText: "ستظهر الخريطة" })).toBeVisible();
-  await expectAccessible(page, "map unavailable");
-  await page.unroute("**/assets/Quest-*.js");
-  await page.getByRole("button", { name: "الطريق" }).click();
-  await expect(stone(page, "F1")).toBeVisible();
+  await expectAccessible(page, "path");
+  // A locked level is aria-disabled, but a tap still says why it is locked.
+  await stone(page, "F2").click({ force: true });
+  await expect(page.getByRole("status").filter({ hasText: "تُفتح بعد إتقان" })).toBeVisible();
 });
 
 test("offline work is kept, then syncs to the server when the network returns", async ({ page, context, browser }) => {

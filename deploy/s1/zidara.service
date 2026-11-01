@@ -1,5 +1,5 @@
 [Unit]
-Description=Zidara prototype (zidara.72-61-103-134.sslip.io), ADR 0010
+Description=Zidara prototype (zidara.ta9in.com), ADR 0010
 After=network-online.target postgresql@17-main.service
 
 [Service]

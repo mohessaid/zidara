@@ -103,7 +103,7 @@ Then, from any machine with the repository, the browser check (it signs in as a 
 reads, and reloads offline; it changes no data):
 
 ```bash
-cd web && ZIDARA_URL=https://zidara.example.org pnpm smoke     # 3 passed
+cd web && ZIDARA_URL=https://zidara.example.org pnpm smoke     # 4 passed
 ```
 
 ## On a shared server (how s1 runs it)
@@ -130,18 +130,22 @@ The hosted sandbox (ADR 0010) runs on a server that other projects share. The fi
   `/etc/zidara.env` (root only). The unit caps memory (512 MB) and CPU (one core).
 - **Caddy:** one file in `/etc/caddy/sites.d/`, then `caddy validate` and `systemctl reload
   caddy`. Never `restart`: it drops every other site's connections.
-- **A clean school every night:** `zidara-reset.timer` runs `truncate events,
-  applied_envelopes` at 03:00 UTC. The server keeps nothing in memory, so this is safe while it
-  runs.
+- **A clean school every night:** `zidara-reset.timer` runs `select private.reset_demo()` at
+  03:00 UTC: events and guests go, the seeded people and classes stay (ADR 0012). The server
+  keeps nothing in memory, so this is safe while it runs.
 - **Never run `tools/load` against it.**
 
-Updating it:
+Updating it (a release with a new migration also runs `migrate` as the owner; to start the
+school from scratch, empty it and `seed` again):
 
 ```bash
 scp target/release/zidara-server s1.nasa9.com:/tmp/ && ssh s1.nasa9.com \
   'sudo install -m 755 /tmp/zidara-server /opt/zidara/ && sudo systemctl restart zidara'
-cd web && ZIDARA_URL=https://zidara.72-61-103-134.sslip.io pnpm smoke     # 3 passed
+cd web && ZIDARA_URL=https://zidara.ta9in.com pnpm smoke     # 4 passed
 ```
+
+The address is a DNS-only A record (`zidara.ta9in.com` → the server), so Caddy obtains and
+renews its own certificate as for the other sites.
 
 ## Before real children use it
 

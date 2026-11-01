@@ -16,9 +16,8 @@ native apps.
   and a SCORM player (`mod_scorm`: SCORM 1.2 in core, SCORM 2004 only in part), but both live
   inside Moodle, tied to its own courses and activities. Neither can be lifted out and reused.
 - **Automation happens between systems.** Student information system, LMS and tools are
-  separate; every arrow between them needs mapping, retries and reconciliation. Scaling by
-  running more LMS instances multiplies that work: N instances, N databases, N upgrades.
-- **Pedagogy is not automated.** Today's automation automates administration; the
+  separate; every arrow between them needs mapping, retries and reconciliation.
+- **Pedagogy is not automated.** Today's automation handles administration; the
   teaching itself stays outside the system's understanding.
 
 ## 2. The model: three axes plus automation
@@ -29,7 +28,7 @@ native apps.
   (how)         │ Teacher studio · Parent view · Chat tutor    │  per audience and device
                 ├──────────────────────────────────────────────┤
   FRAMEWORK     │ Cambridge · Mastery · IB · Competency-based ·│  what learning means:
-  (what)        │ Spaced repetition · a client's own pedagogy  │  outcomes, evidence, rules
+  (what)        │ Spaced repetition · a school's own pedagogy  │  outcomes, evidence, rules
                 ├──────────────────────────────────────────────┤
   KERNEL        │ people · groups · content · activities ·     │  built once,
   (foundation)  │ evidence log · scheduling · API · security   │  tested hard
@@ -91,7 +90,7 @@ device and connection, language and script (right-to-left included), and accessi
 4. **Experience templates:** named combinations for an audience ("Early years", "Secondary",
    "Adult professional").
 
-### 2.3 Automation: the next level of automation
+### 2.3 Automation of teaching, inside rules
 
 | Today | This model |
 |---|---|
@@ -129,8 +128,8 @@ Agents as actors, under the same permission system as humans:
   failover. It is the one part scaled with care, and measured before it grows.
 - **Video never touches the app servers:** 1,000 concurrent viewers at 1.5 Mb/s need 1.5 Gb/s,
   more than a typical server uplink. It goes through a CDN or streaming service.
-- **Segregation and isolation are data rules:** every row carries its cohort and tenant, and
-  PostgreSQL row-level security enforces them, so no screen and no agent can bypass them.
+- **Isolation is a data rule:** every row carries its cohort and tenant, and
+  PostgreSQL row-level security enforces it, so no screen and no agent can bypass it.
 
 ### 3.1 The platform is an API; the apps are native
 
@@ -183,16 +182,6 @@ Honest limits:
   and shipped polls. With Claude Opus 5.5 (Fable 5.1 as advisor), one developer moved it to the
   Internet Computer and Motoko, both new to the team, in one week, and added surveys, studies
   and earnings.
-
-## 6. How to start safely
-
-A three-week spike decides, with evidence rather than opinion:
-- the kernel with two very different frameworks (Cambridge-style and mastery) to prove the six
-  building blocks hold;
-- one lesson with video, text and a quiz; progress tracking and a basic gradebook;
-- cohort isolation enforced by the database;
-- the full test gauntlet wired in from day one;
-- at the end of week 3, compare real speed with the estimates and decide.
 
 ## Sources
 

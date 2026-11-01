@@ -14,7 +14,7 @@ export interface SyncApi {
   events(cohort: string): Promise<Event[]>;
 }
 
-export type SyncReport = { sent: number; refused: { item: Outgoing; error: KernelError }[]; events: number };
+export type SyncReport = { sent: number; refused: { item: Outgoing; error: KernelError }[]; events: number; changed: boolean };
 
 /** A live answer that reached the server after the teacher moved on (or ended the round): in a
  *  round led by the teacher this is normal, not an error to show a child. */
@@ -57,7 +57,12 @@ export async function sync(store: Store, api: SyncApi, kernel: Kernel, cohort: s
     }
   }
   const events = await api.events(cohort);
+  // When the server's log is the phone's, an idle poll reloads nothing and redraws nothing (polls
+  // run every few seconds). Whole logs are compared: the server may have adjusted an event's time.
+  if (JSON.stringify(events) === JSON.stringify(kernel.events())) {
+    return { sent: pending.length, refused, events: events.length, changed: false };
+  }
   await store.setLog(cohort, events);
   kernel.load(events);
-  return { sent: pending.length, refused, events: events.length };
+  return { sent: pending.length, refused, events: events.length, changed: true };
 }

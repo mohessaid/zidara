@@ -171,6 +171,8 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Fixed
 
+- A poll that brings nothing new reloads and redraws nothing, and the log is read once per change
+  for XP and the streak: with polls every few seconds, idle syncs were redrawing every screen.
 - A live answer that reaches the server after the teacher moved on is dropped quietly instead of
   showing a child "refused by the server"; the phone follows the board's question.
 - Commands built from a screen's state are copied before they are stored: IndexedDB cannot

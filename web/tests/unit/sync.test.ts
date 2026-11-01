@@ -63,7 +63,7 @@ describe("offline work and sync", () => {
 
     setOnline(true);
     const report = await sync(reopened, api, again, cohort);
-    expect(report).toEqual({ sent: 1, refused: [], events: server.events().length });
+    expect(report).toEqual({ sent: 1, refused: [], events: server.events().length, changed: false });
     expect(await reopened.pending(cohort)).toEqual([]);
     expect(await reopened.log(cohort)).toEqual(server.events());
     // Syncing again sends nothing new.
@@ -114,6 +114,22 @@ describe("offline work and sync", () => {
     expect(await store.refused(cohort)).toEqual([]);
     expect(await store.pending(cohort)).toEqual([]);
     expect(kernel.learnerView(golden.learner, "en", 4).challenge).toMatchObject({ question: 1, answered: null });
+  });
+
+  it("does nothing more when nothing changed: an idle poll reloads and redraws nothing", async () => {
+    const { api, server } = fakeServer();
+    const store = await fresh();
+    const kernel = new Kernel(golden.setup);
+    // The phone's own work: the server's log becomes the same, so nothing changes on the phone.
+    await act(store, kernel, cohort, amina, quiz, () => 1);
+    expect((await sync(store, api, kernel, cohort)).changed).toBe(false);
+    // Someone else's work reaches the server: the phone takes the new log.
+    const teacher: Actor = { kind: "human", user: "00000000-0000-0000-0000-0000007ea001", role: "teacher" };
+    expect(server.run(teacher, { id: crypto.randomUUID(), at: 2, command: { type: "change_framework", framework: "cambridge-style" } }).status).toBe("applied");
+    expect((await sync(store, api, kernel, cohort)).changed).toBe(true);
+    const idle = await sync(store, api, kernel, cohort);
+    expect(idle.changed).toBe(false);
+    expect(idle.events).toBe(kernel.events().length);
   });
 
   it("keeps cohorts apart", async () => {

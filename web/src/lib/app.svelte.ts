@@ -135,7 +135,7 @@ class App {
     try {
       const report = await sync(this.store!, this.api, this.kernel, this.cohort.id);
       this.sync.online = true;
-      this.version++;
+      if (report.changed) this.version++;
       return report;
     } catch (error) {
       if (error instanceof ApiError && error.status === 401) await this.signOut();

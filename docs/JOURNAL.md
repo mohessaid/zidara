@@ -4,6 +4,46 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-01 — Lessons that play like a game, judged like a school
+
+**What happened.** The owner asked us to work without stopping on lessons in the style of
+Duolingo, Brilliant and Kahoot, to show what the engine can do, with at least one complete track,
+possibly about the concept itself. We built: a session player (one step per screen, checked at
+once by the kernel), answers given by shading and cutting bars, two toys (folding a paper strip,
+a fraction wall), XP and streaks read from the log, synthesised sounds, live rounds run by the
+teacher with every phone following, and a second track, "How Zidara works", that teaches the
+concept to anyone. The kernel gained live-round commands, question looks and an explore kind
+(ADR 0011). Every question of the fractions track, in all its versions, now has a picture, an
+input and an explanation in three languages.
+**The problems, in the order we made them.**
+- *The same trap twice.* The kernel reads lesson packs with serde defaults (no `look` means a
+  plain question; no `role` means core). The browser reads the same JSON as written. The first
+  quiz question crashed the session ("Something went wrong"), and later the live board's quiz
+  menu was empty. Fix: one `lookOf` helper with the kernel's defaults, and `role !==
+  "remediation"` instead of `role === "core"`.
+- *Svelte state is a proxy.* Saving the quiz's answers failed with "DataCloneError: could not be
+  cloned": IndexedDB cannot store Svelte's state proxies. `app.run` now stores a plain snapshot
+  of every command.
+- *Code that is not there offline.* The session's code became its own chunk; a phone that lost
+  the network before opening a lesson could not load it, and the offline browser test hung. The
+  learner screen now fetches the session's code at once, in the background.
+- *Two tabs are one person.* The browser demo's live round cannot be played in two tabs of one
+  browser: they share one signed-in session. Live rounds are shown on the real server instead.
+- *We killed our own shell* with `pkill -f "vite preview ..."`: the pattern matched the command
+  running it. And a waiting loop of ours ran for an hour because its `pgrep` matched itself.
+  Stop processes by PID.
+- *Fading is not dimming.* Fading the wrong options on the board to 45% opacity failed the
+  colour-contrast check; they now turn slate, still readable.
+**The numbers.** 138 kernel and framework tests (13 new), 15 wasm, 34 web unit tests, 13
+browser tests on the server (one a two-phone live round), 2 on the demo. A live round on the
+hosted server: phones see it after 5.3 and 5.5 s; the board counts both answers 0.3 s after
+they arrive; the next question reaches the phone in 0.8 s. The browser's kernel went from 164 to
+184 KB gzipped. The demo film is 98 s.
+**The lesson.** Two shells reading one JSON file need the same defaults: write them down once on
+each side, next to each other, or the second shell meets them in production.
+
+---
+
 ## 2026-11-01 — The real server, on a shared machine
 
 **What happened.** The owner offered `s1.nasa9.com` for the full stack, with two rules: no

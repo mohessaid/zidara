@@ -37,6 +37,14 @@ PixiJS, GSAP and the table view are gone.
 else, demo mode and the cap, the reset keeps the school). Web unit tests 34 of 34. Static demo
 3 of 3. axe found three contrast failures in the first draft (white on the bright green at 16 px,
 the green START, the blue links); all fixed by darker shades, not by hiding text.
+Browser tests against the real server 12 of 12 (one failed on the first run and was fixed).
+The path holds 60 fps on a throttled phone with no long tasks, needs no GPU, and the page uses
+3.8 MB of heap. The full gauntlet is green: 230 of 230 branches, 259 kernel and 110 server
+mutants caught, none missed.
+
+*A self-inflicted kill.* Stopping a dev server with `pkill -f` and a pattern that also appeared
+in my own command line killed the shell running it (exit 144), for the second time. Processes
+are now stopped by the PID that `ss -ltnp` shows listening on the port, never by pattern.
 
 **Lesson.** Look at the product the way a stranger meets it: the first screen, the first five
 seconds, on a phone, before signing in. Tests that start from a signed-in pupil never saw what

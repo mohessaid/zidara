@@ -97,6 +97,25 @@ describe("offline work and sync", () => {
     expect(server.events().length).toBe(2);
   });
 
+  it("drops a live answer that came too late, quietly, and follows the board", async () => {
+    const { api, server } = fakeServer();
+    const store = await fresh();
+    const kernel = new Kernel(golden.setup);
+    const teacher: Actor = { kind: "human", user: "00000000-0000-0000-0000-0000007ea001", role: "teacher" };
+    const env = (at: number, command: Command): Envelope => ({ id: crypto.randomUUID(), at, command });
+    server.run(teacher, env(1, { type: "start_challenge", activity: "quiz-f1" }));
+    await sync(store, api, kernel, cohort);
+    // The phone answers question 1 while the teacher has already moved to question 2.
+    await act(store, kernel, cohort, amina, { type: "answer_challenge", question: 0, response: { type: "choice", index: 0 } }, () => 2);
+    server.run(teacher, env(3, { type: "next_question" }));
+    const report = await sync(store, api, kernel, cohort);
+    // Missing a question in a live round is not an error to show a child: nothing is kept.
+    expect(report.refused).toEqual([]);
+    expect(await store.refused(cohort)).toEqual([]);
+    expect(await store.pending(cohort)).toEqual([]);
+    expect(kernel.learnerView(golden.learner, "en", 4).challenge).toMatchObject({ question: 1, answered: null });
+  });
+
   it("keeps cohorts apart", async () => {
     const store = await fresh();
     const kernel = new Kernel(golden.setup);

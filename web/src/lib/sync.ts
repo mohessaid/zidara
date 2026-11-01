@@ -16,6 +16,10 @@ export interface SyncApi {
 
 export type SyncReport = { sent: number; refused: { item: Outgoing; error: KernelError }[]; events: number };
 
+/** A live answer that reached the server after the teacher moved on (or ended the round): in a
+ *  round led by the teacher this is normal, not an error to show a child. */
+const MISSED: KernelError["type"][] = ["not_this_question", "already_answered", "no_challenge"];
+
 /** Runs a command locally; when the kernel accepts it, it is saved and queued for the server. */
 export async function act(
   store: Store,
@@ -42,7 +46,9 @@ export async function sync(store: Store, api: SyncApi, kernel: Kernel, cohort: s
     const results = await api.commands(cohort, pending.map(({ actor, envelope }) => ({ actor, envelope })));
     for (const item of pending) {
       const outcome = results.find((r) => r.id === item.envelope.id)?.outcome;
-      if (outcome?.status === "refused") {
+      if (outcome?.status === "refused" && item.envelope.command.type === "answer_challenge" && MISSED.includes(outcome.error.type)) {
+        await store.remove(item.id);
+      } else if (outcome?.status === "refused") {
         await store.markRefused(item, outcome.error);
         refused.push({ item, error: outcome.error });
       } else if (outcome) {

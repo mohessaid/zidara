@@ -34,7 +34,7 @@ with tempfile.TemporaryDirectory() as texts:
         "[0:v]fps=25,scale=-2:880,setsar=1[l]",
         f"[1:v]fps=25,scale=-2:880,setsar=1,tpad=start_duration={at}:start_mode=add:color=0xFFF8EC[r]",
         "[bg][l]overlay=x=430:y=95:shortest=1[a]",
-        "[a][r]overlay=x=1100:y=95:eof_action=pass[b]",
+        "[a][r]overlay=x=1100:y=95:eof_action=repeat[b]",
         "[b]" + ",".join(draws) + "[out]",
     ])
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", timeline["learner"], "-i", timeline["teacher"],

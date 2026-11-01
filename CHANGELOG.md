@@ -171,6 +171,8 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Fixed
 
+- A live answer that reaches the server after the teacher moved on is dropped quietly instead of
+  showing a child "refused by the server"; the phone follows the board's question.
 - Commands built from a screen's state are copied before they are stored: IndexedDB cannot
   store Svelte's state proxies ("could not be cloned").
 - Material from another project's pitch is removed from the repository and its history, and the

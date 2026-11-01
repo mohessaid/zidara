@@ -4,6 +4,34 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-01 — The frame-rate gate, on a machine three times oversubscribed
+
+**What happened.** The full gauntlet ran four times in the afternoon. Each time every Rust test,
+story and unit test passed; the browser stage failed on timing. The map's frame-rate test gave
+54.5, then 30.5 fps (gate 55); once it timed out after a minute; once three teacher-side tests
+could not find the map within five seconds. Run alone, at the same load, the same test gave a
+median of 60 fps with no long task. The machine has 8 cores and other projects kept its load
+between 16 and 34; the gauntlet runs niced below them.
+**What we found, measuring instead of guessing.**
+- The new session plays three full F1 sessions under a 4× CPU throttle; the old flow was two
+  taps. The test's one-minute budget was too short for the work it now does (150 s now).
+- Polls went from every 20 s to every 4 s for live rounds, and every poll reloaded the whole log
+  into the kernel and redrew every screen, even when nothing had changed. The learner screen and
+  the finish screen also each asked the kernel for the whole log as JSON. Now an idle poll
+  compares the logs and does nothing, and the log is read once per change.
+- With those fixed, Chromium's Long Animation Frame API named what was left in the slow frames:
+  scripts of 6–15 ms (the map's frame callback, a click), one 34 ms IndexedDB callback, and
+  otherwise style, layout and paint. That is a starved CPU, not our code; one run in three had
+  no slow frame at all.
+**Mistakes.** We killed our own shell a second time with `pgrep -f` (the pattern was in the
+command running it); processes are now found by name (`pgrep -x`). A test we wrote for the idle
+poll first assumed the phone's own work would change its log; it does not, because ids come
+from the envelope and the server replays the same events.
+**The lesson.** A gate that measures time measures the machine too. Keep the gate, rerun it at
+low load, and look for work that runs when nothing changed: that one was ours.
+
+---
+
 ## 2026-11-01 — Lessons that play like a game, judged like a school
 
 **What happened.** The owner asked us to work without stopping on lessons in the style of

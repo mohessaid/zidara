@@ -4,6 +4,26 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-01 — Another project's pitch, published by mistake
+
+**What happened.** We pushed the code to a new public GitHub repository. Within minutes the owner
+saw that it held a pitch made for someone else: its slides, its film and the conversation behind
+it. They came into the repo on the first day, as the record of how the design formed.
+**The problem.** The secret scan before the push looked for keys and passwords. It did not ask
+whose material each file was. A pitch to another organisation is confidential even though it holds
+no secret.
+**What we did.** We made the repository private at once (it had been public about ten minutes,
+with no forks or stars). We moved the material out of the repo, kept a full backup, and rewrote
+every commit with `git filter-repo`: the files are gone from all history, and the names in older
+versions of three documents are replaced. A search of every commit now finds nothing. The GitHub
+repository is to be deleted and created again, because GitHub keeps rewritten commits reachable
+by their hashes.
+**The numbers.** 78 files removed from history; `.git` went from 46 MB to 9.5 MB.
+**The lesson.** Before anything goes public, list every file and ask whose it is, not only
+whether it holds a secret. Keep it private until the owner has seen the list.
+
+---
+
 ## 2026-10-31 — The gauntlet, green on a shared machine
 
 **What happened.** The full gauntlet ran with the demo school in it, niced, while other projects

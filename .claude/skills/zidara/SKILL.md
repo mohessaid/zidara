@@ -34,6 +34,10 @@ Read first: `docs/superpowers/specs/2026-10-14-zidara-prototype-design.md` (what
 10. **Use the best tool for each job**, chosen on evidence; HyperFrames is one option, not the
     default. When a third-party skill helps, distil what applies into this skill and remove
     the original.
+11. **Only this project's material goes in, and nothing goes public unseen.** Other clients' or
+    projects' pitches, briefs and conversations never enter the repo. Before a push to a
+    public place or a publish, list every file and ask whose it is (a secret scan is not
+    enough); keep it private until the owner has seen the list.
 
 ## Where to look
 

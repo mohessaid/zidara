@@ -134,6 +134,7 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Fixed
 
+- Material from another project's pitch is removed from the repository and its history.
 - Browser tests no longer assume a date: under Cambridge-style, F3 opened on 19 October, and
   the test that expected it locked would have failed from then on.
 - The Lighthouse runner starts Chromium without its sandbox, as Playwright does: AppArmor on

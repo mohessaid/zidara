@@ -69,7 +69,7 @@ numbers; link the repository or the demo.
 
 **Website/app.** https://zidara.pages.dev, the demo school in the browser (static, on Cloudflare
 Pages; its two browser tests pass against the live address), and the code at
-https://github.com/mohessaid/zidara. The pitch video (100 s) is the other proof point.
+https://github.com/mohessaid/zidara. The pitch video (172 s, with the 98 s demo film recorded on the real server) is the other proof point.
 
 **Well-positioned team (300 words).** *Owner only.* Solve wants engagement with the target
 population: who you have talked to, how many, and what changed because of them. Kanonix and

@@ -23,7 +23,7 @@ live form when submitting.
 | Two complete tracks on one kernel | "Equivalent fractions" (3 outcomes, every question in 3 versions with pictures and explanations, 2 toys, a checkpoint, help assigned by rules) and "How Zidara works", which teaches the concept itself to anyone, in its own class |
 | Arabic first (right to left), French and English | `web/src/lib/i18n/strings.ts` (every key in three languages, tested); RTL browser test |
 | Accessible | axe: zero WCAG 2.x A/AA violations on every screen; Lighthouse accessibility 100 |
-| Fast on an economy phone | Lighthouse mobile performance 100; map median 60 fps with no long task at 4× CPU throttle |
+| Fast on an economy phone | Lighthouse mobile performance 99–100; map median 60 fps with no long task at 4× CPU throttle (measured 1 November) |
 | Light on low-end phones | with data saver on or a phone reporting ≤ 2 GB of memory, the lesson opens without the game engine: JS heap 3.1–3.3 MB vs 5.5–5.6 MB, main-thread work 710–723 ms vs 1 542–1 628 ms on the same throttled phone (browser test; ADR 0008) |
 | Try it from a link | https://zidara.pages.dev: a demo build runs the whole school in the visitor's browser, with the same kernel: a learner's work, the teacher's decision, the pedagogy switch; one browser test proves the story with no request leaving the page (ADR 0009). It does not show the server's isolation, sync between devices or AI marking, and must not be cited for them |
 | Runs on a real server now | https://zidara.72-61-103-134.sslip.io: the release build on PostgreSQL behind HTTPS, three classes kept apart by row-level security, the rubric marking (no paid AI calls on a public demo), the school emptied nightly (ADR 0010); 3 smoke tests pass against it |

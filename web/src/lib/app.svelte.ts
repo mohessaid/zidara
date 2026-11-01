@@ -49,9 +49,9 @@ class App {
       void this.syncNow();
     });
     addEventListener("offline", () => (this.sync.online = false));
-    // Every 6 s while the page is on screen (so a live round reaches every phone quickly; an
+    // Every 4 s while the page is on screen (so a live round reaches every phone quickly; an
     // empty sync is a few bytes), never while it is hidden; at once when it comes back.
-    setInterval(() => document.visibilityState === "visible" && void this.syncNow(), 6_000);
+    setInterval(() => document.visibilityState === "visible" && void this.syncNow(), 4_000);
     document.addEventListener("visibilitychange", () => document.visibilityState === "visible" && void this.syncNow());
     this.ready = true;
   }

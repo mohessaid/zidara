@@ -13,15 +13,9 @@ font = "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf"
 out = root / "pitch/demo/zidara-demo.mp4"
 out.parent.mkdir(parents=True, exist_ok=True)
 
-captions = [
-    (0, 3.2, "Amina signs in. Arabic first, right to left."),
-    (3.2, 9.2, "Offline. Her phone marks the quiz: F1 mastered, F2 opens."),
-    (9.2, 12.6, "She explains in her own words, still offline."),
-    (12.6, at, "Back online: her work syncs."),
-    (at, at + 3.6, "Her teacher sees the class and the AI draft. A human decides."),
-    (at + 3.6, at + 7, "One switch: same work, Cambridge-style rules."),
-    (at + 7, 99, "Amina's path redraws: practice is no longer mastery."),
-]
+# Each step of the recording marked its own time and caption (web/tests/demo/demo.spec.ts).
+marks = timeline["marks"]
+captions = [(m["t"], (marks[k + 1]["t"] if k + 1 < len(marks) else timeline["end"]), m["caption"]) for k, m in enumerate(marks)]
 labels = [("Learner phone · offline-first", 470), ("Teacher studio", 1220)]
 
 with tempfile.TemporaryDirectory() as texts:

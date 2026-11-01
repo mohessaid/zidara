@@ -37,7 +37,7 @@ const SCENES = {
   ],
   b: [
     { until: 18, html: (t) => `<div class="center"><h2>How it works</h2>
-        <div class="row" style="opacity:${fade(t, 0.6)}"><div class="box green">Experiences<br/><span class="muted">a path for children · a light grid for low-end phones · the teacher studio</span></div></div>
+        <div class="row" style="opacity:${fade(t, 0.6)}"><div class="box green">Experiences<br/><span class="muted">lessons that play like a game · live class rounds · a light grid for low-end phones · the teacher studio</span></div></div>
         <div class="row" style="opacity:${fade(t, 3)}"><div class="box blue">Frameworks<br/><span class="muted">mastery · Cambridge-style · your own</span></div></div>
         <div class="row" style="opacity:${fade(t, 5.4)}"><div class="box">One kernel · the same code on phone and server</div></div>
         <div class="row" style="opacity:${fade(t, 8.4)}"><div class="box violet">AI drafts. Teachers decide. Everything can be undone.</div></div>
@@ -49,12 +49,12 @@ const SCENES = {
             ["Offline", "the app opens and the lesson works with no network at all"],
             ["Teachers decide", "the AI can never mark summative work; every AI action can be undone"],
             ["Accessible", "zero WCAG violations found; Lighthouse accessibility 100"],
-            ["Light", "the whole kernel in the browser is 150 KB; low-end phones skip the game engine"],
+            ["Light", "the whole kernel in the browser is 184 KB; low-end phones skip the game engine"],
             ["Efficient", "300 learners on 2 CPU cores, 95% of pages within 32 ms"],
           ].map(([a, b], i) => `<li style="opacity:${fade(t, 19 + i * 3)}"><b>${a}:</b> ${b}</li>`).join("")}
         </ul></div>` },
     { until: 52, html: (t) => `<div class="center"><h1 style="font-size:96px;opacity:${fade(t, 42.2)}">Zidara</h1>
-        <p style="opacity:${fade(t, 43.4)}">A working prototype, October 2026.</p>
+        <p style="opacity:${fade(t, 43.4)}">A working prototype, November 2026. Try it: zidara.pages.dev</p>
         <p class="muted" style="opacity:${fade(t, 45)}">Next: a pilot with a school and its teachers.</p></div>` },
   ],
 };

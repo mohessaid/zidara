@@ -10,14 +10,30 @@ Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (dea
 6 November 2026, 12:00 pm EST, per the live challenge page on 31 October).
 
 - **Try it:** https://zidara.pages.dev (the demo school, in your browser: no sign-up, invented
-  people, works offline after one visit; pick a learner, then the teacher Karim).
-- **The real server:** https://zidara.72-61-103-134.sslip.io (PostgreSQL, two classes kept apart
-  by the database; the school is emptied every night).
+  people, works offline after one visit). Sign in as **Lina** to learn how Zidara works by
+  playing it, or as **Amina** for the fractions track, then as the teacher **Karim**.
+- **The real server:** https://zidara.72-61-103-134.sslip.io (PostgreSQL, three classes kept apart
+  by the database; the school is emptied every night). For a live round, open it as Karim on a
+  laptop and as Amina and Yacine on two phones.
 - **Code:** https://github.com/mohessaid/zidara
 
 ## What works today
 
-- **One lesson, two pedagogies.** "Equivalent fractions" for ages 9–11, under mastery learning
+- **Lessons that play like a game, judged like a school.** Each outcome is a session in the
+  style of Duolingo and Brilliant: one step per screen, a film, a reading, a toy to play with
+  (fold a paper strip, a fraction wall), then questions answered by shading or cutting bars,
+  checked at once by the kernel, with the answer and why. XP, streaks and stars are read from the
+  evidence log, and the finish screen shows what the class's teaching approach now says: the
+  game never claims more than the learner can do.
+- **Live rounds, like Kahoot, without the pressure.** The teacher projects a board, starts a
+  round on a quiz, and every phone in the class shows the question within seconds. The kernel
+  marks each answer, the board counts answers and picks, and ending the round turns every
+  learner's answers into practice evidence. No timer, no names, no ranking: the class plays
+  together.
+- **Two complete tracks.** "Equivalent fractions" (three outcomes, every question in three
+  versions, two toys, a checkpoint, help assigned by the rules) and "How Zidara works", which
+  teaches the concept itself to anyone, on the same kernel.
+- **One kernel, two pedagogies.** "Equivalent fractions" for ages 9–11, under mastery learning
   (decaying average, 80%) or Cambridge-style teaching (scheme-of-work calendar, grade
   boundaries). A teacher switches the class's framework and every learner's path redraws from
   the same evidence.

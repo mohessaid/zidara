@@ -16,6 +16,10 @@ pub struct Seed {
     pub karim: Uuid,
     pub nadia: Uuid,
     pub agent: Uuid,
+    /// The open class: anyone can learn how Zidara works, as Lina, with Omar teaching.
+    pub c: Uuid,
+    pub lina: Uuid,
+    pub omar: Uuid,
 }
 
 impl Seed {
@@ -29,6 +33,9 @@ impl Seed {
         karim: Uuid::from_u128(0x7e_a001),
         nadia: Uuid::from_u128(0x7e_b001),
         agent: Uuid::from_u128(0xa6_0001),
+        c: Uuid::from_u128(0xc0_0c),
+        lina: Uuid::from_u128(0x1e_c001),
+        omar: Uuid::from_u128(0x7e_c001),
     };
 }
 
@@ -40,11 +47,16 @@ pub async fn seed(owner: &PgPool) -> Result<Seed, sqlx::Error> {
         .bind(s.tenant)
         .execute(&mut *tx)
         .await?;
-    for (id, name) in [(s.a, "Class 4 A"), (s.b, "Class 4 B")] {
-        sqlx::query("insert into cohorts (id, tenant_id, name, lesson_id, framework) values ($1, $2, $3, 'equivalent-fractions', 'mastery')")
+    for (id, name, lesson) in [
+        (s.a, "Class 4 A", "equivalent-fractions"),
+        (s.b, "Class 4 B", "equivalent-fractions"),
+        (s.c, "Discover Zidara", "how-zidara-works"),
+    ] {
+        sqlx::query("insert into cohorts (id, tenant_id, name, lesson_id, framework) values ($1, $2, $3, $4, 'mastery')")
             .bind(id)
             .bind(s.tenant)
             .bind(name)
+            .bind(lesson)
             .execute(&mut *tx)
             .await?;
     }
@@ -54,6 +66,8 @@ pub async fn seed(owner: &PgPool) -> Result<Seed, sqlx::Error> {
         (s.sara, "Sara", "person"),
         (s.karim, "Karim", "person"),
         (s.nadia, "Nadia", "person"),
+        (s.lina, "Lina", "person"),
+        (s.omar, "Omar", "person"),
         (s.agent, "assessor", "agent"),
     ];
     for (id, name, kind) in people {
@@ -73,8 +87,11 @@ pub async fn seed(owner: &PgPool) -> Result<Seed, sqlx::Error> {
         (s.sara, s.b, "learner"),
         (s.karim, s.a, "teacher"),
         (s.nadia, s.b, "teacher"),
+        (s.lina, s.c, "learner"),
+        (s.omar, s.c, "teacher"),
         (s.agent, s.a, "assessment_agent"),
         (s.agent, s.b, "assessment_agent"),
+        (s.agent, s.c, "assessment_agent"),
     ];
     for (user, cohort, role) in memberships {
         sqlx::query("insert into memberships (user_id, cohort_id, role) values ($1, $2, $3)")

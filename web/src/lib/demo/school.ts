@@ -12,10 +12,11 @@ import type { Role } from "../kernel/types/Role.ts";
 
 const TENANT = "00000000-0000-0000-0000-000007e40001";
 const CLASSES = [
-  { id: "00000000-0000-0000-0000-00000000c00a", name: "Class 4 A" },
-  { id: "00000000-0000-0000-0000-00000000c00b", name: "Class 4 B" },
+  { id: "00000000-0000-0000-0000-00000000c00a", name: "Class 4 A", lesson: "equivalent-fractions" },
+  { id: "00000000-0000-0000-0000-00000000c00b", name: "Class 4 B", lesson: "equivalent-fractions" },
+  { id: "00000000-0000-0000-0000-00000000c00c", name: "Discover Zidara", lesson: "how-zidara-works" },
 ] as const;
-const [A, B] = [CLASSES[0].id, CLASSES[1].id];
+const [A, B, C] = [CLASSES[0].id, CLASSES[1].id, CLASSES[2].id];
 
 /** The server's seed (`crates/zidara-server/src/seed.rs`). */
 export const PEOPLE = [
@@ -24,6 +25,8 @@ export const PEOPLE = [
   { name: "sara", id: "00000000-0000-0000-0000-0000001eb001", display_name: "Sara", cohort: B, role: "learner" },
   { name: "karim", id: "00000000-0000-0000-0000-0000007ea001", display_name: "Karim", cohort: A, role: "teacher" },
   { name: "nadia", id: "00000000-0000-0000-0000-0000007eb001", display_name: "Nadia", cohort: B, role: "teacher" },
+  { name: "lina", id: "00000000-0000-0000-0000-0000001ec001", display_name: "Lina", cohort: C, role: "learner" },
+  { name: "omar", id: "00000000-0000-0000-0000-0000007ec001", display_name: "Omar", cohort: C, role: "teacher" },
 ] as const satisfies readonly { name: string; id: string; display_name: string; cohort: string; role: Role }[];
 
 const AGENT: Actor = { kind: "agent", agent: "assessor", role: "assessment_agent" };
@@ -45,15 +48,17 @@ const notFound = () => new Refusal(404, "not found");
 
 export class DemoSchool {
   #saved: Saved;
+  readonly #packs: LessonPack[];
   #seen: string | null;
   /** One kernel per class for the page's life: each holds the lesson and log in wasm memory. */
   readonly #kernels = new Map<string, Kernel>();
 
   constructor(
-    private readonly pack: LessonPack,
+    packs: LessonPack | LessonPack[],
     private readonly storage: Storage,
     private readonly now: () => number = Date.now,
   ) {
+    this.#packs = Array.isArray(packs) ? packs : [packs];
     this.#seen = storage.getItem(KEY);
     this.#saved = JSON.parse(this.#seen ?? "{}") as Saved;
   }
@@ -96,10 +101,11 @@ export class DemoSchool {
       return {
         id: person.id,
         display_name: person.display_name,
-        cohorts: [{ id: cohort.id, tenant_id: TENANT, name: cohort.name, lesson_id: this.pack.id, framework: "mastery", role: person.role }],
+        cohorts: [{ id: cohort.id, tenant_id: TENANT, name: cohort.name, lesson_id: cohort.lesson, framework: "mastery", role: person.role }],
       };
     }
-    if (method === "GET" && path === `/api/packs/${this.pack.id}`) return this.pack;
+    const pack = this.#packs.find((p) => path === `/api/packs/${p.id}`);
+    if (method === "GET" && pack) return pack;
     const [, cohort, action] = /^\/api\/cohorts\/([^/]+)\/([a-z]+)$/.exec(path) ?? [];
     if (!cohort || !CLASSES.some((c) => c.id === cohort)) throw notFound();
     if (person.cohort !== cohort) throw notMember();
@@ -157,7 +163,8 @@ export class DemoSchool {
   #kernel(cohort: string): Kernel {
     let kernel = this.#kernels.get(cohort);
     if (!kernel) {
-      kernel = new Kernel({ lesson: this.pack, framework: "mastery", tenant: TENANT, cohort });
+      const lesson = CLASSES.find((c) => c.id === cohort)!.lesson;
+      kernel = new Kernel({ lesson: this.#packs.find((p) => p.id === lesson)!, framework: "mastery", tenant: TENANT, cohort });
       kernel.load(this.#cohort(cohort).log);
       this.#kernels.set(cohort, kernel);
     }

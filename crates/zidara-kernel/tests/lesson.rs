@@ -464,3 +464,12 @@ fn a_live_round_asks_the_first_version_of_a_quiz_and_nothing_else() {
     );
     assert!(lesson.questions(&ActivityId::new("nope")).is_empty());
 }
+
+#[test]
+fn the_concept_pack_is_valid_too() {
+    let pack = include_str!("../../../content/lessons/how-zidara-works.json");
+    let lesson: Lesson = serde_json::from_str(pack).unwrap();
+    assert_eq!(lesson.id, "how-zidara-works");
+    assert_eq!(lesson.graph.len(), 3);
+    assert_eq!(lesson.title.get("en"), "How Zidara works");
+}

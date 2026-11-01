@@ -8,13 +8,14 @@ export const DEMO = import.meta.env.VITE_ZIDARA_DEMO === "browser";
 let school: Promise<typeof fetch> | undefined;
 
 async function openSchool(): Promise<typeof fetch> {
-  const [{ DemoSchool }, { loadKernel }, pack] = await Promise.all([
+  const [{ DemoSchool }, { loadKernel }, fractions, concept] = await Promise.all([
     import("./demo/school.ts"),
     import("./kernel/kernel.ts"),
     import("../../../content/lessons/equivalent-fractions.json"),
+    import("../../../content/lessons/how-zidara-works.json"),
   ]);
   await loadKernel(wasmUrl);
-  return new DemoSchool(pack.default as never, localStorage).fetch;
+  return new DemoSchool([fractions.default, concept.default] as never, localStorage).fetch;
 }
 
 export const apiFetch: typeof fetch = DEMO

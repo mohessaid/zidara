@@ -57,15 +57,21 @@ pub struct School {
 }
 
 impl School {
-    /// The demo: one lesson, both frameworks, the Cambridge calendar opening one outcome a week.
+    /// The demo: two lessons (fractions, and how Zidara itself works), both frameworks, the
+    /// Cambridge calendar opening one outcome a week.
     pub fn demo() -> Self {
-        let pack: &'static str = include_str!("../../../content/lessons/equivalent-fractions.json");
-        let lesson: Lesson = serde_json::from_str(pack).expect("the demo lesson is valid");
-        let registry = zidara_frameworks::demo_registry();
+        let packs: [&'static str; 2] = [
+            include_str!("../../../content/lessons/equivalent-fractions.json"),
+            include_str!("../../../content/lessons/how-zidara-works.json"),
+        ];
+        let lessons: Vec<(Lesson, &'static str)> = packs
+            .into_iter()
+            .map(|pack| (serde_json::from_str(pack).expect("the demo lessons are valid"), pack))
+            .collect();
         Self {
-            packs: BTreeMap::from([(lesson.id.clone(), pack)]),
-            lessons: BTreeMap::from([(lesson.id.clone(), lesson)]),
-            registry,
+            packs: lessons.iter().map(|(l, p)| (l.id.clone(), *p)).collect(),
+            lessons: lessons.into_iter().map(|(l, _)| (l.id.clone(), l)).collect(),
+            registry: zidara_frameworks::demo_registry(),
             policy: Policy::STANDARD,
         }
     }

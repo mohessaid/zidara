@@ -1,0 +1,459 @@
+{
+  "id": "how-zidara-works",
+  "title": {
+    "ar": "كيف تعمل زيدارا",
+    "fr": "Comment marche Zidara",
+    "en": "How Zidara works"
+  },
+  "outcomes": [
+    {
+      "id": "Z1",
+      "title": {
+        "ar": "أفهم كيف يصبح العمل دليلًا",
+        "fr": "Comprendre comment le travail devient une preuve",
+        "en": "See how work becomes evidence"
+      }
+    },
+    {
+      "id": "Z2",
+      "title": {
+        "ar": "أبدّل طريقة التدريس",
+        "fr": "Changer de méthode d'enseignement",
+        "en": "Switch the teaching approach"
+      },
+      "prerequisites": [
+        "Z1"
+      ]
+    },
+    {
+      "id": "Z3",
+      "title": {
+        "ar": "أعرف ما يحقّ للذكاء الاصطناعي",
+        "fr": "Savoir ce que l'IA peut faire",
+        "en": "Know what the AI may do"
+      },
+      "prerequisites": [
+        "Z2"
+      ]
+    }
+  ],
+  "activities": [
+    {
+      "id": "z-evidence",
+      "title": {
+        "ar": "كلّ إجابة دليل",
+        "fr": "Chaque réponse est une preuve",
+        "en": "Every answer is evidence"
+      },
+      "outcomes": [
+        "Z1"
+      ],
+      "kind": {
+        "type": "reading",
+        "body": {
+          "ar": "كلّ ما يفعله المتعلّم يُسجَّل دليلًا: إجابة، اختبار، شرح. ثم تقرأ «طريقة التدريس» الأدلّة وتحكم: لم يبدأ بعد، يتقدّم، أتقنها، أو يحتاج إلى مساعدة. النجوم والنقاط التي تراها ليست إلا هذا الحكم، مرسومًا كلعبة.",
+          "fr": "Tout ce que fait l'élève est enregistré comme une preuve : une réponse, un test, une explication. Puis la « méthode d'enseignement » lit les preuves et juge : pas commencé, en progrès, maîtrisé, ou besoin d'aide. Les étoiles et les points que tu vois ne sont que ce jugement, dessiné comme un jeu.",
+          "en": "Everything a learner does is recorded as evidence: an answer, a test, an explanation. Then the class's teaching approach reads the evidence and decides: not started, getting there, mastered, or needs support. The stars and points you see are only that decision, drawn as a game."
+        }
+      }
+    },
+    {
+      "id": "z-quiz-1",
+      "title": {
+        "ar": "تمرين: من الدليل إلى الحكم",
+        "fr": "Exercice : de la preuve au jugement",
+        "en": "Practice: from evidence to verdict"
+      },
+      "outcomes": [
+        "Z1"
+      ],
+      "kind": {
+        "type": "quiz",
+        "evidence": "formative",
+        "questions": [
+          {
+            "id": "z1-q1",
+            "outcome": "Z1",
+            "prompt": {
+              "ar": "أجابت أمينة عن 3 أسئلة صحيحة من 4. اكتب ذلك كسرًا.",
+              "fr": "Amina a 3 bonnes réponses sur 4. Écris-le en fraction.",
+              "en": "Amina got 3 of 4 questions right. Write that as a fraction."
+            },
+            "expected": {
+              "type": "exactly",
+              "num": 3,
+              "den": 4
+            },
+            "look": {
+              "visual": {
+                "type": "bar",
+                "parts": 4,
+                "shaded": 3
+              },
+              "input": {
+                "type": "shade",
+                "parts": 4
+              },
+              "explain": {
+                "ar": "‏3/4‎ هو دليلها. زيدارا تحفظ الأعداد الصحيحة فقط (75%)، بلا تقريب ولا أخطاء حساب.",
+                "fr": "3/4, c'est sa preuve. Zidara garde des nombres entiers (75 %), sans arrondi ni erreur de calcul.",
+                "en": "3/4 is her evidence. Zidara keeps whole numbers (75%), with no rounding errors."
+              }
+            }
+          },
+          {
+            "id": "z1-q2",
+            "outcome": "Z1",
+            "prompt": {
+              "ar": "من يقرّر أنّ أمينة أتقنت هدفًا؟",
+              "fr": "Qui décide qu'Amina a maîtrisé un objectif ?",
+              "en": "Who decides that Amina has mastered an outcome?"
+            },
+            "expected": {
+              "type": "choice",
+              "options": [
+                {
+                  "ar": "طريقة التدريس، انطلاقًا من أدلّتها",
+                  "fr": "La méthode de la classe, à partir de ses preuves",
+                  "en": "The class's teaching approach, from her evidence"
+                },
+                {
+                  "ar": "الذكاء الاصطناعي وحده",
+                  "fr": "L'IA, toute seule",
+                  "en": "The AI, on its own"
+                },
+                {
+                  "ar": "من ينهي أوّلًا",
+                  "fr": "Le plus rapide",
+                  "en": "Whoever finishes first"
+                }
+              ],
+              "correct": 0
+            },
+            "look": {
+              "explain": {
+                "ar": "الحكم تطبيق لقواعد طريقة التدريس على الأدلّة، وهو نفسه على الهاتف وعلى الخادم.",
+                "fr": "Le jugement applique les règles de la méthode aux preuves, et il est le même sur le téléphone et sur le serveur.",
+                "en": "The verdict applies the approach's rules to the evidence, and it is the same on the phone and on the server."
+              }
+            }
+          },
+          {
+            "id": "z1-q3",
+            "outcome": "Z1",
+            "prompt": {
+              "ar": "بلا إنترنت، ماذا يحدث لعمل المتعلّم؟",
+              "fr": "Sans internet, que devient le travail de l'élève ?",
+              "en": "With no internet, what happens to a learner's work?"
+            },
+            "expected": {
+              "type": "choice",
+              "options": [
+                {
+                  "ar": "يُحفظ على الهاتف ويُرسل لاحقًا",
+                  "fr": "Il est gardé sur le téléphone et envoyé plus tard",
+                  "en": "It is kept on the phone and sent later"
+                },
+                {
+                  "ar": "يضيع",
+                  "fr": "Il est perdu",
+                  "en": "It is lost"
+                },
+                {
+                  "ar": "لا يمكن التعلّم",
+                  "fr": "On ne peut pas apprendre",
+                  "en": "Nobody can learn"
+                }
+              ],
+              "correct": 0
+            },
+            "look": {
+              "explain": {
+                "ar": "نفس النواة تعمل داخل الهاتف: الحكم يظهر فورًا، والخادم يعيد الحساب نفسه عند العودة.",
+                "fr": "Le même noyau tourne dans le téléphone : le jugement s'affiche tout de suite, et le serveur refait le même calcul au retour.",
+                "en": "The same kernel runs inside the phone: the verdict shows at once, and the server repeats the same calculation when the connection returns."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "z-approaches",
+      "title": {
+        "ar": "طرق تدريس كثيرة، نواة واحدة",
+        "fr": "Plusieurs méthodes, un seul noyau",
+        "en": "Many approaches, one kernel"
+      },
+      "outcomes": [
+        "Z2"
+      ],
+      "kind": {
+        "type": "reading",
+        "body": {
+          "ar": "في «التعلّم بالإتقان» تُفتح الخطوة التالية حين تتقن هذه. في «أسلوب كامبريدج» يفتح التقويم المدرسي الأهداف، وتُعطى العلامات بحسب الحدود. يستطيع المعلّم أن يبدّل طريقة قسمه بلمسة واحدة: لا يضيع شيء، فالأدلّة نفسها يُعاد الحكم عليها.",
+          "fr": "En « maîtrise », l'étape suivante s'ouvre quand tu maîtrises celle-ci. En « style Cambridge », le calendrier scolaire ouvre les objectifs et les notes suivent des seuils. L'enseignant change la méthode de sa classe d'un geste : rien n'est perdu, les mêmes preuves sont jugées à nouveau.",
+          "en": "In mastery learning, the next step opens when you master this one. In Cambridge-style, the school calendar opens outcomes and grades follow boundaries. A teacher switches the class's approach in one tap: nothing is lost, the same evidence is judged again."
+        }
+      }
+    },
+    {
+      "id": "z-quiz-2",
+      "title": {
+        "ar": "تمرين: نبدّل الطريقة",
+        "fr": "Exercice : changer de méthode",
+        "en": "Practice: switching approach"
+      },
+      "outcomes": [
+        "Z2"
+      ],
+      "kind": {
+        "type": "quiz",
+        "evidence": "formative",
+        "questions": [
+          {
+            "id": "z2-q1",
+            "outcome": "Z2",
+            "prompt": {
+              "ar": "بدّل المعلّم القسم من الإتقان إلى أسلوب كامبريدج. ماذا يحدث لإجابات التلاميذ السابقة؟",
+              "fr": "L'enseignant passe la classe de la maîtrise au style Cambridge. Que deviennent les réponses passées ?",
+              "en": "The teacher switches the class from mastery to Cambridge-style. What happens to the learners' past answers?"
+            },
+            "expected": {
+              "type": "choice",
+              "options": [
+                {
+                  "ar": "تبقى، ويُحكم عليها من جديد",
+                  "fr": "Elles restent, et sont jugées à nouveau",
+                  "en": "They stay, and are judged again"
+                },
+                {
+                  "ar": "تُحذف",
+                  "fr": "Elles sont effacées",
+                  "en": "They are deleted"
+                },
+                {
+                  "ar": "يجب الإجابة من جديد",
+                  "fr": "Il faut tout refaire",
+                  "en": "Everyone must answer again"
+                }
+              ],
+              "correct": 0
+            },
+            "look": {
+              "explain": {
+                "ar": "السجلّ لا يُمحى أبدًا؛ تتغيّر القواعد فقط، فيتغيّر الحكم.",
+                "fr": "Le journal n'est jamais effacé ; seules les règles changent, donc le jugement change.",
+                "en": "The log is never erased; only the rules change, so the verdict changes."
+              }
+            }
+          },
+          {
+            "id": "z2-q2",
+            "outcome": "Z2",
+            "prompt": {
+              "ar": "نفس الدليل: 80%. أيّ جملة صحيحة؟",
+              "fr": "Même preuve : 80 %. Quelle phrase est vraie ?",
+              "en": "The same evidence: 80%. Which sentence is true?"
+            },
+            "expected": {
+              "type": "choice",
+              "options": [
+                {
+                  "ar": "قد تعني «أتقن» في طريقة و«يتقدّم» في أخرى",
+                  "fr": "Elle peut valoir « maîtrisé » dans une méthode et « en progrès » dans une autre",
+                  "en": "It can mean “mastered” in one approach and “getting there” in another"
+                },
+                {
+                  "ar": "تعني دائمًا الشيء نفسه",
+                  "fr": "Elle veut toujours dire la même chose",
+                  "en": "It always means the same thing"
+                }
+              ],
+              "correct": 0
+            },
+            "look": {
+              "explain": {
+                "ar": "لهذا تُكتب طريقة التدريس كقواعد صريحة: يرى الجميع لماذا جاء الحكم هكذا.",
+                "fr": "C'est pourquoi la méthode est écrite en règles explicites : chacun voit pourquoi le jugement est ce qu'il est.",
+                "en": "That is why an approach is written as explicit rules: everyone can see why the verdict is what it is."
+              },
+              "visual": {
+                "type": "pair",
+                "top": {
+                  "parts": 5,
+                  "shaded": 4
+                },
+                "bottom": {
+                  "parts": 5,
+                  "shaded": 4
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "z-ai",
+      "title": {
+        "ar": "ذكاء اصطناعي تحت القواعد",
+        "fr": "Une IA sous des règles",
+        "en": "An AI under rules"
+      },
+      "outcomes": [
+        "Z3"
+      ],
+      "kind": {
+        "type": "reading",
+        "body": {
+          "ar": "المساعد (ذكاء اصطناعي) يصحّح الشرح المكتوب. إن كان واثقًا وكان العمل تمرينًا، يُسجَّل حكمه، ويمكن للمعلّم إلغاؤه. إن لم يكن واثقًا، أو كان العمل اختبارًا، ينتظر قرار المعلّم. المساعد لا يقرّر وحده أبدًا، وكلّ ما يفعله ظاهر ويمكن إلغاؤه.",
+          "fr": "L'assistant (une IA) corrige les explications écrites. S'il est sûr et que c'est un exercice, sa note est enregistrée, et l'enseignant peut l'annuler. S'il n'est pas sûr, ou si c'est un test, il attend la décision de l'enseignant. L'assistant ne décide jamais seul, et tout ce qu'il fait est visible et annulable.",
+          "en": "The assistant (an AI) marks written explanations. If it is confident and the work is practice, its mark is recorded, and the teacher can undo it. If it is unsure, or the work is a test, it waits for the teacher's decision. The assistant never decides alone, and everything it does is visible and can be undone."
+        }
+      }
+    },
+    {
+      "id": "z-quiz-3",
+      "title": {
+        "ar": "تمرين: ما يحقّ للمساعد",
+        "fr": "Exercice : ce que peut l'assistant",
+        "en": "Practice: what the assistant may do"
+      },
+      "outcomes": [
+        "Z3"
+      ],
+      "kind": {
+        "type": "quiz",
+        "evidence": "formative",
+        "questions": [
+          {
+            "id": "z3-q1",
+            "outcome": "Z3",
+            "prompt": {
+              "ar": "المساعد غير واثق من تصحيح إجابة. ماذا يحدث؟",
+              "fr": "L'assistant n'est pas sûr d'une note. Que se passe-t-il ?",
+              "en": "The assistant is unsure about a mark. What happens?"
+            },
+            "expected": {
+              "type": "choice",
+              "options": [
+                {
+                  "ar": "تنتظر الإجابة قرار المعلّم",
+                  "fr": "La réponse attend la décision de l'enseignant",
+                  "en": "The answer waits for the teacher's decision"
+                },
+                {
+                  "ar": "يقرّر المساعد على كلّ حال",
+                  "fr": "L'assistant décide quand même",
+                  "en": "The assistant decides anyway"
+                },
+                {
+                  "ar": "تُرمى الإجابة",
+                  "fr": "La réponse est jetée",
+                  "en": "The answer is thrown away"
+                }
+              ],
+              "correct": 0
+            },
+            "look": {
+              "explain": {
+                "ar": "ما لا يثق فيه المساعد يذهب إلى قائمة المعلّم: يقبل أو يرفض.",
+                "fr": "Ce dont l'assistant n'est pas sûr va dans la liste de l'enseignant : il accepte ou refuse.",
+                "en": "Anything the assistant is unsure of goes to the teacher's list: accept or reject."
+              }
+            }
+          },
+          {
+            "id": "z3-q2",
+            "outcome": "Z3",
+            "prompt": {
+              "ar": "هل يصحّح المساعد اختبار نهاية الوحدة وحده؟",
+              "fr": "L'assistant peut-il noter seul le test de fin d'unité ?",
+              "en": "Can the assistant mark the end-of-unit test on its own?"
+            },
+            "expected": {
+              "type": "choice",
+              "options": [
+                {
+                  "ar": "نعم، دائمًا",
+                  "fr": "Oui, toujours",
+                  "en": "Yes, always"
+                },
+                {
+                  "ar": "لا: الاختبارات تذهب دائمًا إلى المعلّم",
+                  "fr": "Non : les tests vont toujours à l'enseignant",
+                  "en": "No: tests always go to the teacher"
+                }
+              ],
+              "correct": 1
+            },
+            "look": {
+              "explain": {
+                "ar": "قاعدة في النواة نفسها، تُختبر آلاف المرّات: لا حكم نهائيّ بلا إنسان.",
+                "fr": "C'est une règle du noyau lui-même, testée des milliers de fois : pas de note finale sans un humain.",
+                "en": "It is a rule in the kernel itself, tested thousands of times: no final mark without a person."
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "z-explain",
+      "title": {
+        "ar": "بكلماتك",
+        "fr": "Avec tes mots",
+        "en": "In your own words"
+      },
+      "outcomes": [
+        "Z3"
+      ],
+      "kind": {
+        "type": "open_response",
+        "evidence": "formative",
+        "outcome": "Z3",
+        "prompt": {
+          "ar": "في جملة واحدة: لماذا يمكن للمعلّم أن يثق في مساعد زيدارا؟",
+          "fr": "En une phrase : pourquoi un enseignant peut-il faire confiance à l'assistant de Zidara ?",
+          "en": "In one sentence: why can a teacher trust Zidara's assistant?"
+        },
+        "rubric": {
+          "min_words": 5,
+          "criteria": [
+            {
+              "weight": 1,
+              "any_of": [
+                "teacher",
+                "decide",
+                "decides",
+                "المعلّم",
+                "المعلم",
+                "يقرّر",
+                "يقرر",
+                "enseignant",
+                "décide"
+              ]
+            },
+            {
+              "weight": 1,
+              "any_of": [
+                "undo",
+                "unsure",
+                "rules",
+                "rule",
+                "إلغاء",
+                "يلغي",
+                "قواعد",
+                "واثق",
+                "annuler",
+                "règles",
+                "sûr"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

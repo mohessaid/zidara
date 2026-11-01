@@ -46,7 +46,7 @@
   $effect(() => app.followLive(Boolean(view?.challenge)));
 </script>
 
-<Header title={t(app.locale, "quest.title")}>
+<Header title={app.pack?.title[app.locale] ?? t(app.locale, "quest.title")}>
   <div class="row" role="group" aria-label={t(app.locale, "quest.map")}>
     <button aria-pressed={experience === "quest"} onclick={showMap}>{t(app.locale, "view.quest")}</button>
     <button aria-pressed={experience === "grid"} onclick={() => (experience = "grid")}>{t(app.locale, "view.grid")}</button>

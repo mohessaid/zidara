@@ -58,7 +58,7 @@
 </script>
 
 {#if question.expected.type === "choice"}
-  <div class="tiles" class:live role="radiogroup" aria-label={text(question.prompt)}>
+  <div class="tiles" class:live class:long={question.expected.options.some((o) => text(o).length > 14)} role="radiogroup" aria-label={text(question.prompt)}>
     {#each question.expected.options as option, k (k)}
       <button
         role="radio"
@@ -109,6 +109,9 @@
   }
   .tile:active:not(:disabled) { transform: translateY(3px); border-bottom-width: 3px; }
   .tile[aria-checked="true"] { border-color: var(--in-progress); background: #e7f0fb; }
+  /* Sentences rather than numbers: one per row, at reading size. */
+  .long { grid-template-columns: 1fr; }
+  .long .tile { font-size: 20px; min-height: 60px; text-align: start; justify-content: flex-start; padding: 0.6rem 1rem; }
   .live .tile { color: #fff; border-color: transparent; display: flex; gap: 0.75rem; align-items: center; justify-content: center; }
   .live .c0 { background: var(--in-progress); } .live .c1 { background: var(--achieved); }
   .live .c2 { background: var(--needs-support); } .live .c3 { background: var(--agent); }

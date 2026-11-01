@@ -7,6 +7,11 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- A second track, "How Zidara works", for anyone: how work becomes evidence and a verdict, what
+  switching the teaching approach does, and what the AI may and may not do, in Arabic, French
+  and English. Its open answer is marked by the governed assistant it describes. It has its own
+  class ("Discover Zidara"), with Lina learning and Omar teaching, on the server and in the
+  browser demo. The learner's header now shows the class's own lesson title.
 - A lesson player in the style of Duolingo and Brilliant: tapping a stone opens a session, one
   step per screen, with a progress bar. Quiz questions come one at a time and are checked at
   once by the kernel's own marking, with a gentle "let's look again", the answer and why; the

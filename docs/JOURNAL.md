@@ -4,6 +4,24 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-01 — The real server, on a shared machine
+
+**What happened.** The owner offered `s1.nasa9.com` for the full stack, with two rules: no
+Docker, and never disturb the projects already on it. We built here, copied the binary and the
+web app, gave Zidara its own user, port, database and roles, and added one Caddy file.
+**The problem.** `seed` failed with "new row violates row-level security policy for table
+tenants". Our deploy guide used the `postgres` superuser as the owner, and a superuser bypasses
+row-level security. Our new owner role was not one, and the tables force row-level security on
+their owner too.
+**What we did.** We gave the owner role `bypassrls`. Only migrations and the seed use that role;
+the app's role still bypasses nothing. The guide now has a section for shared servers.
+**The numbers.** The 3 smoke tests pass against the live address over HTTPS. The other four
+sites on the server answered 200 before and after Caddy reloaded.
+**The lesson.** A rehearsal on a fresh database with a superuser hid a rule that a real server
+with separate roles brings out. Rehearse with the roles you will really use.
+
+---
+
 ## 2026-11-01 — Public, clean, and a link anyone can open
 
 **What happened.** With the other project's material gone and history rewritten, we deleted the

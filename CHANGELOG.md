@@ -7,6 +7,8 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- The real server runs at https://zidara.72-61-103-134.sslip.io (ADR 0010): its own user,
+  database and roles on a shared machine, one Caddy file, and a clean school every night.
 - The demo school is published at https://zidara.pages.dev and the code at
   https://github.com/mohessaid/zidara.
 - The demo school in the browser (ADR 0009): `pnpm build:demo` builds the app with the school

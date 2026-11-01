@@ -11,6 +11,8 @@ Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (dea
 
 - **Try it:** https://zidara.pages.dev (the demo school, in your browser: no sign-up, invented
   people, works offline after one visit; pick a learner, then the teacher Karim).
+- **The real server:** https://zidara.72-61-103-134.sslip.io (PostgreSQL, two classes kept apart
+  by the database; the school is emptied every night).
 - **Code:** https://github.com/mohessaid/zidara
 
 ## What works today

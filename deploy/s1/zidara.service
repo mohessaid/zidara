@@ -1,0 +1,21 @@
+[Unit]
+Description=Zidara prototype (zidara.72-61-103-134.sslip.io), ADR 0010
+After=network-online.target postgresql@17-main.service
+
+[Service]
+EnvironmentFile=/etc/zidara.env
+ExecStart=/opt/zidara/zidara-server serve
+User=zidara
+Group=zidara
+Restart=on-failure
+RestartSec=2
+Nice=5
+MemoryMax=512M
+CPUQuota=100%
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

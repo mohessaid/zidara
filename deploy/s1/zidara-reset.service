@@ -1,0 +1,7 @@
+[Unit]
+Description=Empty the Zidara demo school (people and classes stay), ADR 0010
+
+[Service]
+Type=oneshot
+User=postgres
+ExecStart=/usr/bin/psql -d zidara -v ON_ERROR_STOP=1 -c "truncate events, applied_envelopes"

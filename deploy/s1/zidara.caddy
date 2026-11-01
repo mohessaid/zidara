@@ -1,0 +1,6 @@
+# Zidara (ADR 0010): Rust binary under systemd (zidara.service, user zidara, never Docker) on
+# 127.0.0.1:8850. Files in /opt/zidara, env /etc/zidara.env. Added 2026-11-01.
+zidara.72-61-103-134.sslip.io {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:8850
+}

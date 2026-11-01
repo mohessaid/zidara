@@ -4,6 +4,19 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-01 — Green again
+
+**What happened.** With idle polls doing nothing, the browser stage passed: 13 of 13, and the map
+at a flat 60 fps with no long task (load 14). The stages after it passed on the same code: the
+demo build (2 of 2), Lighthouse 99 and 100, coverage 228/228 branches, and 423 mutants (308 core,
+115 server) with every viable one caught. The gauntlet ran as two invocations because the
+browser stage was rerun on its own after the fix.
+**The numbers.** 139 kernel and framework tests, 18 stories, 58 server tests, 15 wasm tests, 36
+web unit tests, 15 browser tests. The demo film is 75 s and the pitch 149 s; on the hosted
+server, phones see a live round after 2.4–2.6 s.
+
+---
+
 ## 2026-11-01 — The frame-rate gate, on a machine three times oversubscribed
 
 **What happened.** The full gauntlet ran four times in the afternoon. Each time every Rust test,

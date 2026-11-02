@@ -29,7 +29,7 @@
   const mastered = $derived(view.outcomes.filter((o) => !o.lock && o.judgement.state === "achieved").length);
   const won = $derived(mastered === view.outcomes.length && mastered > 0);
   const flip = $derived(direction(app.locale) === "rtl" ? -1 : 1);
-  const ROW = 172;
+  const ROW = 196;
   /** The winding: each level sits a little further along a gentle wave. */
   const shift = (i: number) => Math.round(Math.sin((i * Math.PI) / 2.5) * 70) * flip;
   /** The trail between the levels, drawn from the centre line. */
@@ -132,7 +132,7 @@
           <svg class="palm" width="70" height="96" viewBox="-40 -96 90 100" aria-hidden="true"><Palm /></svg>
         {/if}
         {#if o.outcome === next || (won && i === view.outcomes.length - 1)}
-          <div class="buddy" aria-hidden="true"><Mascot size={84} mood={won ? "cheer" : "idle"} still={!won} /></div>
+          <div class="buddy" class:right={shift(i) < 0} aria-hidden="true"><Mascot size={84} mood={won ? "cheer" : "idle"} still={!won} /></div>
         {/if}
       </li>
     {/each}
@@ -216,7 +216,9 @@
   .stars { font-size: 18px; color: var(--locked-edge); letter-spacing: 0.1rem; line-height: 1; }
   .stars .lit { color: var(--gold-edge); }
   .palm { position: absolute; inset-inline-end: calc(100% - 0.5rem); top: -0.5rem; pointer-events: none; }
-  .buddy { position: absolute; inset-inline-start: calc(50% + 3.4rem); top: 0.75rem; }
+  /* The guide stands on whichever side of the level has room. */
+  .buddy { position: absolute; right: calc(50% + 3.2rem); top: 0.75rem; }
+  .buddy.right { right: auto; left: calc(50% + 3.2rem); }
   .tip { text-align: center; font-weight: 700; color: var(--muted); min-height: 1.5em; }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -226,5 +228,4 @@
   }
   @keyframes sprout { from { transform: scale(0.1, 0); } }
   @keyframes float { 50% { transform: translateY(-5px); } }
-  @media (max-width: 400px) { .buddy { inset-inline-start: calc(50% + 2.9rem); } }
 </style>

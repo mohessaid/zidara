@@ -2,11 +2,12 @@
   // Bizra (بذرة, "seed"): Zidara's guide, a seed that grows a sprout. Drawn here, in SVG, so it
   // costs no image request and scales to any screen. Moods follow the art bible: it cheers real
   // progress and encourages after a miss; it is never sad, never disappointed.
-  let { mood = "idle", size = 120 }: { mood?: "idle" | "happy" | "cheer" | "think" | "encourage"; size?: number } = $props();
+  // `still`: no idle loop (bob, blink, sway), for screens that must stay quiet and cheap, like the path.
+  let { mood = "idle", size = 120, still = false }: { mood?: "idle" | "happy" | "cheer" | "think" | "encourage"; size?: number; still?: boolean } = $props();
   const uid = $props.id();
 </script>
 
-<svg class="mascot {mood}" width={size} height={size} viewBox="0 0 120 120" aria-hidden="true">
+<svg class="mascot {mood}" class:still width={size} height={size} viewBox="0 0 120 120" aria-hidden="true">
   <g class="body">
     <!-- Sprout -->
     <path d="M60 30 C60 22 60 16 60 12" stroke="#2f8f3a" stroke-width="4" stroke-linecap="round" fill="none" />
@@ -71,6 +72,7 @@
   .eyes { animation: blink 4s infinite; transform-origin: 60px 60px; }
   .leaf { transform-origin: 60px 16px; animation: sway 3s ease-in-out infinite; }
   .leaf.r { animation-delay: -1.5s; }
+  .still .body, .still .eyes, .still .leaf { animation: none; }
   @keyframes bob { 50% { transform: translateY(-4px) scaleY(1.02); } }
   @keyframes hop { 40% { transform: translateY(-12px); } }
   @keyframes jump { 0% { transform: scale(1, 1); } 30% { transform: translateY(-22px) scale(0.95, 1.08); } 60% { transform: translateY(0) scale(1.08, 0.92); } }

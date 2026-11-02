@@ -8,6 +8,14 @@ All notable changes to Zidara are recorded here. The format follows
 ### Added
 
 - The pilot server is live at https://zidara.ta9in.com (DNS record added, certificate issued).
+- The pedagogy lens (ADR 0013): under the path, "School rules: Mastery | Cambridge-style"
+  replays the learner's own evidence in a throwaway kernel under the other framework and
+  redraws the path from it. Nothing is run, saved or sent; the class keeps its teacher's choice.
+- The oasis (ADR 0013): learner screens stand on sand under a morning sky, with dunes, water and
+  date palms drawn in SVG. The courses are horseshoe-arch doorways, the levels eight-pointed
+  stars, and a palm grows for every outcome the framework says is achieved.
+- A right answer: Bizra cheers, small stars burst and "+10" rises; the finish screen counts the
+  points up, lands the stars one by one and grows a palm on mastery. Off under reduced motion.
 - Guests (ADR 0012): the front page offers the two courses as cards, and one tap starts a
   guest learner in it, with no account and no names. `POST /api/guest` makes a learner in every
   open class through `private.join_as_guest`, the only way the app can write users, capped at
@@ -190,6 +198,10 @@ All notable changes to Zidara are recorded here. The format follows
 - The PixiJS map, GSAP, the table view and the light experience: the HTML path replaces them.
 
 ### Fixed
+
+- The app's typeface (Baloo Bhaijaan 2) had never rendered: an inline splash style on `<body>`
+  set `system-ui`, which beat the face set on `:root`. Every screen fell back to the system font.
+- A burst of stars could widen the page by a few pixels, and phones zoomed out to fit it.
 
 - The points in the learner's bar stayed at 0 after a session until a reload: the value
   short-circuited on the kernel, which is not reactive, before reading the log.

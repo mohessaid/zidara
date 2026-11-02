@@ -27,6 +27,13 @@ test("a guest starts a course in one tap, learns, and can switch to the other co
   await expect(stone(page, "F1")).toHaveAttribute("data-state", "achieved");
   // Points come from the log at once, not after a reload.
   await expect(page.getByRole("group", { name: "نقاطك وأيامك المتتالية" })).toContainText("النقاط 20");
+  // The pedagogy lens: the same work judged by Cambridge-style rules, on this phone only.
+  await page.getByRole("button", { name: /على طريقة كامبريدج/ }).click();
+  await expect(stone(page, "F1")).not.toHaveAttribute("data-state", "achieved");
+  await expect(page.getByRole("status").filter({ hasText: "نفس إجاباتك" })).toBeVisible();
+  await expectAccessible(page, "pedagogy lens");
+  await page.getByRole("button", { name: /الإتقان/ }).click();
+  await expect(stone(page, "F1")).toHaveAttribute("data-state", "achieved");
   await page.getByRole("button", { name: "القائمة" }).click();
   await page.getByRole("button", { name: /كيف تعمل زيدارا/ }).click();
   await expect(stone(page, "Z1")).toHaveAttribute("data-state", "not_started");

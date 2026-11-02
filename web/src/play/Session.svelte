@@ -11,6 +11,7 @@
   import type { Question } from "../lib/kernel/types/Question.ts";
   import type { Response } from "../lib/kernel/types/Response.ts";
   import Answer from "./Answer.svelte";
+  import Burst from "./Burst.svelte";
   import Finish from "./Finish.svelte";
   import Fold from "./Fold.svelte";
   import Mascot from "./Mascot.svelte";
@@ -190,7 +191,10 @@
     <footer class="sheet" class:right={verdict === true} class:again={verdict === false}>
       {#if verdict !== undefined && question}
         <div class="feedback" role="status">
-          <span class="badge" aria-hidden="true">{verdict ? "✓" : "↻"}</span>
+          <span class="badge" aria-hidden="true">
+            <Mascot size={64} mood={verdict ? "cheer" : "encourage"} />
+            {#if verdict}<Burst /><span class="plus">+10 ⚡</span>{/if}
+          </span>
           <p class="headline">
             {#if verdict}{t(app.locale, PRAISE[(q + at) % PRAISE.length]!)}{:else}{t(app.locale, "feedback.again")}{/if}
           </p>
@@ -210,18 +214,18 @@
 </div>
 
 <style>
-  .session { position: fixed; inset: 0; background: var(--paper); display: flex; flex-direction: column; z-index: 10; overflow-y: auto; }
+  .session { position: fixed; inset: 0; background: var(--paper); display: flex; flex-direction: column; z-index: 10; overflow-y: auto; overflow-x: clip; }
   .bar { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; max-width: 760px; width: 100%; margin: 0 auto; }
   .close, .mute { border: none; background: none; font-size: 26px; padding: 0; color: var(--muted); }
   .close:active, .mute:active { transform: none; }
-  .progress { flex: 1; height: 18px; background: var(--line); border-radius: 999px; overflow: hidden; }
+  .progress { flex: 1; height: 20px; background: var(--locked-fill); border-radius: 999px; overflow: hidden; }
   .progress span {
-    display: block; height: 100%; background: #3fb950; border-radius: 999px; transition: width 400ms cubic-bezier(.3,1.4,.5,1);
+    display: block; height: 100%; background: linear-gradient(90deg, var(--gold), #3fb950); border-radius: 999px; transition: width 400ms cubic-bezier(.3,1.4,.5,1);
     background-image: linear-gradient(transparent 22%, rgba(255,255,255,0.35) 22%, rgba(255,255,255,0.35) 42%, transparent 42%);
   }
   .combo { font-weight: 800; font-size: 20px; color: #c25e00; animation: pop 300ms ease both; }
   .step { flex: 1; width: 100%; max-width: 760px; margin: 0 auto; padding: 0.5rem 1rem 1.5rem; animation: enter 260ms ease both; }
-  .kicker { margin: 0; color: var(--agent); font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+  .kicker { margin: 0; color: var(--teal-text); font-size: 16px; font-weight: 800; }
   h2 { font-size: 28px; margin: 0.25rem 0 1rem; line-height: 1.25; }
   .reading { font-size: 21px; display: block; }
   .speaker { display: flex; align-items: flex-start; gap: 0.75rem; }
@@ -244,7 +248,10 @@
   .sheet.again { background: var(--sky); border-color: transparent; animation: rise 220ms ease both; }
   .feedback { display: grid; grid-template-columns: auto 1fr; column-gap: 0.75rem; align-items: center; }
   .feedback > p { grid-column: 2; }
-  .badge { grid-row: span 3; width: 56px; height: 56px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-size: 30px; font-weight: 800; }
+  .badge { position: relative; grid-row: span 3; width: 76px; height: 76px; border-radius: 50%; background: #fff; display: grid; place-items: center; border: 3px solid currentColor; }
+  .plus { position: absolute; top: -1.9rem; left: 50%; translate: -50% 0; padding: 0 0.5rem; border-radius: 999px; background: var(--gold); color: var(--ink); font-weight: 800; font-size: 16px; white-space: nowrap; }
+  @media (prefers-reduced-motion: no-preference) { .plus { animation: plus 700ms cubic-bezier(.2,1.4,.4,1) both; } }
+  @keyframes plus { from { transform: translateY(16px) scale(0.4); opacity: 0; } }
   .right .badge { color: var(--achieved); }
   .again .badge { color: var(--blue-edge); }
   .feedback p { margin: 0.1rem 0; font-size: 19px; }

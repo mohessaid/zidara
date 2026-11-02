@@ -4,6 +4,10 @@ Pillars: **clarity** (a child knows what to do next without reading), **warmth**
 is a friendly place to try and fail), **honesty** (the game shows what the learner can do,
 never more).
 
+> **Revised 2 November 2026 (ADR 0013): the oasis.** Back to this bible's own world: sand
+> ground, a morning sky, dunes, water and date palms, horseshoe-arch doors and eight-pointed star
+> levels; a palm grows for each outcome achieved. Tokens and contrast ratios: `web/src/app.css`.
+>
 > **Revised 1 November 2026 (ADR 0012).** White ground, chunky buttons, brighter colours (the
 > tokens and their contrast ratios are in `web/src/app.css`), Baloo Bhaijaan 2 for every
 > language, and the path drawn in HTML and CSS, with Bizra the seed as guide. The pillars and

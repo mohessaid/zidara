@@ -8,6 +8,8 @@
   import SyncBadge from "../components/SyncBadge.svelte";
   import CourseIcon from "../play/CourseIcon.svelte";
   import { streak, xp } from "../play/xp.ts";
+  import type { FrameworkId } from "../lib/kernel/types/FrameworkId.ts";
+  import { lensView } from "../lib/lens.ts";
   import Path from "./Path.svelte";
 
   let selected: string | undefined = $state();
@@ -23,6 +25,15 @@
   void session().catch(() => undefined);
   void livePhone().catch(() => undefined);
   const events = $derived(app.events());
+  // The pedagogy lens (ADR 0013): the same evidence, judged by another framework, on this phone
+  // only. Nothing is run or sent; the class keeps the framework its teacher chose.
+  let lens: FrameworkId | undefined = $state();
+  const shown = $derived.by(() => {
+    const log = events;
+    if (!lens || !view || lens === view.framework || !app.pack || !app.cohort || !app.me) return view;
+    const setup = { lesson: app.pack, framework: view.framework, tenant: app.cohort.tenant_id, cohort: app.cohort.id };
+    return lensView(setup, log, lens, app.me.id, app.locale, now);
+  });
   // `events` is read first: `app.kernel` is not reactive, so a derived that short-circuited on
   // it before the kernel arrived would never recompute (points stuck at 0 until a reload).
   const points = $derived.by(() => {
@@ -41,6 +52,7 @@
 
   async function switchTo(id: string) {
     menu = false;
+    lens = undefined;
     await app.switchCohort(id);
   }
 </script>
@@ -86,7 +98,7 @@
         <play.default outcome={selected} onclose={() => (selected = undefined)} />
       {/await}
     {/if}
-    <Path {view} onopen={(id: string) => (selected = id)} />
+    <Path view={shown ?? view} real={view.framework} bind:lens onopen={(id: string) => (selected = id)} />
   {/if}
 </main>
 

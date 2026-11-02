@@ -4,6 +4,60 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-02 — "You literally copied Notion": the oasis, and a lens on the concept
+
+**What happened.** The owner opened the live guest flow and said it was far from winning: a
+template look, and nothing that showed why Zidara is different. Both were true.
+
+**The problems.**
+- *A template, not a world.* ADR 0012 had replaced the art bible's own world (a sunlit
+  landscape, warm paper) with white ground and outlined cards. The bible already held the
+  answer; we had walked away from it.
+- *The concept was invisible.* The project's own game-design note names the signature moment
+  (switching the pedagogy redraws the same game), but a guest could never see it. A judge saw a
+  lesson app.
+- *The typeface never rendered.* An inline style on `<body>` in `index.html`, there for the
+  splash, set `system-ui`; `body` beats the face inherited from `:root`, so every screen in
+  every language used the system font. Found by asking the browser which fonts it had loaded
+  (`document.fonts`: twelve faces, all "unloaded", and the heading's computed family
+  `system-ui`). No test looked at fonts.
+
+**What we did.** Used girth to distil two installed design skills (anti-template discipline,
+reduced motion, restraint) into `girth-gameui`, wrote a plan (palette, shapes, one bold place),
+and reviewed it against "would this suit any kids' app?" before code (ADR 0013).
+- The oasis: sand ground, morning sky, dunes, water and date palms in SVG; horseshoe-arch doors
+  for the courses; eight-pointed star levels; one palm grows per outcome achieved.
+- The pedagogy lens: "School rules: Mastery | Cambridge-style" under the path replays the
+  learner's own log in a throwaway kernel under the other framework. Test first
+  (`tests/unit/lens.test.ts`: the same attempts, achieved under mastery, not under
+  Cambridge-style, the log untouched), then the UI, then the guest browser test.
+- Juice within the rules: a star burst, "+10", a counting total, stars landing, a palm growing;
+  all off under reduced motion.
+
+**Mistakes on the way.**
+- The first draft animated a drifting cloud, shimmering water, a breathing level, a bobbing
+  guide and blinking eyes, all forever. Infinite loops inside an SVG repaint it every frame, and
+  the frame-rate gate fell to 37 fps on the throttled phone. We removed every endless loop from
+  the path (a fixed halo marks the next level; the guide stands still there).
+- A burst of stars widened the page by 6 px and the phone zoomed out to fit it; the session and
+  the page now clip horizontal overflow.
+
+**Numbers.** Text colours on sand are 4.9 to 14.5:1. Returning to the path after mastering a level,
+on a phone throttled four times, costs 162–202 ms of main-thread time against 844–945 ms
+before (style recalculation 20–25 ms against 159–202 ms: the old glowing box-shadow recalculated
+every frame), measured on the same busy machine, old and new builds side by side. The wall-clock
+frame-rate test swung from 18 to 58 fps between runs while another project's processes held the
+load average at 15–25 on 8 cores. Rerun on a quiet machine: 60 fps in all three runs, no long
+task, worst frame 17 ms; the path's main-thread work 907 ms (1 588 ms on 1 November), heap
+4.1 MB; Lighthouse performance 98, accessibility 100. Gauntlet green: 37 web unit tests,
+12 browser tests on the real server (the lens included), 3 on the demo build, 18 stories,
+230/230 branches, 259 kernel and 110 server mutants caught.
+
+**Lesson.** Re-read your own bible before inventing a look, and measure what you change in a way
+the machine's load cannot distort: CPU time beats frames per second on a shared laptop.
+
+---
+
 ## 2026-11-02 — zidara.ta9in.com is live
 
 **What happened.** The owner signed in to Cloudflare and we added the record for the domain they

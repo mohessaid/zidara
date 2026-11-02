@@ -7,6 +7,7 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- The pilot server is live at https://zidara.ta9in.com (DNS record added, certificate issued).
 - Guests (ADR 0012): the front page offers the two courses as cards, and one tap starts a
   guest learner in it, with no account and no names. `POST /api/guest` makes a learner in every
   open class through `private.join_as_guest`, the only way the app can write users, capped at

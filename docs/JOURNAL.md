@@ -4,6 +4,23 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-02 — zidara.ta9in.com is live
+
+**What happened.** The owner signed in to Cloudflare and we added the record for the domain they
+chose: A `zidara` → 72.61.103.134, DNS only, so Caddy on s1 answers HTTPS itself. The record
+resolved within seconds at Cloudflare's nameservers; Caddy, validated then reloaded (never
+restarted), obtained a Let's Encrypt certificate on the first try.
+
+**Numbers.** `https://zidara.ta9in.com` answers 200 over HTTP/2; nasa9.com still answers 200.
+Deployment smoke tests 4 of 4 against the live domain, including a guest starting a course and
+the app opening offline after one visit. A phone walkthrough in Arabic showed the front door,
+the path, a session and 10 points with a 1-day streak afterwards.
+
+**Lesson.** The command-line login we already had could deploy Pages but not edit DNS; the
+dashboard, signed in by the owner, was the only door. Ask for the sign-in early, not last.
+
+---
+
 ## 2026-11-01 — "I don't see no Duolingo": guests, a real path, and a domain
 
 **What happened.** The owner opened the published app and was angry, rightly. The front page was

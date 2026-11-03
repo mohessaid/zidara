@@ -8,8 +8,6 @@
   import { app } from "../lib/app.svelte.ts";
   import { t } from "../lib/i18n/i18n.ts";
   import { stars } from "../lib/stars.ts";
-  import Mascot from "./Mascot.svelte";
-  import Palm from "./Palm.svelte";
   import { sound } from "./sound.svelte.ts";
   import { streak, xp } from "./xp.ts";
 
@@ -24,7 +22,6 @@
   const days = $derived(streak(events, app.me!.id, Date.now()));
   const help = $derived((app.pack?.activities ?? []).filter((a) => a.role === "remediation" && a.outcomes.includes(outcome) && view?.assigned.includes(a.id)));
   const text = (l: Record<string, string>) => l[app.locale] ?? l.en ?? Object.values(l)[0] ?? "";
-  const CONFETTI = Array.from({ length: 24 }, (_, i) => i);
 
   // The total counts up from where it stood before this session: the points land, not appear.
   const still = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -38,27 +35,20 @@
 </script>
 
 <section class="finish state-{state}" aria-labelledby="finish-title">
-  {#if state === "achieved"}
-    <div class="confetti" aria-hidden="true">
-      {#each CONFETTI as i (i)}<i style:--x={`${(i * 37) % 100}%`} style:--d={`${(i % 6) * 90}ms`} class="k{i % 4}"></i>{/each}
-    </div>
-  {/if}
   <div class="emblem" aria-hidden="true">
-    {#if state === "achieved"}<svg class="palm" width="110" height="150" viewBox="-40 -96 90 100"><Palm grow /></svg>{/if}
-    <Mascot size={150} mood={state === "achieved" ? "cheer" : state === "needs_support" ? "encourage" : "happy"} />
+    {#if state === "achieved"}<svg viewBox="0 0 24 24" width="56" height="56"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>{:else if state === "needs_support"}<svg viewBox="0 0 24 24" width="50" height="50"><path d="M19 12a7 7 0 1 1-2.05-4.95M19 5v4h-4" /></svg>{:else}<svg viewBox="0 0 24 24" width="52" height="52"><path d="M5 12h14M13 6l6 6-6 6" /></svg>{/if}
   </div>
   <h2 id="finish-title">{t(app.locale, `finish.${state}`)}</h2>
   {#if info}<p class="outcome">{info.title}</p>{/if}
-  {#if state === "achieved"}<p class="grew">🌴 {t(app.locale, "finish.oasis")}</p>{/if}
   {#if earned.of > 0}
     <p class="stars" aria-label={t(app.locale, "stars", { n: earned.n, of: earned.of })}>
       {#each Array.from({ length: earned.of }, (_, i) => i) as i (i)}<span class:lit={i < earned.n} style:--d={`${300 + i * 160}ms`}>★</span>{/each}
     </p>
   {/if}
   <dl class="tally">
-    <div class="gold"><dt>{t(app.locale, "finish.xp")}</dt><dd>⚡ +{gained}</dd></div>
+    <div class="gold"><dt>{t(app.locale, "finish.xp")}</dt><dd>+{gained}</dd></div>
     <div class="blue"><dt>{t(app.locale, "finish.total")}</dt><dd><span aria-hidden="true">{Math.round(shown.current)}</span><span class="visually-hidden">{total}</span></dd></div>
-    <div class="flame"><dt>{t(app.locale, "finish.streak")}</dt><dd>🔥 {days}</dd></div>
+    <div class="flame"><dt>{t(app.locale, "finish.streak")}</dt><dd>{days}</dd></div>
   </dl>
   {#if help.length}
     <p class="help">{t(app.locale, "finish.help", { name: text(help[0]!.title) })}</p>
@@ -67,30 +57,29 @@
 </section>
 
 <style>
-  .finish { position: relative; flex: 1; display: grid; align-content: center; justify-items: center; gap: 0.5rem; padding: 1rem; text-align: center; overflow: hidden; }
-  .emblem { position: relative; display: flex; align-items: flex-end; animation: land 420ms cubic-bezier(.2,1.6,.4,1) both; }
-  .palm { margin-inline-end: -1.5rem; }
-  .grew { margin: 0; font-weight: 600; color: var(--achieved); font-size: 19px; }
-  @media (prefers-reduced-motion: no-preference) { .stars .lit { display: inline-block; animation: star 380ms cubic-bezier(.2,1.8,.4,1) var(--d) both; } }
-  @keyframes star { from { transform: scale(2.4) rotate(-30deg); opacity: 0; } }
-  h2 { font-size: 34px; margin: 0; color: var(--accent); font-weight: 600; letter-spacing: -0.02em; }
-  .state-achieved h2 { color: var(--star); }
-  .state-in_progress h2 { color: var(--in-progress); }
-  .outcome { font-size: 20px; margin: 0; font-weight: 700; }
-  .stars { font-size: 44px; margin: 0; letter-spacing: 0.2rem; color: var(--line); }
-  .stars .lit { color: var(--gold); -webkit-text-stroke: 2px var(--gold-edge); }
-  .tally { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin: 1rem 0; }
-  .tally div { border-radius: var(--radius); border: 1px solid; overflow: hidden; min-width: 6.5rem; background: #fff; }
-  dt { font: 600 12.5px/1.6 var(--mono); color: #fff; padding: 0.15rem 0.5rem; text-transform: uppercase; letter-spacing: 0.06em; }
-  dd { margin: 0; font: 600 26px/1.3 var(--mono); padding: 0.35rem 0.75rem; }
-  .gold { border-color: #e0a800 !important; } .gold dt { background: #e0a800; color: #3d2a00; } .gold dd { color: #8a6100; }
-  .blue { border-color: var(--in-progress) !important; } .blue dt { background: var(--in-progress); } .blue dd { color: var(--teal-text); }
-  .flame { border-color: #ff9600 !important; } .flame dt { background: #ff9600; color: #3d2400; } .flame dd { color: #b35400; }
+  /* The end of a lesson (ADR 0016): one emblem, the kernel's verdict in words, three numbers. */
+  .finish { flex: 1; display: grid; align-content: center; justify-items: center; gap: 8px; padding: 24px 16px; text-align: center; max-width: 560px; margin: 0 auto; width: 100%; }
+  .emblem { width: 104px; height: 104px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: var(--ink); box-shadow: 0 5px 0 #000; margin-bottom: 12px; }
+  .state-achieved .emblem { background: var(--achieved); box-shadow: 0 5px 0 var(--achieved-edge); }
+  .state-needs_support .emblem { background: var(--try); box-shadow: 0 5px 0 var(--try-ink); }
+  .emblem svg { fill: none; stroke: currentColor; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
+  @media (prefers-reduced-motion: no-preference) {
+    .emblem { animation: land 520ms cubic-bezier(.2,1.5,.4,1) both; }
+    .emblem path { stroke-dasharray: 40; animation: draw 500ms 220ms ease-out both; }
+    .stars .lit { display: inline-block; animation: star 380ms cubic-bezier(.2,1.8,.4,1) var(--d) both; }
+  }
+  @keyframes land { from { transform: scale(0.4); } }
+  @keyframes draw { from { stroke-dashoffset: 40; } }
+  @keyframes star { from { transform: scale(2) rotate(-30deg); } }
+  h2 { font: 900 clamp(30px, 7vw, 40px)/1.15 var(--display); margin: 0; }
+  .outcome { font-size: 19px; margin: 0; color: var(--muted); }
+  .stars { font-size: 40px; margin: 4px 0 0; letter-spacing: 4px; color: var(--line); }
+  .stars .lit { color: var(--accent); -webkit-text-stroke: 1.5px var(--ink); }
+  .tally { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; width: 100%; }
+  .tally div { border-radius: var(--radius); border: 2px solid var(--line); padding: 12px 8px; background: var(--surface); }
+  dt { font-size: 14px; font-weight: 500; color: var(--muted); }
+  dd { margin: 2px 0 0; font: 800 28px/1.2 var(--display); }
+  .gold dd { color: var(--accent-ink); }
   .help { color: var(--needs-support); font-weight: 700; }
-  .finish :global(button.big) { width: min(100%, 420px); }
-  .confetti { position: absolute; inset: 0; pointer-events: none; }
-  .confetti i { position: absolute; top: -12px; left: var(--x); width: 10px; height: 16px; border-radius: 3px; animation: fall 1.6s ease-in var(--d) both; }
-  .k0 { background: var(--in-progress); } .k1 { background: #3fb950; } .k2 { background: var(--gold); } .k3 { background: var(--terra); }
-  @keyframes fall { to { transform: translateY(110vh) rotate(540deg); opacity: 0.2; } }
-  @keyframes land { from { transform: scale(0.3); opacity: 0; } }
+  .finish :global(button.big) { width: 100%; }
 </style>

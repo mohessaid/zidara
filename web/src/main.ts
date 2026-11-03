@@ -1,6 +1,6 @@
-// Baloo Bhaijaan 2 (SIL OFL): one rounded face for Arabic and Latin, so all three languages
-// look like the same friendly game. Each weight loads only the scripts a page uses.
-// One face for every screen, Arabic and Latin (ADR 0015).
+// Two faces, both SIL OFL and both drawn for Arabic and Latin (ADR 0016): Alexandria, heavy, for
+// headings; Readex Pro, quiet, for reading. Each loads only the scripts a page uses.
+import "@fontsource-variable/alexandria";
 import "@fontsource-variable/readex-pro";
 import "./app.css";
 import { mount } from "svelte";

@@ -102,28 +102,29 @@
 {/if}
 
 <style>
-  .tiles { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
-  .tile { min-height: 76px; font-size: 26px; font-weight: 600; border-width: 1px 1px 4px; border-radius: 14px; }
-  .tile[aria-checked="true"] { border-color: var(--accent); border-bottom-color: var(--accent-edge); background: var(--accent-tint); color: var(--accent-edge); }
+  /* Choices are big cards (ADR 0016): a grey edge, ink when picked, never colour alone. */
+  .tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+  .tile { min-height: 72px; font-size: 24px; font-weight: 600; border-radius: 14px; }
+  .tile[aria-checked="true"] { border-color: var(--ink); box-shadow: 0 3px 0 var(--ink); background: var(--accent-soft); }
   /* Sentences rather than numbers: one per row, at reading size. */
   .long { grid-template-columns: 1fr; }
-  .long .tile { font-size: 20px; min-height: 60px; text-align: start; justify-content: flex-start; padding: 0.6rem 1rem; }
-  .live .tile { color: #fff; border-color: transparent; display: flex; gap: 0.75rem; align-items: center; justify-content: center; }
-  .live .c0 { background: var(--in-progress); } .live .c1 { background: var(--achieved); }
-  .live .c2 { background: var(--needs-support); } .live .c3 { background: var(--agent); }
-  .live .tile[aria-checked="true"] { outline: 4px solid var(--ink); outline-offset: 3px; }
-  .shape { font-size: 30px; }
-  .fraction { display: flex; width: fit-content; flex-direction: column; align-items: center; gap: 0.4rem; margin: 0 auto; }
-  .fraction input { width: 6rem; min-height: 64px; font-size: 34px; font-weight: 600; text-align: center; border: 1px solid var(--line); border-bottom-width: 3px; border-radius: var(--radius); background: #f7f7f7; }
-  .fraction input:focus { border-color: var(--accent); background: #fff; }
+  .long .tile { font-size: 19px; font-weight: 500; min-height: 60px; text-align: start; justify-content: flex-start; padding: 12px 16px; }
+  .live .tile { color: #fff; border-color: transparent; display: flex; gap: 12px; align-items: center; justify-content: center; }
+  .live .c0 { background: #0f0f10; } .live .c1 { background: var(--achieved); }
+  .live .c2 { background: var(--try-ink); } .live .c3 { background: var(--agent); }
+  .live .tile[aria-checked="true"] { outline: 4px solid var(--accent); outline-offset: 3px; }
+  .shape { font-size: 28px; }
+  .fraction { display: flex; width: fit-content; flex-direction: column; align-items: center; gap: 8px; margin: 0 auto; }
+  .fraction input { width: 6rem; min-height: 64px; font: 700 34px/1 var(--display); text-align: center; border: 2px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+  .fraction input:focus { border-color: var(--ink); outline: none; }
   .line { width: 7rem; height: 4px; background: var(--ink); border-radius: 2px; }
-  .shade { display: grid; gap: 0.75rem; justify-items: center; }
-  .stepper { display: flex; align-items: center; gap: 1rem; }
-  .stepper button { font-size: 28px; font-weight: 700; width: 56px; }
-  .stepper output { font-size: 22px; font-weight: 700; min-width: 7rem; text-align: center; }
-  .cells { display: flex; width: min(100%, 420px); gap: 4px; }
-  .cell { flex: 1; min-width: 0; min-height: 72px; padding: 0; border-radius: 10px; transition: background 120ms ease; }
-  .cell.on { background-color: var(--accent); border-color: var(--accent-edge); background-image: radial-gradient(circle, rgb(255 255 255 / 0.35) 1.3px, transparent 1.7px); background-size: 8px 8px; }
+  .shade { display: grid; gap: 14px; justify-items: center; }
+  .stepper { display: flex; align-items: center; gap: 16px; }
+  .stepper button { font-size: 26px; font-weight: 700; width: 56px; }
+  .stepper output { font-size: 20px; font-weight: 700; min-width: 7rem; text-align: center; }
+  .cells { display: flex; width: min(100%, 420px); gap: 6px; }
+  .cell { flex: 1; min-width: 0; min-height: 76px; padding: 0; border-radius: 10px; transition: background-color 140ms ease; }
+  .cell.on { background: var(--accent); border-color: var(--ink); box-shadow: 0 3px 0 var(--ink); }
   .cell:disabled, .tile:disabled { opacity: 1; }
-  .count { font-size: 28px; font-weight: 700; margin: 0; }
+  .count { font: 700 26px/1.2 var(--display); margin: 0; }
 </style>

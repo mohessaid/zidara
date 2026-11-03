@@ -1,79 +1,92 @@
-/* Tokens for every screen of the app (ADR 0015): the front page's language, made for a game.
-   White ground with a faint grid of dots, ink text, one blue accent, dot-matrix pictures, thin
-   lines, mono labels. The states keep their own colours, so a level is never told by colour
-   alone (each also has a glyph). Contrast on white and on the ground (#f7f8fd): ink 18.0/17.1,
-   muted 7.4/7.0, blue 6.6/6.3, teal 5.6/5.3, terracotta 5.4/5.1, green 5.4/5.2, gold text
-   5.9/5.6; white on blue, teal, terracotta, green and ink is at least 5.1. */
+/* Tokens for every screen of the app (ADR 0016): a light, quiet lesson in the manner of Brilliant,
+   sharing the front page's faces and its saffron. White ground, ink text, heavy Alexandria
+   headings, one idea per screen, chunky choices, Check and Continue pinned at the bottom. Colour
+   is never the only signal: every state also has a glyph or words. Contrast on white: ink 19.4,
+   muted 7.3, green 5.6, orange text 5.9, star 5.4; ink on saffron 11.6; white on green 5.6, on
+   ink 19.4. */
 :root {
-  --paper: #f7f8fd;          /* the ground of every learner screen, under a grid of dots */
+  --paper: #ffffff;
+  --paper-2: #f4f4f5;
   --surface: #ffffff;
-  --line: #e2e4ee;
-  --ink: #14121c;
-  --muted: #555263;
-  --dot: rgb(36 80 211 / 0.12);
-  --accent: #2450d3;
-  --accent-edge: #17348a;
-  --accent-tint: #eef2fd;
-  --sky: #eef2fd;
-  --sky-top: #dfe7fb;
-  --dune: #f1d59a;
-  --dune-deep: #9fb3e6;      /* the path's trail: a line of soft blue dots */
-  --achieved: #1d7a45;
-  --go: #14121c;             /* the main action: ink, like the front page's buttons */
+  --line: #e4e4e7;
+  --line-strong: #c9c9cf;
+  --ink: #0f0f10;
+  --muted: #55555d;
+  --display: "Alexandria Variable", "Alexandria", "Readex Pro Variable", system-ui, sans-serif;
+  --accent: #f7b63c;         /* saffron fills; text on it is ink */
+  --accent-soft: #fff4dc;
+  --accent-ink: #8a5300;     /* saffron as text */
+  --on-accent: #0f0f10;
+  --accent-edge: #c98a17;
+  --accent-tint: #fff4dc;
+  --achieved: #1f8a4c;       /* right, mastered */
+  --achieved-edge: #156638;
+  --right-tint: #e9f7ef;
+  --try: #e0621c;            /* not yet: try again */
+  --try-ink: #a8430c;
+  --try-tint: #fff1e7;
+  --go: #0f0f10;
   --go-edge: #000000;
-  --in-progress: #0b7285;
-  --blue-edge: #08525f;
-  --teal-text: #0a6170;
-  --zellige: #2450d3;
-  --zellige-edge: #17348a;
-  --needs-support: #b4471f;
-  --terra: #b4471f;
-  --terra-edge: #85320f;
-  --locked: #555263;
-  --locked-fill: #eceef5;
-  --locked-edge: #cfd3e2;
-  --agent: #7c3fc4;          /* reserved: anything an AI did or proposed */
-  --star: #8a5a00;
-  --gold: #f5b301;
-  --gold-edge: #c98a00;
-  --flame: #e8700a;
-  --mint: #e3f4e9;
-  --focus: #2450d3;
+  --in-progress: #0f0f10;
+  --blue-edge: #000000;
+  --teal-text: #55555d;
+  --zellige: #0f0f10;
+  --zellige-edge: #000000;
+  --needs-support: #a8430c;
+  --terra: #e0621c;
+  --terra-edge: #a8430c;
+  --locked: #55555d;
+  --locked-fill: #f4f4f5;
+  --locked-edge: #d4d4d8;
+  --agent: #6d3fc4;          /* reserved: anything an AI did or proposed */
+  --star: #9a6400;
+  --gold: #f7b63c;
+  --gold-edge: #c98a17;
+  --flame: #e0621c;
+  --mint: #e9f7ef;
+  --sky: #f4f4f5;
+  --sky-top: #f4f4f5;
+  --dune: #fff4dc;
+  --dune-deep: #d4d4d8;
+  --dot: transparent;
+  --focus: #0f0f10;
   --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
   --radius: 14px;
-  --radius-studio: 8px;
+  --radius-studio: 10px;
   font-family: "Readex Pro Variable", "Readex Pro", "Noto Sans Arabic", system-ui, sans-serif;
   font-size: 18px;
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--ink);
   background: var(--paper);
 }
 * { box-sizing: border-box; }
-body {
-  margin: 0; min-height: 100vh; font-family: inherit; overflow-x: clip;
-  background-color: var(--paper); background-image: radial-gradient(circle, var(--dot) 1.2px, transparent 1.6px); background-size: 14px 14px;
-}
+body { margin: 0; min-height: 100vh; font-family: inherit; overflow-x: clip; background: var(--paper); color: var(--ink); }
+/* The front page keeps its dark ground under the page too, so an overscroll never flashes white. */
+body:has(.landing) { background: #09090b; }
 button, input, select, textarea { font: inherit; color: inherit; }
-/* Buttons: a thin line and a firm edge underneath that the button sinks into when pressed. */
+/* Buttons: a flat face on a firm lip that it presses into, the way Brilliant's do. */
 button {
-  min-height: 48px; min-width: 48px; border-radius: var(--radius); cursor: pointer;
-  border: 1px solid var(--line); border-bottom-width: 4px; background: var(--surface);
-  padding: 0.4rem 1rem; font-weight: 600; transition: transform 80ms ease, border-bottom-width 80ms ease, background-color 160ms ease;
+  min-height: 48px; min-width: 48px; border-radius: 12px; cursor: pointer;
+  border: 2px solid var(--line); background: var(--surface); box-shadow: 0 3px 0 var(--line);
+  padding: 0.45rem 1rem; font-weight: 600; transition: transform 80ms ease, box-shadow 80ms ease, background-color 160ms ease, border-color 160ms ease;
 }
-button:active:not(:disabled) { transform: translateY(3px); border-bottom-width: 1px; }
+button:hover:not(:disabled) { border-color: var(--line-strong); }
+button:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 var(--line); }
 button.primary {
-  background: var(--go); border-color: var(--go); border-bottom-color: var(--go-edge); color: #fff;
-  font-size: 19px; font-weight: 600;
+  background: var(--go); border-color: var(--go); box-shadow: 0 3px 0 var(--go-edge); color: #fff; font-size: 18px; font-weight: 700;
 }
-button.primary:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); border-bottom-color: var(--accent-edge); }
-button.blue { background: var(--accent); border-color: var(--accent); border-bottom-color: var(--accent-edge); color: #fff; font-weight: 600; }
+button.primary:hover:not(:disabled) { border-color: var(--go); background: #26262a; }
+button.blue { background: var(--accent); border-color: var(--accent); box-shadow: 0 3px 0 var(--accent-edge); color: var(--on-accent); font-weight: 700; }
 button:disabled { cursor: default; }
-button.primary:disabled { background: var(--locked-fill); border-color: var(--locked-fill); border-bottom-color: var(--locked-edge); color: var(--muted); }
+button.primary:disabled { background: var(--paper-2); border-color: var(--paper-2); box-shadow: 0 3px 0 var(--line); color: var(--muted); }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 main { max-width: 960px; margin: 0 auto; padding: 1rem; }
-h1 { font-size: 30px; margin: 0.5rem 0; line-height: 1.2; font-weight: 600; letter-spacing: -0.02em; }
-h2 { font-size: 24px; margin: 1rem 0 0.5rem; line-height: 1.25; font-weight: 600; letter-spacing: -0.01em; }
+h1, h2, h3 { font-family: var(--display); letter-spacing: -0.02em; }
+/* Arabic letters join: any tracking pulls a word apart, on every screen and the front page. */
+html[dir="rtl"] *, :lang(ar) { letter-spacing: 0 !important; }
+h1 { font-size: 32px; margin: 0.5rem 0; line-height: 1.2; font-weight: 800; }
+h2 { font-size: 24px; margin: 1rem 0 0.5rem; line-height: 1.25; font-weight: 700; }
 .card { background: var(--surface); border-radius: var(--radius); padding: 1rem; border: 1px solid var(--line); }
 .row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
 .state-achieved { color: var(--achieved); }

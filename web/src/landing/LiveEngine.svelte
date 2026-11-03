@@ -159,12 +159,9 @@
 </figure>
 
 <style>
-  .console { margin: 0; padding: 14px; border-radius: 22px; background: var(--l-accent); position: relative; isolation: isolate; }
-  .console::before {
-    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
-    background-image: radial-gradient(circle, rgb(255 255 255 / 0.22) 1.4px, transparent 1.8px); background-size: 11px 11px;
-  }
-  .screen { background: var(--l-surface); border-radius: 12px; padding: 16px 18px 18px; text-align: start; box-shadow: 0 18px 40px -26px rgb(0 0 0 / 0.5); }
+  /* A hairline frame lit from one corner in the accent (ADR 0016), not a block of colour. */
+  .console { margin: 0; padding: 1px; border-radius: 20px; background: linear-gradient(150deg, var(--l-accent), var(--l-line) 38%, var(--l-line) 70%, color-mix(in srgb, var(--l-accent) 50%, var(--l-line))); position: relative; box-shadow: 0 40px 90px -50px rgb(247 182 60 / 0.35); }
+  .screen { background: var(--l-surface); border-radius: 19px 19px 0 0; padding: 16px 18px 18px; text-align: start; }
   .bar { display: flex; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--l-line); }
   .lights { display: inline-flex; gap: 6px; }
   .lights i { width: 10px; height: 10px; border-radius: 50%; background: var(--l-line); }
@@ -203,6 +200,7 @@
   .needs_support { --c: #b4471f; }
   .locked { --c: var(--l-locked); }
   .stone.locked .dot { color: var(--l-ink); }
+  .stone.achieved .dot { color: var(--l-on-accent); }
 
   /* The secondary grid. */
   .grid { width: 100%; border-collapse: collapse; font-size: 14.5px; }
@@ -228,7 +226,7 @@
   .verdict { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--l-tint); font-size: 15px; line-height: 1.5; }
   .verdict.muted { color: var(--l-muted); }
   .skeleton li { height: 60px; border-radius: 12px; background: var(--l-tint); }
-  figcaption { margin: 12px 4px 0; font: 500 13px/1.5 var(--l-mono); color: var(--l-on-accent); text-align: center; }
+  figcaption { margin: 0; padding: 12px 16px 14px; font: 500 13px/1.5 var(--l-mono); color: var(--l-muted); text-align: center; background: var(--l-surface); border-radius: 0 0 19px 19px; }
   @media (max-width: 720px) {
     .screen { padding: 14px; }
     .axis-name { min-width: 0; width: 100%; }

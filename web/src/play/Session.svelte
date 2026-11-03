@@ -11,10 +11,8 @@
   import type { Question } from "../lib/kernel/types/Question.ts";
   import type { Response } from "../lib/kernel/types/Response.ts";
   import Answer from "./Answer.svelte";
-  import Burst from "./Burst.svelte";
   import Finish from "./Finish.svelte";
   import Fold from "./Fold.svelte";
-  import Mascot from "./Mascot.svelte";
   import Picture from "./Picture.svelte";
   import Wall from "./Wall.svelte";
   import { sound } from "./sound.svelte.ts";
@@ -128,12 +126,12 @@
 
 <div class="session" role="dialog" aria-modal="true" aria-labelledby="step-title">
   <header class="bar">
-    <button class="close" onclick={onclose} aria-label={t(app.locale, "session.close")}>✕</button>
+    <button class="close" onclick={onclose} aria-label={t(app.locale, "session.close")}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
     <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax={total} aria-valuenow={Math.min(done, total)}
       aria-label={t(app.locale, "session.progress")}>
       <span style:width={`${(100 * Math.min(done, total)) / Math.max(total, 1)}%`}></span>
     </div>
-    {#if combo >= 2}<span class="combo" aria-label={t(app.locale, "session.combo", { n: combo })}>⚡ {combo}</span>{/if}
+    {#if combo >= 2}<span class="combo" aria-label={t(app.locale, "session.combo", { n: combo })}><span aria-hidden="true">⚡</span> {combo}</span>{/if}
     <button class="mute" onclick={() => sound.toggle()} aria-pressed={sound.on} aria-label={t(app.locale, "session.sound")}>{sound.on ? "🔊" : "🔇"}</button>
   </header>
 
@@ -162,16 +160,10 @@
               <details><summary>{t(app.locale, "video.transcript")}</summary><p>{text(step.kind.transcript)}</p></details>
             {/if}
           {:else if step.kind.type === "reading"}
-            <div class="speaker">
-              <Mascot size={88} mood="think" />
-              <p class="reading bubble">{text(step.kind.body)}</p>
-            </div>
+            <p class="reading">{text(step.kind.body)}</p>
             {#if step.kind.audio}<audio controls preload="none" src={`/${step.kind.audio}`}></audio>{/if}
           {:else if step.kind.type === "explore"}
-            <div class="speaker">
-              <Mascot size={72} mood={explored ? "happy" : "idle"} />
-              <p class="reading bubble">{text(step.kind.body)}</p>
-            </div>
+            <p class="reading">{text(step.kind.body)}</p>
             {#if step.kind.toy.type === "fold"}
               <Fold folds={step.kind.toy.folds} ondone={() => (explored = true)} />
             {:else}
@@ -192,16 +184,16 @@
       {#if verdict !== undefined && question}
         <div class="feedback" role="status">
           <span class="badge" aria-hidden="true">
-            <Mascot size={64} mood={verdict ? "cheer" : "encourage"} />
-            {#if verdict}<Burst /><span class="plus">+10 ⚡</span>{/if}
+            {#if verdict}<svg viewBox="0 0 24 24" width="26" height="26"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg>{:else}<svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 7v6M12 17v.5" /></svg>{/if}
           </span>
           <p class="headline">
             {#if verdict}{t(app.locale, PRAISE[(q + at) % PRAISE.length]!)}{:else}{t(app.locale, "feedback.again")}{/if}
           </p>
+          {#if verdict}<p class="plus">+10 XP</p>{/if}
           {#if !verdict}<p>{t(app.locale, "feedback.answer")} <bdi dir="ltr" class="solution">{answerOf(question)}</bdi></p>{/if}
           {#if lookOf(question).explain}<p>{text(lookOf(question).explain ?? undefined)}</p>{/if}
         </div>
-        <button class="primary big" class:blue={!verdict} onclick={nextQuestion} disabled={busy}>{t(app.locale, "session.continue")}</button>
+        <button class="primary big" class:go-right={verdict} class:go-again={!verdict} onclick={nextQuestion} disabled={busy}>{t(app.locale, "session.continue")}</button>
       {:else if step.kind.type === "quiz"}
         <button class="primary big" onclick={check} disabled={!response}>{t(app.locale, "session.check")}</button>
       {:else if step.kind.type === "open_response" && !sent}
@@ -214,53 +206,48 @@
 </div>
 
 <style>
+  /* A lesson screen in the manner of Brilliant (ADR 0016): a thin progress bar under a close
+     button, one idea in the middle of the screen, and the action pinned at the bottom. After a
+     check, the bottom panel turns green or orange and says why. */
   .session { position: fixed; inset: 0; background: var(--paper); display: flex; flex-direction: column; z-index: 10; overflow-y: auto; overflow-x: clip; }
-  .bar { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; max-width: 760px; width: 100%; margin: 0 auto; }
-  .close, .mute { border: none; background: none; font-size: 26px; padding: 0; color: var(--muted); }
-  .close:active, .mute:active { transform: none; }
-  .progress { flex: 1; height: 20px; background: var(--locked-fill); border-radius: 999px; overflow: hidden; }
-  .progress span {
-    display: block; height: 100%; background-color: var(--accent); border-radius: 999px; transition: width 400ms steps(6);
-    background-image: radial-gradient(circle, rgb(255 255 255 / 0.45) 1.4px, transparent 1.8px); background-size: 8px 8px; background-position: center;
-  }
-  .combo { font: 600 18px/1.2 var(--mono); color: #c25e00; animation: pop 300ms steps(3) both; }
-  .step { flex: 1; width: 100%; max-width: 760px; margin: 0 auto; padding: 0.5rem 1rem 1.5rem; animation: enter 260ms ease both; }
-  .kicker { margin: 0; color: var(--accent); font: 500 13px/1.3 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
-  h2 { font-size: 28px; margin: 0.25rem 0 1rem; line-height: 1.25; }
-  .reading { font-size: 21px; display: block; }
-  .speaker { display: flex; align-items: flex-start; gap: 0.75rem; }
-  .speaker :global(.mascot) { flex: none; }
-  .bubble {
-    position: relative; margin: 0.5rem 0 0; padding: 0.9rem 1.1rem; border: 1px solid var(--line); border-radius: var(--radius);
-    background: var(--surface); line-height: 1.55;
-  }
-  .bubble::before {
-    content: ""; position: absolute; inset-inline-start: -10px; top: 1.5rem; width: 16px; height: 16px;
-    background: var(--surface); border-inline-start: 2px solid var(--line); border-bottom: 2px solid var(--line); transform: rotate(45deg);
-  }
-  :global([dir="rtl"]) .bubble::before { transform: rotate(-45deg); }
+  .bar { display: flex; align-items: center; gap: 14px; padding: 14px 16px; max-width: 720px; width: 100%; margin: 0 auto; }
+  .close, .mute { border: none; background: none; box-shadow: none; font-size: 20px; padding: 0; color: var(--muted); border-radius: 50%; }
+  .close:hover, .mute:hover { background: var(--paper-2); }
+  .close svg { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+  .close:active, .mute:active { transform: none; box-shadow: none; }
+  .progress { flex: 1; height: 12px; background: var(--paper-2); border-radius: 999px; overflow: hidden; }
+  .progress span { display: block; height: 100%; background: var(--achieved); border-radius: 999px; transition: width 450ms cubic-bezier(.2,.8,.2,1); }
+  .combo { font-weight: 700; font-size: 16px; color: var(--try-ink); animation: pop 280ms cubic-bezier(.2,1.5,.4,1) both; }
+  .step { flex: 1; width: 100%; max-width: 640px; margin: 0 auto; padding: 24px 16px 32px; animation: enter 280ms cubic-bezier(.2,.8,.2,1) both; }
+  .kicker { margin: 0 0 6px; color: var(--muted); font-size: 15px; font-weight: 500; }
+  h2 { font-size: clamp(24px, 5.4vw, 30px); margin: 0 0 20px; line-height: 1.3; font-weight: 700; }
+  .reading { font-size: 20px; line-height: 1.6; display: block; margin: 0 0 16px; }
   video { width: 100%; border-radius: var(--radius); background: #000; }
-  textarea { width: 100%; font-size: 20px; border: 1px solid var(--line); border-bottom-width: 3px; border-radius: var(--radius); padding: 0.75rem; background: var(--surface); }
+  textarea { width: 100%; font-size: 19px; border: 2px solid var(--line); border-radius: var(--radius); padding: 14px; background: var(--surface); }
+  textarea:focus { border-color: var(--ink); outline: none; }
   .agent { color: var(--agent); font-weight: 700; }
-  .sheet { position: sticky; bottom: 0; padding: 1rem 1rem 1.25rem; border-top: 2px solid var(--line); background: var(--surface); display: grid; gap: 0.75rem; }
-  .sheet > * { width: 100%; max-width: 760px; margin: 0 auto; }
-  .sheet.right { background: var(--mint); border-color: transparent; animation: rise 220ms ease both; }
-  .sheet.again { background: var(--sky); border-color: transparent; animation: rise 220ms ease both; }
-  .feedback { display: grid; grid-template-columns: auto 1fr; column-gap: 0.75rem; align-items: center; }
+  .sheet { position: sticky; bottom: 0; padding: 16px 16px 20px; border-top: 1px solid var(--line); background: var(--surface); display: grid; gap: 14px; }
+  .sheet > * { width: 100%; max-width: 640px; margin: 0 auto; }
+  .sheet.right { background: var(--right-tint); border-color: transparent; animation: rise 260ms cubic-bezier(.2,.8,.2,1) both; }
+  .sheet.again { background: var(--try-tint); border-color: transparent; animation: rise 260ms cubic-bezier(.2,.8,.2,1) both; }
+  .feedback { display: grid; grid-template-columns: auto 1fr; column-gap: 14px; align-items: center; }
   .feedback > p { grid-column: 2; }
-  .badge { position: relative; grid-row: span 3; width: 76px; height: 76px; border-radius: 22px; background: #fff; display: grid; place-items: center; border: 2px dotted currentColor; }
-  .plus { position: absolute; top: -1.9rem; left: 50%; translate: -50% 0; padding: 0 0.5rem; border-radius: 999px; background: var(--gold); color: var(--ink); font-weight: 800; font-size: 16px; white-space: nowrap; }
-  @media (prefers-reduced-motion: no-preference) { .plus { animation: plus 700ms cubic-bezier(.2,1.4,.4,1) both; } }
-  @keyframes plus { from { transform: translateY(16px) scale(0.4); opacity: 0; } }
-  .right .badge { color: var(--achieved); }
-  .again .badge { color: var(--blue-edge); }
-  .feedback p { margin: 0.1rem 0; font-size: 19px; }
-  .headline { font-weight: 600; font-size: 26px !important; }
-  .right .headline { color: #1a7431; }
-  .again .headline { color: var(--blue-edge); }
-  .solution { font-weight: 600; }
-  :global(button.big) { min-height: 56px; font-size: 20px; }
-  @keyframes enter { from { opacity: 0; transform: translateY(10px); } }
+  .badge { grid-row: span 4; align-self: start; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; }
+  .badge svg { fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .right .badge { background: var(--achieved); }
+  .again .badge { background: var(--try); }
+  .feedback p { margin: 2px 0; font-size: 18px; }
+  .headline { font: 800 24px/1.25 var(--display) !important; }
+  .right .headline { color: var(--achieved-edge); }
+  .again .headline { color: var(--try-ink); }
+  .plus { font-weight: 700; color: var(--achieved-edge); font-size: 15px !important; }
+  .solution { font-weight: 700; }
+  :global(button.big) { min-height: 56px; font-size: 19px; }
+  :global(button.primary.go-right) { background: var(--achieved); border-color: var(--achieved); box-shadow: 0 3px 0 var(--achieved-edge); }
+  :global(button.primary.go-again) { background: var(--try-ink); border-color: var(--try-ink); box-shadow: 0 3px 0 #7a2f06; }
+  @keyframes enter { from { transform: translateX(24px); } }
+  :global([dir="rtl"]) .step { animation-name: enter-rtl; }
+  @keyframes enter-rtl { from { transform: translateX(-24px); } }
   @keyframes rise { from { transform: translateY(100%); } }
   @keyframes pop { from { transform: scale(0.4); } }
 </style>

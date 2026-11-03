@@ -1,7 +1,7 @@
-// The front page's dot-matrix scenes (ADR 0015). Each one argues a point of the architecture
+// The front page's dot-matrix scenes (ADR 0015, recoloured in ADR 0016). Each one argues a point of the architecture
 // (docs/proposal.md): one kernel under any framework under any experience, agents that pass
 // through rules, work that waits offline, classes walled apart. Fixed-size scenes declare their
-// design grid in SIZE; the hero field and the wordmark fill whatever space they are given.
+// design grid in SIZE.
 import { type Grid, hash, type Scene } from "./pixels.ts";
 
 const frac = (n: number) => n - Math.floor(n);
@@ -31,26 +31,6 @@ function path(g: Grid, points: [number, number][], v: 1 | 2 | 3) {
     else g.hline(Math.min(x0, x1), y0, Math.abs(x1 - x0) + 1, v);
   }
 }
-
-/** The hero: streams of dots flowing in from the corners, the middle left clear for words. */
-export const streams: Scene = (g, t) => {
-  for (let y = 0; y < g.h; y++) {
-    for (let x = 0; x < g.w; x++) {
-      const u = x / g.w - 0.5;
-      const v = y / g.h - 0.48;
-      // On a narrow screen the words fill the width: keep the streams to a strip above and below.
-      const away = g.w < 70 ? (Math.abs(v) > 0.4 ? 1 + (Math.abs(v) - 0.4) * 8 : 0) : (u / 0.36) ** 2 + (v / 0.46) ** 2;
-      if (away < 1) continue;
-      const band = (x + y * 0.9) % 23;
-      const cross = (x - y * 1.1 + 400) % 31;
-      if (band > 7 && cross > 6) continue;
-      const r = hash(x, y);
-      if (r < 0.45 - Math.min(0.3, (away - 1) * 0.15)) continue;
-      const wave = frac((x + y) * 0.018 - t * 0.22);
-      g.set(x, y, wave < 0.05 && r > 0.55 ? 3 : r > 0.88 ? 2 : 1);
-    }
-  }
-};
 
 /** The architecture: four experiences over four frameworks over one kernel. A configuration
  * lights up, and pulses climb from the kernel through the framework to the experience. */
@@ -207,34 +187,3 @@ export const walls: Scene = (g, t) => {
     }
   }
 };
-
-/** The footer: "zidara" in dots, a light passing through it. */
-export function wordmark(): Scene {
-  let mask: Uint8Array | null = null;
-  let size = "";
-  return (g, t) => {
-    const key = `${g.w}x${g.h}`;
-    if (key !== size) {
-      size = key;
-      const c = document.createElement("canvas");
-      c.width = g.w;
-      c.height = g.h;
-      const x = c.getContext("2d")!;
-      x.fillStyle = "#000";
-      x.textAlign = "center";
-      x.textBaseline = "middle";
-      x.font = `700 ${Math.round(g.h * 1.05)}px "Readex Pro Variable", system-ui, sans-serif`;
-      x.fillText("zidara", g.w / 2, g.h * 0.52, g.w * 0.98);
-      const data = x.getImageData(0, 0, g.w, g.h).data;
-      mask = new Uint8Array(g.w * g.h);
-      for (let i = 0; i < mask.length; i++) mask[i] = data[i * 4 + 3]! > 110 ? 1 : 0;
-    }
-    for (let y = 0; y < g.h; y++) {
-      for (let x = 0; x < g.w; x++) {
-        if (!mask![y * g.w + x]) continue;
-        const wave = frac(x / g.w - t * 0.12);
-        g.set(x, y, wave < 0.06 ? 3 : hash(x, y) > 0.7 ? 2 : 1);
-      }
-    }
-  };
-}

@@ -12,9 +12,18 @@ export type Qa = { q: string; a: string };
 export type Agent = { name: string; body: string; today: boolean };
 export type Made = { title: string; body: string; href: string; shot: string; alt: string };
 
+export type AskCopy = {
+  label: string;
+  tag: string;
+  prev: string;
+  next: string;
+  items: { ask: string; reply: { k: string; v: string }[] }[];
+};
+
 export type LandingCopy = {
   nav: { why: string; how: string; engine: string; ai: string; made: string; play: string; menu: string };
   hero: { badge: string; before: string; accent: string; after: string; lead: string; primary: string; secondary: string };
+  ask: AskCopy;
   engine: { title: string; lead: string };
   live: {
     label: string;
@@ -47,7 +56,7 @@ export type LandingCopy = {
   proof: { title: string; lead: string; stats: { value: string; label: string }[]; code: string };
   faq: { title: string; items: Qa[] };
   end: { title: string; lead: string; primary: string; classes: string };
-  footer: { line: string; made: string; code: string };
+  footer: { line: string; made: string; code: string; words: string[] };
 };
 
 const SOURCES: Source[] = [
@@ -68,6 +77,29 @@ const en: LandingCopy = {
     lead: "Zidara is a learning platform built on one tested kernel. Bring any teaching framework, present it as any experience, and let AI agents work only inside the rules your educators approve.",
     primary: "See the engine live",
     secondary: "Try a demo course",
+  },
+  ask: {
+    label: "Ask Zidara",
+    tag: "example",
+    prev: "Previous example",
+    next: "Next example",
+    items: [
+      { ask: "Teach equivalent fractions to Grade 4, judged by mastery, as a game for phones.", reply: [
+        { k: "Kernel", v: "Six outcomes, each with its prerequisites" },
+        { k: "Framework", v: "Mastery: a level opens when the one before is achieved" },
+        { k: "Experience", v: "A children's path that keeps working offline" },
+      ] },
+      { ask: "Same course for a secondary class, graded Cambridge-style.", reply: [
+        { k: "Kernel", v: "The same outcomes and the same evidence" },
+        { k: "Framework", v: "Cambridge-style bands from the same answers" },
+        { k: "Experience", v: "A secondary grid instead of a path" },
+      ] },
+      { ask: "Pre-mark today's written answers, but keep teachers in charge.", reply: [
+        { k: "Agent", v: "The assessment agent marks each answer with a confidence score" },
+        { k: "Rules", v: "Only confident, formative marks apply on their own" },
+        { k: "Teacher", v: "Reviews the rest, and every summative mark" },
+      ] },
+    ],
   },
   engine: {
     title: "One judgement, any framework, any experience",
@@ -181,7 +213,7 @@ const en: LandingCopy = {
     ],
   },
   end: { title: "See what the engine can do", lead: "Open a demo course as a guest, or the teacher's studio. No account needed.", primary: "Try a demo course", classes: "Open the teacher's studio" },
-  footer: { line: "The adaptable learning engine for the AI era.", made: "Made with Zidara", code: "Source code" },
+  footer: { line: "The adaptable learning engine for the AI era.", made: "Made with Zidara", code: "Source code", words: ["Any framework", "any experience", "any learner"] },
 };
 
 const fr: LandingCopy = {
@@ -194,6 +226,29 @@ const fr: LandingCopy = {
     lead: "Zidara est une plateforme d'apprentissage bâtie sur un seul noyau testé. Apportez n'importe quel cadre pédagogique, présentez-le sous n'importe quelle expérience, et laissez les agents IA agir seulement dans les règles que vos enseignants approuvent.",
     primary: "Voir le moteur en direct",
     secondary: "Essayer un cours de démo",
+  },
+  ask: {
+    label: "Demander à Zidara",
+    tag: "exemple",
+    prev: "Exemple précédent",
+    next: "Exemple suivant",
+    items: [
+      { ask: "Enseigne les fractions équivalentes en 4e année, jugées par la maîtrise, comme un jeu sur téléphone.", reply: [
+        { k: "Noyau", v: "Six objectifs, chacun avec ses prérequis" },
+        { k: "Cadre", v: "Maîtrise : un niveau s'ouvre quand le précédent est acquis" },
+        { k: "Expérience", v: "Un parcours pour enfants qui marche hors ligne" },
+      ] },
+      { ask: "Le même cours pour une classe du secondaire, noté façon Cambridge.", reply: [
+        { k: "Noyau", v: "Les mêmes objectifs et les mêmes preuves" },
+        { k: "Cadre", v: "Des niveaux façon Cambridge à partir des mêmes réponses" },
+        { k: "Expérience", v: "Une grille du secondaire au lieu d'un parcours" },
+      ] },
+      { ask: "Pré-corrige les réponses écrites du jour, sous le contrôle des enseignants.", reply: [
+        { k: "Agent", v: "L'agent d'évaluation note chaque réponse avec un indice de confiance" },
+        { k: "Règles", v: "Seules les notes formatives sûres s'appliquent seules" },
+        { k: "Enseignant", v: "Revoit le reste, et toute note sommative" },
+      ] },
+    ],
   },
   engine: {
     title: "Un jugement, n'importe quel cadre, n'importe quelle expérience",
@@ -307,7 +362,7 @@ const fr: LandingCopy = {
     ],
   },
   end: { title: "Voyez ce que le moteur sait faire", lead: "Ouvrez un cours de démo en invité, ou l'atelier de l'enseignant. Aucun compte nécessaire.", primary: "Essayer un cours de démo", classes: "Ouvrir l'atelier de l'enseignant" },
-  footer: { line: "Le moteur d'apprentissage adaptable pour l'ère de l'IA.", made: "Fait avec Zidara", code: "Code source" },
+  footer: { line: "Le moteur d'apprentissage adaptable pour l'ère de l'IA.", made: "Fait avec Zidara", code: "Code source", words: ["Tout cadre", "toute expérience", "tout élève"] },
 };
 
 const ar: LandingCopy = {
@@ -320,6 +375,29 @@ const ar: LandingCopy = {
     lead: "زيدارا منصّة تعلّم مبنية على نواة واحدة مختبَرة. أحضر أي إطار تعليمي، واعرضه بأي تجربة، ودع وكلاء الذكاء الاصطناعي يعملون داخل القواعد التي يوافق عليها معلّموك فقط.",
     primary: "شاهد المحرّك مباشرة",
     secondary: "جرّب درسًا تجريبيًا",
+  },
+  ask: {
+    label: "اسأل زيدارا",
+    tag: "مثال",
+    prev: "المثال السابق",
+    next: "المثال التالي",
+    items: [
+      { ask: "علّم الكسور المتكافئة لتلاميذ السنة 4، بالحكم على الإتقان، كلعبة على الهاتف.", reply: [
+        { k: "النواة", v: "ستة أهداف، لكلٍّ منها متطلّباته" },
+        { k: "الإطار", v: "الإتقان: يُفتح المستوى حين يُتقَن الذي قبله" },
+        { k: "التجربة", v: "مسار للأطفال يعمل دون اتصال" },
+      ] },
+      { ask: "الدرس نفسه لقسم من الثانوي، بتقييم على طريقة كامبريدج.", reply: [
+        { k: "النواة", v: "الأهداف نفسها والأدلّة نفسها" },
+        { k: "الإطار", v: "درجات على طريقة كامبريدج من الإجابات نفسها" },
+        { k: "التجربة", v: "جدول للثانوي بدل المسار" },
+      ] },
+      { ask: "صحّح إجابات اليوم المكتوبة مبدئيًا، والقرار للمعلّمين.", reply: [
+        { k: "الوكيل", v: "وكيل التقييم يمنح كل إجابة درجة مع نسبة ثقة" },
+        { k: "القواعد", v: "لا يُطبَّق وحده إلا التقييم التكويني المؤكَّد" },
+        { k: "المعلّم", v: "يراجع الباقي، وكل تقييم ختامي" },
+      ] },
+    ],
   },
   engine: {
     title: "حكم واحد، بأي إطار، وبأي تجربة",
@@ -433,7 +511,7 @@ const ar: LandingCopy = {
     ],
   },
   end: { title: "شاهد ما يستطيعه المحرّك", lead: "افتح درسًا تجريبيًا ضيفًا، أو استوديو المعلّم. لا حاجة إلى حساب.", primary: "جرّب درسًا تجريبيًا", classes: "افتح استوديو المعلّم" },
-  footer: { line: "محرّك التعلّم القابل للتكيّف لعصر الذكاء الاصطناعي.", made: "صُنع بزيدارا", code: "الشيفرة المصدرية" },
+  footer: { line: "محرّك التعلّم القابل للتكيّف لعصر الذكاء الاصطناعي.", made: "صُنع بزيدارا", code: "الشيفرة المصدرية", words: ["أيّ إطار", "أيّ تجربة", "أيّ متعلّم"] },
 };
 
 export const LANDING: Record<Locale, LandingCopy> = { en, fr, ar };

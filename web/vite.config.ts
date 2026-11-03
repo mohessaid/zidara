@@ -22,8 +22,8 @@ export default defineConfig({
         // An installed app opens the game; the front page is for visitors (ADR 0014).
         start_url: "/#play",
         display: "standalone",
-        background_color: "#FFF8EC",
-        theme_color: "#FFF8EC",
+        background_color: "#09090b",
+        theme_color: "#09090b",
         icons: [
           { src: "icon-192.png", sizes: "192x192", type: "image/png" },
           { src: "icon-512.png", sizes: "512x512", type: "image/png" },
@@ -36,7 +36,7 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,wasm,woff2,svg,png}"],
         // The share image is for visitors, not for learning offline.
         // The face works offline in Arabic and Latin (53 KB); the other subsets load only if needed.
-        globIgnores: ["**/og.png", "**/readex-pro-vietnamese-*.woff2", "**/readex-pro-latin-ext-*.woff2"],
+        globIgnores: ["**/og.png", "**/readex-pro-vietnamese-*.woff2", "**/readex-pro-latin-ext-*.woff2", "**/alexandria-vietnamese-*.woff2", "**/alexandria-latin-ext-*.woff2"],
         maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
         navigateFallback: "index.html",
         navigateFallbackDenylist: [/^\/api\//],

@@ -11,6 +11,6 @@
 
 <style>
   .mark { flex: none; display: inline-block; vertical-align: middle; }
-  rect { fill: var(--l-accent, #1b4f9c); }
+  rect { fill: var(--l-accent, var(--accent, #f7b63c)); }
   .light rect { fill: #fff; }
 </style>

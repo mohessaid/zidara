@@ -10,12 +10,18 @@ metadata:
         sections: [0.D Anti-Default Discipline, 4.5 Interactive UI States, 6.B Reduced Motion (mandatory), Micro-Interactions & Effects]
     crafted_for: Game-like learning UI for kids on economy phones, vivid, juicy, not templated
     created: 2026-11-02
-    last_used: 2026-11-02
+    last_used: 2026-11-03
 ---
 ## Ground it in the subject <!-- src: frontend-design#ground-your-designs-in-the-subject-matter -->
 The subject's world, materials and vernacular are where distinctive choices come from: a toy for
 8–11-year-olds looks nothing like a dashboard. Open with the most characteristic thing in that
 world (an image, an animation, an interactive moment), not a headline over cards.
+
+## The house look (ADR 0016)
+The learner screens are a lesson in the manner of Brilliant, owner's call, "don't overdo it":
+white ground, ink, Alexandria headings, one saffron accent, one idea per screen, chunky answer
+cards with a firm lip, Check pinned at the bottom, a green or orange panel that says why. No
+mascot or scenery. Every colour measured: text 4.5:1, control edges (`--edge`) 3:1.
 
 ## Tells of a generated design <!-- src: frontend-design#process--plan--review-against-the-brief--build--critique, design-taste-frontend#0-d-anti-default-discipline -->
 Never spend free choices on defaults: the SaaS-card kit (identical rounded cards, one radius,

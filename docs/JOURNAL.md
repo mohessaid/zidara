@@ -4,6 +4,50 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-03 — A third look, and contrast I had not measured
+
+**What happened.** The owner looked at the dot-matrix restyle and said it was better but the demo
+was "not there yet". The numbered labels ("01 / vision") felt like an AI-made site, the colours
+and font were weak, and the demo should be Brilliant-like without overdoing it. They pointed to
+mastrilo.com for its heading face, colours, contrast and motion. Then, after the first pass:
+"pay attention to color contrast because you are missing so much most of the time".
+
+**The problem.** Three looks in one day, each set mostly from my own instincts; the owner's
+references should have come first. And the contrast record was worse than I knew: axe passed
+every screen, yet the answer cards and inputs had a 1.27:1 edge on white, the language picker
+1.27:1, the front page's cards 1.32:1, and a comment in app.css said the green was 5.6:1 when it
+was 4.38:1. axe skips text it cannot decide and never checks control edges (WCAG 1.4.11), and I
+had written a ratio I never measured.
+
+**What we did.**
+- Studied mastrilo's build: Thmanyah Sans Black for headings (free to use, but behind an email
+  form and not redistributable, so not for a public repo), neutral near-black and white, one
+  bright accent, small idle animations. Rendered nine open Arabic and Latin faces side by side;
+  Alexandria at 800 to 900 was closest. ADR 0016.
+- Front page: dark stage, saffron accent, Alexandria headings, a typing console in the hero,
+  bracket focus on the closing phrase, the live engine in a hairline frame; numbered labels and
+  crosses removed. The hero's dot streams and the dotted wordmark went.
+- Demo rebuilt in Brilliant's manner: course cards, a single column of levels, one idea per
+  screen, Check at the bottom, a feedback panel; the mascot, the oasis and the palms removed.
+- Wrote `lowContrast`: it walks every visible text (translucent layers composited, every stop
+  of a gradient tried) and every control edge, and runs inside every `expectAccessible`. A
+  static tour measures each screen, and a planted-mistake test proves the check fails when it
+  should. It found seven failures axe had passed; all fixed with measured colours.
+
+**Problems on the way.** Letter-spacing on mono labels pulled Arabic words apart; tracking is
+now off for right-to-left everywhere. The console's first Arabic and French examples lost the
+"4" the figures test compares. One Lighthouse run under load said 56; three quiet runs said 98
+to 99. My screenshot script was committed by mistake and taken out before anything left the
+machine.
+
+**The numbers.** Lighthouse `/` 98 to 99 (was 90), `#play` 99, accessibility 100 on both;
+browser tests 13 of 13 and the static suite 7 of 7, all with the measured check; unit tests 44 of 44.
+
+**The lesson.** Start from the owner's references, not from taste. Measure every colour before
+choosing it, write only measured numbers, and test the edges of controls, not only the words.
+
+---
+
 ## 2026-11-03 — I pitched the engine as a game; the front page now says what Zidara is
 
 **What happened.** An hour after the first front page went live, the owner rejected it: "super

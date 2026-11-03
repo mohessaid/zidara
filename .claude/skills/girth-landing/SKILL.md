@@ -16,14 +16,16 @@ metadata:
 State one line before building: page kind, audience, vibe, aesthetic family. Zidara's front page:
 a pitch for judges, funders and schools. **Zidara is the adaptable learning engine / LMS for the
 AI era (kernel, any framework, any experience, governed agents; `docs/proposal.md`). Never pitch
-it as a game: the game is one experience that shows the engine bends** (owner, ADR 0015). Look:
-context.dev's (dot streams, blue dotted frame, ruled sections, mono labels, dot-matrix drawings).
+it as a game: the game is one experience that shows the engine bends** (owner, ADR 0015). Look
+(ADR 0016): a dark, high-contrast stage after mastrilo.com, not copied: near-black, white
+Alexandria headings, grey reading text, one saffron accent, a typing console in the hero, small
+CSS motion, recoloured dot drawings. Start from the owner's references, not from taste.
 
 ## Hard layout rules <!-- src: design-taste-frontend#4-7-layout-discipline-hard-rules-failing-any-of-these-is-shipping-broken-work -->
 - Hero fits the first screen: headline ≤ 3 lines, subtext ≤ 20 words, CTAs visible. Max 4 text elements.
 - Navigation on one line, ≤ 80 px. One label per intent.
 - No two sections share a layout family; bento cells = content count, with varied materials.
-- Mono kickers (`01 / vision`) allowed as the page's rhythm; nothing else uppercase. No split headers, no scroll cues.
+- No numbered section labels or eyebrow kickers (owner: an AI-site pattern); numbers only for a real sequence. No split headers, no scroll cues.
 - Mobile collapse declared per section; no horizontal page scroll.
 
 ## Copy <!-- src: design-taste-frontend#4-9-content-density -->
@@ -40,7 +42,9 @@ the canvas never sits in layout flow (absolute, out of the grid) or it widens co
 ## Speed and access
 - Heavy work off the main thread (the showcase kernel runs in a Web Worker); below-the-fold
   sections use `content-visibility: auto`. Gate: Lighthouse mobile ≥ 90 performance, 100 access.
-- Dark mode by tokens; axe in light, dark and Arabic. Scrolling regions are focusable.
+- Contrast measured, never assumed: text 4.5:1 (3:1 large), every control edge 3:1 or none;
+  `lowContrast` runs in every `expectAccessible`. Write only measured ratios in comments.
+- axe in light, dark and Arabic. Scrolling regions are focusable. No tracking on Arabic.
 - Motion only with a reason, all of it off under reduced motion.
 
 ## Share metadata <!-- src: seo-aeo-best-practices#open-graph -->

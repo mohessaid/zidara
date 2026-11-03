@@ -7,6 +7,16 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- A new face (ADR 0016). The front page is a dark, high-contrast stage: Alexandria headings,
+  one saffron accent, a console in the hero where a request to Zidara is answered layer by
+  layer, corner brackets travelling along the closing phrase, no numbered section labels. The
+  demo is a light lesson in the manner of Brilliant: course cards, one column of levels, Check
+  pinned at the bottom, a green or orange panel that says why. Bizra, the oasis scene and the
+  palms are removed; new screenshots, share image and app icon.
+- Contrast is measured on every screen: every visible text against what is really behind it,
+  and every control's edge (3:1), inside each accessibility check and in a static tour of all
+  screens. Fixes from it: darker green and orange, a visible edge on every control, unlit stars
+  drawn as outlines, edges on the language picker and the front page's cards.
 - The game and the studio now speak the front page's language (ADR 0015, art bible): every
   picture is a grid of dots (the oasis, Bizra, palms, course badges, the burst after a right
   answer), white ground under a faint dot grid, ink and blue buttons, thin lines, mono labels,

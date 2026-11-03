@@ -4,6 +4,14 @@ Pillars: **clarity** (a child knows what to do next without reading), **warmth**
 is a friendly place to try and fail), **honesty** (the game shows what the learner can do,
 never more).
 
+> **Revised 3 November 2026, later (ADR 0016): a lesson in the manner of Brilliant.** White
+> ground, ink text, heavy Alexandria headings, one saffron accent, flat course badges. One idea
+> per screen, chunky answer cards, Check pinned at the bottom, a green or orange panel that says
+> why. Levels in one column: green with a tick when mastered, ink with a Start card for the next,
+> outlined while open, grey with a lock. Bizra, the oasis scene and the palms are retired from
+> the screens. Every colour is measured (text 4.5:1, control edges 3:1). Honesty, feedback and
+> sound rules are unchanged.
+>
 > **Revised 3 November 2026 (ADR 0015): the oasis in dots.** The same world drawn the way the
 > front page draws everything: every picture a grid of dots (sun, dunes, water, palms, Bizra,
 > course badges, the burst after a right answer), white ground under a faint dot grid, ink text,

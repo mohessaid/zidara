@@ -124,7 +124,6 @@ export const STRINGS = {
     "studio.live.board": "افتح السبّورة",
     "studio.live.together": "القسم معًا: {n} إجابات صحيحة من {of}",
     "studio.live.ended": "سُجّلت إجابات كلّ تلميذ دليلًا للتمرّن، وحكم عليها منهج القسم.",
-    "welcome.hello": "مرحبًا! أنا بذرة. هيّا نتعلّم ونحن نلعب!",
     "welcome.title": "تعلّم وأنت تلعب.",
     "welcome.lead": "دروس قصيرة بالصور والألعاب، بلا حساب. وحين يقول التطبيق إنك أتقنت شيئًا فهذا صحيح: محرّك زيدارا هو من يقرّر، لا اللعبة.",
     "welcome.pick": "اختر درسًا",
@@ -156,7 +155,6 @@ export const STRINGS = {
     "lens.yours": "قسمك",
     "lens.note": "نفس إجاباتك، بقواعد «{name}». انظر كيف يتغيّر طريقك: محرّك زيدارا يحكم بقواعد المدرسة، لا اللعبة. قسمك يبقى على «{class}»؛ معلّمك وحده يغيّرها.",
     "lens.hint": "العب مستوى، ثمّ بدّل القواعد: شاهد كيف يحكم كلّ نظام على نفس إجاباتك.",
-    "finish.oasis": "نبتت نخلة في واحتك!",
     "error.generic": "حدث خطأ. حاول مرة أخرى.",
   },
   fr: {
@@ -279,7 +277,6 @@ export const STRINGS = {
     "studio.live.board": "Ouvrir le tableau",
     "studio.live.together": "La classe ensemble : {n} réponses justes sur {of}",
     "studio.live.ended": "Les réponses de chaque élève sont enregistrées comme entraînement, jugées par la méthode de la classe.",
-    "welcome.hello": "Salut ! Je suis Bizra. On apprend en jouant ?",
     "welcome.title": "Apprends en jouant.",
     "welcome.lead": "Des leçons courtes, avec des images et des jeux, sans compte. Quand l'appli dit que tu maîtrises quelque chose, c'est vrai : c'est le moteur de Zidara qui décide, pas le jeu.",
     "welcome.pick": "Choisis une leçon",
@@ -311,7 +308,6 @@ export const STRINGS = {
     "lens.yours": "ta classe",
     "lens.note": "Les mêmes réponses, jugées avec les règles « {name} ». Regarde ton chemin changer : c'est le moteur de Zidara qui juge, selon les règles de l'école, pas le jeu. Ta classe reste en « {class} » ; seul ton enseignant peut la changer.",
     "lens.hint": "Joue un niveau, puis change les règles : vois comment chaque école juge les mêmes réponses.",
-    "finish.oasis": "Un palmier a poussé dans ton oasis !",
     "error.generic": "Une erreur est survenue. Réessaie.",
   },
   en: {
@@ -434,7 +430,6 @@ export const STRINGS = {
     "studio.live.board": "Open the board",
     "studio.live.together": "The class together: {n} right of {of}",
     "studio.live.ended": "Each learner's answers are recorded as practice, judged by the class's teaching approach.",
-    "welcome.hello": "Hi! I'm Bizra. Let's learn by playing!",
     "welcome.title": "Learn by playing.",
     "welcome.lead": "Short lessons with pictures and games, no account needed. When the app says you've mastered something, it's true: Zidara's engine decides, not the game.",
     "welcome.pick": "Choose a course",
@@ -466,7 +461,6 @@ export const STRINGS = {
     "lens.yours": "your class",
     "lens.note": "The same answers, judged by {name} rules. Watch your path change: Zidara's engine judges by the school's rules, not the game. Your class stays on {class}; only your teacher can change it.",
     "lens.hint": "Play a level, then switch the rules: see how each school judges the same answers.",
-    "finish.oasis": "A palm grew in your oasis!",
     "error.generic": "Something went wrong. Please try again.",
   },
 } as const satisfies Record<Locale, Record<string, string>>;

@@ -29,6 +29,12 @@ pixel animations included, and found the previous styling weak.
   one 2D canvas per drawing: sprites stamped per dot, DPR capped at 2, 30 frames a second at
   most, nothing drawn off screen, started on idle, a single still frame under reduced motion.
 
+- **The game in the same language.** Learner and teacher screens use the front page's tokens,
+  buttons and type (Readex Pro, Baloo removed), and every picture is a dot grid: the oasis's
+  shapes filled with dot patterns, Bizra, palms and badges as character grids (`play/dots.ts`).
+  Static SVG only: no canvas and no frame loop on learner screens, so the path keeps 60 fps.
+
 ## Consequences
 - The page's claims match the proposal; a reader meets the engine before any demo.
-- Screen captures of the game wait for its restyle; the showcase uses drawings meanwhile.
+- "Made with Zidara" shows real captures of the restyled app (path, lens, studio, live round).
+- The front page sits on its speed gate (Lighthouse 90): new weight there needs a measurement.

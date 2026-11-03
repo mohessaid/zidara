@@ -91,8 +91,9 @@ test("a learner sees the path, mirrored for Arabic, with locks explained", async
   await expect(stone(page, "F1")).toHaveAttribute("data-state", "not_started");
   await expect(stone(page, "F2")).toHaveAttribute("data-state", "locked");
   await expect(stone(page, "F2")).toContainText("تُفتح بعد إتقان");
-  const [first, last] = [await stone(page, "F1").boundingBox(), await stone(page, "F3").boundingBox()];
-  expect(first!.x).toBeGreaterThan(last!.x);
+  // Right to left: each level's disc stands to the right of its words.
+  const [disc, words] = [await stone(page, "F1").locator(".disc").boundingBox(), await stone(page, "F1").locator(".words").boundingBox()];
+  expect(disc!.x).toBeGreaterThan(words!.x);
   await expectAccessible(page, "path");
   // A locked level is aria-disabled, but a tap still says why it is locked.
   await stone(page, "F2").click({ force: true });

@@ -115,7 +115,7 @@
   .live .tile[aria-checked="true"] { outline: 4px solid var(--accent); outline-offset: 3px; }
   .shape { font-size: 28px; }
   .fraction { display: flex; width: fit-content; flex-direction: column; align-items: center; gap: 8px; margin: 0 auto; }
-  .fraction input { width: 6rem; min-height: 64px; font: 700 34px/1 var(--display); text-align: center; border: 2px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+  .fraction input { width: 6rem; min-height: 64px; font: 700 34px/1 var(--display); text-align: center; border: 2px solid var(--edge); border-radius: var(--radius); background: var(--surface); }
   .fraction input:focus { border-color: var(--ink); outline: none; }
   .line { width: 7rem; height: 4px; background: var(--ink); border-radius: 2px; }
   .shade { display: grid; gap: 14px; justify-items: center; }

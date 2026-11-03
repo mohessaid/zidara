@@ -42,7 +42,7 @@
   {#if info}<p class="outcome">{info.title}</p>{/if}
   {#if earned.of > 0}
     <p class="stars" aria-label={t(app.locale, "stars", { n: earned.n, of: earned.of })}>
-      {#each Array.from({ length: earned.of }, (_, i) => i) as i (i)}<span class:lit={i < earned.n} style:--d={`${300 + i * 160}ms`}>★</span>{/each}
+      {#each Array.from({ length: earned.of }, (_, i) => i) as i (i)}<span class:lit={i < earned.n} style:--d={`${300 + i * 160}ms`}>{i < earned.n ? "★" : "☆"}</span>{/each}
     </p>
   {/if}
   <dl class="tally">
@@ -73,8 +73,8 @@
   @keyframes star { from { transform: scale(2) rotate(-30deg); } }
   h2 { font: 900 clamp(30px, 7vw, 40px)/1.15 var(--display); margin: 0; }
   .outcome { font-size: 19px; margin: 0; color: var(--muted); }
-  .stars { font-size: 40px; margin: 4px 0 0; letter-spacing: 4px; color: var(--line); }
-  .stars .lit { color: var(--accent); -webkit-text-stroke: 1.5px var(--ink); }
+  .stars { font-size: 40px; margin: 4px 0 0; letter-spacing: 4px; color: var(--muted); }
+  .stars .lit { color: var(--accent-ink); }
   .tally { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; width: 100%; }
   .tally div { border-radius: var(--radius); border: 2px solid var(--line); padding: 12px 8px; background: var(--surface); }
   dt { font-size: 14px; font-weight: 500; color: var(--muted); }

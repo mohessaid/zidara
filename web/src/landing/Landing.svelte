@@ -271,7 +271,9 @@
 <style>
   /* The page's design system (ADR 0016). Dark and high-contrast in every scheme, like a stage:
      near-black ground, white headings in heavy Alexandria, muted grey for reading, one saffron
-     accent. Contrast on --l-bg: ink 18.9, muted 8.6, accent 11.6; ink on the accent 11.6. */
+     accent. Contrast, measured: on --l-bg ink 18.2, muted 8.4, accent 11.1; on --l-surface muted
+     8.0, accent 10.5; the ground on the accent 11.1. Control edges (--l-line-strong) 3.7 or more;
+     --l-line is only for separators. tests/e2e/contrast.spec.ts checks the page. */
   .landing {
     --l-bg: #09090b;
     --l-surface: #111114;
@@ -279,12 +281,12 @@
     --l-ink: #f5f5f4;
     --l-muted: #a8a8ae;
     --l-line: #26262b;
-    --l-line-strong: #3a3a41;
+    --l-line-strong: #6e6e78;    /* the edge of every control: 3.7 on the surface */
     --l-tint: #141417;
     --l-accent: #f7b63c;          /* saffron: one accent, the whole page */
     --l-accent-ink: #f7b63c;
     --l-on-accent: #09090b;
-    --l-locked: #4a4a52;
+    --l-locked: #6e6e78;
     --l-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
     --l-display: "Alexandria Variable", "Alexandria", "Readex Pro Variable", system-ui, sans-serif;
     --px-ring: #2a2a30;
@@ -314,7 +316,7 @@
   nav a { text-decoration: none; color: var(--l-muted); font-size: 14.5px; }
   nav a:hover { color: var(--l-ink); }
   .end { margin-inline-start: auto; display: flex; align-items: center; gap: 10px; }
-  .end :global(select) { min-height: 40px; border: 1px solid var(--l-line); border-bottom-width: 1px; border-radius: 999px; background: var(--l-surface); color: var(--l-ink); font-weight: 500; font-size: 14px; }
+  .end :global(select) { min-height: 40px; border: 1px solid var(--l-line-strong); border-bottom-width: 1px; border-radius: 999px; background: var(--l-surface); color: var(--l-ink); font-weight: 500; font-size: 14px; }
 
   /* Buttons: pills; cards are 16 px; frames 22 px. */
   .cta {
@@ -428,7 +430,7 @@
 
   /* Made with Zidara. */
   .made { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-  .made a { display: grid; height: 100%; align-content: start; text-decoration: none; border: 1px solid var(--l-line); border-radius: 16px; padding: 12px 12px 20px; background: var(--l-surface); transition: border-color 160ms ease, transform 160ms ease; }
+  .made a { display: grid; height: 100%; align-content: start; text-decoration: none; border: 1px solid var(--l-line-strong); border-radius: 16px; padding: 12px 12px 20px; background: var(--l-surface); transition: border-color 160ms ease, transform 160ms ease; }
   .made a:hover { border-color: var(--l-accent); transform: translateY(-2px); }
   .made h3 { margin: 16px 10px 6px; font-size: 18px; font-weight: 500; }
   .made p { margin: 0 10px 14px; color: var(--l-muted); font-size: 15px; }

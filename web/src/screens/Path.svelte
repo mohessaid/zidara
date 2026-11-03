@@ -95,7 +95,7 @@
           </span>
           <span class="words" aria-hidden="true">
             <span class="name">{o.title}</span>
-            <span class="state">{o.lock ? lockText(o) : t(app.locale, `state.${o.judgement.state}`)}{#if !o.lock && earned.of > 0}<span class="stars">{#each Array.from({ length: earned.of }, (_, k) => k) as k (k)}<span class:lit={k < earned.n}>★</span>{/each}</span>{/if}</span>
+            <span class="state">{o.lock ? lockText(o) : t(app.locale, `state.${o.judgement.state}`)}{#if !o.lock && earned.of > 0}<span class="stars">{#each Array.from({ length: earned.of }, (_, k) => k) as k (k)}<span class:lit={k < earned.n}>{k < earned.n ? "★" : "☆"}</span>{/each}</span>{/if}</span>
           </span>
           {#if o.outcome === next}<span class="start" aria-hidden="true">{t(app.locale, "path.start")}</span>{/if}
           <span class="visually-hidden">{t(app.locale, "path.level", { n: i + 1, name: o.title })}. {t(app.locale, `state.${o.judgement.state}`)}. {lockText(o)}</span>
@@ -127,7 +127,8 @@
   .lens-title { margin: 0 0 10px; font-size: 15px; font-weight: 600; }
   .switch { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 4px; border-radius: 12px; background: var(--paper-2); }
   .opt { border: 0; box-shadow: none; background: transparent; padding: 6px 10px; font-size: 16px; line-height: 1.2; display: grid; justify-items: center; border-radius: 9px; }
-  .opt[aria-pressed="true"] { background: var(--surface); box-shadow: 0 1px 3px rgb(15 15 16 / 0.18); }
+  .opt[aria-pressed="true"] { background: var(--surface); border: 2px solid var(--ink); box-shadow: none; }
+  .opt { border: 2px solid transparent; }
   .yours { font-size: 12.5px; font-weight: 500; color: var(--muted); }
   .lens-note { margin: 10px 0 0; font-size: 15px; line-height: 1.45; color: var(--muted); }
   .lens.on .lens-note { color: var(--ink); }
@@ -153,13 +154,13 @@
   .achieved .disc { --disc: var(--achieved); --disc-edge: var(--achieved-edge); --disc-ink: #fff; }
   .next .disc { --disc: var(--ink); --disc-edge: #000; --disc-ink: #fff; }
   .needs_support .disc { --disc: var(--try-tint); --disc-edge: var(--try); --disc-ink: var(--try-ink); }
-  .locked .disc { --disc: var(--paper-2); --disc-edge: var(--line); --disc-ink: var(--muted); box-shadow: none; }
+  .locked .disc { --disc: var(--paper-2); --disc-edge: var(--edge); --disc-ink: var(--muted); box-shadow: none; }
   .locked .node { cursor: default; }
   .words { display: grid; gap: 2px; flex: 1; min-width: 0; }
   .name { font-family: var(--display); font-weight: 700; font-size: 18px; line-height: 1.25; }
   .state { font-size: 14.5px; color: var(--muted); display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .locked .name { color: var(--muted); }
-  .stars { letter-spacing: 1px; color: var(--line-strong); }
+  .stars { letter-spacing: 1px; color: var(--muted); }
   .stars .lit { color: var(--star); }
   /* The level to play next: a card around the row, and a Start button inside it. */
   .next .node { padding: 12px; margin-inline: -12px; width: calc(100% + 24px); background: var(--surface); border: 2px solid var(--ink); box-shadow: 0 4px 0 var(--ink); }

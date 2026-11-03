@@ -223,7 +223,7 @@
   h2 { font-size: clamp(24px, 5.4vw, 30px); margin: 0 0 20px; line-height: 1.3; font-weight: 700; }
   .reading { font-size: 20px; line-height: 1.6; display: block; margin: 0 0 16px; }
   video { width: 100%; border-radius: var(--radius); background: #000; }
-  textarea { width: 100%; font-size: 19px; border: 2px solid var(--line); border-radius: var(--radius); padding: 14px; background: var(--surface); }
+  textarea { width: 100%; font-size: 19px; border: 2px solid var(--edge); border-radius: var(--radius); padding: 14px; background: var(--surface); }
   textarea:focus { border-color: var(--ink); outline: none; }
   .agent { color: var(--agent); font-weight: 700; }
   .sheet { position: sticky; bottom: 0; padding: 16px 16px 20px; border-top: 1px solid var(--line); background: var(--surface); display: grid; gap: 14px; }

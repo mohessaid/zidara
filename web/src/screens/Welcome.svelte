@@ -79,7 +79,7 @@
   /* A course card: the badge, the words, and a Start button at the end of the row. */
   .door {
     width: 100%; display: flex; align-items: center; gap: 16px; padding: 16px; text-align: start; color: var(--ink);
-    border-radius: 16px; border: 2px solid var(--line); box-shadow: 0 4px 0 var(--line); background: var(--surface);
+    border-radius: 16px; border: 2px solid var(--edge); box-shadow: 0 4px 0 var(--edge); background: var(--surface);
   }
   .door:hover:not(:disabled) { border-color: var(--ink); box-shadow: 0 4px 0 var(--ink); }
   .door:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }

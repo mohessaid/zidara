@@ -3,7 +3,7 @@
 Date: 2026-10-14. Status: accepted.
 
 ## Context
-Solve's AI focus asks for AI that deepens learning. Ours must act inside rules people approve,
+AI in education should deepen learning. Ours must act inside rules people approve,
 never beside them.
 
 ## Decision

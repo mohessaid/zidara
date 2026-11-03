@@ -1,6 +1,6 @@
 # Impact facts (for the owner to choose from)
 
-Collected 18 October 2026 by an agent from public sources. Check each figure at its source before citing it; write the application in your own words.
+Collected 18 October 2026 by an agent from public sources. Check each figure at its source before citing it; write in your own words.
 
 Status key: **verified** means the agent read the figure in the primary source (page, PDF or
 official data API). **UNVERIFIED** means it came only from search snippets or secondary

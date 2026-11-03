@@ -1,7 +1,7 @@
 # 0014. A front page that pitches the idea, the game at #play, and English by default
 
-Date: 2026-11-03. Status: accepted. Amends ADR 0012 (the front door) and the "Arabic first"
-default of the prototype spec for the interface language only.
+Date: 2026-11-03. Status: accepted. Amends ADR 0012 (the front door) and the prototype
+spec's default interface language.
 
 ## Context
 The owner asked that zidara.ta9in.com present Zidara's vision professionally, in the manner of a
@@ -22,11 +22,12 @@ Until now `/` opened straight into the game's front door, in Arabic.
   same first quiz, judged under Mastery (level 1 mastered, level 2 opens) and Cambridge-style
   (top band, not an assessment; level 3 waits for the calendar). Fixed ids and dates, nothing sent.
 - **English by default.** With no saved choice, the interface is English; Arabic and French are
-  one choice away and remembered. The content, the classes and the tests stay Arabic first.
+  one choice away and remembered. The demo classes and the tests still tell the school's story
+  in Arabic, which also proves right to left on every screen.
 
 ## Consequences
-- A visitor reads the why before the game; a judge can check every figure at its source.
+- A visitor reads the why before the game; a reader can check every figure at its source.
 - The front page must hold the Lighthouse gate on its own: the kernel moved off the main thread
   and below-the-fold sections skip rendering until seen (journal, 3 November).
-- Browser tests that tell the school's story in Arabic now choose Arabic first (`arabic()` in
+- Browser tests that tell the school's story in Arabic now choose Arabic up front (`arabic()` in
   `tests/e2e/helpers.ts`), and the guest flow starts at `#play`.

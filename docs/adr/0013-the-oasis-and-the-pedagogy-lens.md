@@ -9,7 +9,7 @@ white ground, outlined cards, nothing that said who it was for or why it was dif
 were right twice over. ADR 0012 had swapped the art bible's world ("a hand-drawn path across a
 sunlit landscape", warm paper) for the look of a well-known app, and the guest flow never showed
 what makes Zidara different: the game is drawn from a pedagogy the engine runs, and switching
-the pedagogy redraws the same learner's progress. A judge opening the link saw a lesson app.
+the pedagogy redraws the same learner's progress. A visitor opening the link saw a lesson app.
 
 We also found that the chosen typeface had never rendered: an inline style on `<body>` in
 `index.html` (for the splash) set `system-ui`, which beat the face set on `:root`.

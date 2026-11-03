@@ -1,6 +1,6 @@
 # Pilot plan (a draft for the owner to rewrite)
 
-Solve's feasibility criterion asks for a credible plan from prototype to pilot. This is a
+A plan from prototype to a first pilot. This is a
 skeleton with the parts the software already supports filled in. The school, the people, the
 dates and the ethics route are the owner's; nothing here has been agreed with anyone.
 

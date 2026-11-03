@@ -1,13 +1,13 @@
 # Zidara prototype: design
 
-Date: 14 October 2026. Deadline: MIT Solve application, 2 November 2026, 12:00 pm EST.
-Source design: `docs/proposal.md`. Challenge mapping: `docs/solve-2027.md`.
+Date: 14 October 2026.
+Source design: `docs/proposal.md`.
 
 ## 1. Purpose
 
-Solve rejects concept-stage entries. A Prototype is "an initial working version of a solution"
-(often 0 users). For finalists, technical feasibility asks for "convincing evidence that [the
-technology] has been built and functions as claimed". The prototype exists to make the
+A concept is not enough. A prototype is an initial working version (often with 0 users), and
+it should give convincing evidence that the technology has been built and functions as
+claimed. The prototype exists to make the
 proposal's claims true and checkable:
 
 | Claim in the proposal | What proves it in the prototype |
@@ -26,7 +26,7 @@ is green, and the numbers (coverage, mutants, wasm size, latency under load) are
 
 ## 2. Demo setting
 
-Primary maths, fractions, learners aged 9–11. Arabic first (right to left), French and English.
+Primary maths, fractions, learners aged 9–11. Right to left from the start; three languages.
 Offline-first, with quality, on an economy-class phone (see 2.1). Fractions read the same in every language and every
 curriculum, so one lesson serves the whole story.
 
@@ -211,8 +211,8 @@ an API key is set). The agent's governance is the innovation; the model is repla
   - **Grid** (older learners): a dense outcome-by-evidence mastery grid.
   - **Teacher studio**: who is stuck on which outcome, the agent queue, undo, framework switch.
   - **Lite** (future, named so the N + M list is honest): DOM only, no WebGL, for low-end
-    devices. Not built for Solve.
-- Design tokens; Arabic first with `dir="rtl"`; French and English. WCAG 2.2 AA is the floor.
+    devices. Not built yet.
+- Design tokens; right to left from the start with `dir="rtl"`; three languages. WCAG 2.2 AA is the floor.
 
 ## 4. Testing: the gauntlet
 
@@ -267,7 +267,7 @@ Tests are written first (TDD). Code review is not the proof; the gauntlet is.
 | 19–22 Oct | M2 Server | schema, RLS, API, sync, Claude assessor; integration tests green |
 | 22–26 Oct | M3 Shell | bridge, Quest, Grid, studio, offline, ar/fr/en; Playwright and axe green |
 | 27–29 Oct | M4 Demo | lesson content and video, seed data, load numbers, demo script and recording |
-| 30 Oct–1 Nov | M5 Buffer | fixes, README numbers, evidence for the application |
+| 30 Oct–1 Nov | M5 Buffer | fixes, README numbers, evidence |
 
 Each media job uses the tool that fits it best (an openly licensed clip, a generated video, a
 web tool), chosen at M4; no tool is fixed in advance.
@@ -283,4 +283,4 @@ are cut first; the offline sync and the governed agent stay.
 
 Native Kotlin and Swift apps (the kernel's Android and iOS type-checks stand in), OIDC, LTI 1.3,
 QTI and SCORM import, Open Badges, offline edits of shared records, multi-node deployment,
-public hosting (can be added in M4 if a live link helps the application).
+public hosting (can be added in M4 if a live link helps).

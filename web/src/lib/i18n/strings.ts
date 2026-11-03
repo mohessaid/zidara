@@ -1,4 +1,4 @@
-// Every word the app shows, in Arabic first, then French and English. Written for children of
+// Every word the app shows, in each language the app ships (right to left included). Written for children of
 // 9-11 on learner screens: plain, warm, never "wrong" or "fail". Placeholders: {name}.
 export const LOCALES = ["ar", "fr", "en"] as const;
 export type Locale = (typeof LOCALES)[number];
@@ -130,7 +130,7 @@ export const STRINGS = {
     "welcome.start": "ابدأ",
     "welcome.busy": "نجهّز درسك…",
     "welcome.offline": "يعمل دون إنترنت",
-    "welcome.languages": "العربية والفرنسية والإنجليزية",
+    "welcome.languages": "أي لغة، ومن اليمين إلى اليسار أيضًا",
     "welcome.free": "بلا حساب وبلا إعلانات",
     "welcome.teachers": "للمعلّمين: الأقسام التجريبية",
     "welcome.back": "رجوع",
@@ -283,7 +283,7 @@ export const STRINGS = {
     "welcome.start": "Commencer",
     "welcome.busy": "On prépare ta leçon…",
     "welcome.offline": "Marche sans internet",
-    "welcome.languages": "Arabe, français, anglais",
+    "welcome.languages": "Toute langue, de droite à gauche aussi",
     "welcome.free": "Sans compte, sans pub",
     "welcome.teachers": "Enseignants : les classes de démo",
     "welcome.back": "Retour",
@@ -436,7 +436,7 @@ export const STRINGS = {
     "welcome.start": "Start",
     "welcome.busy": "Getting your lesson ready…",
     "welcome.offline": "Works offline",
-    "welcome.languages": "Arabic, French, English",
+    "welcome.languages": "Any language, right to left too",
     "welcome.free": "No account, no ads",
     "welcome.teachers": "Teachers: open the demo classes",
     "welcome.back": "Back",

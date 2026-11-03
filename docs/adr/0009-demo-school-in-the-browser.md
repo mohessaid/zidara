@@ -3,7 +3,7 @@
 Date: 2026-10-31. Status: accepted.
 
 ## Context
-Judges should be able to try the prototype, not only watch it. The real server needs a VPS
+Anyone should be able to try the prototype, not only watch it. The real server needs a VPS
 with PostgreSQL, which the owner has not decided on, and a public server with a demo sign-in
 lets anyone write to a shared database. The kernel already runs in the browser.
 
@@ -23,6 +23,6 @@ flag when building, and the build was checked for the demo's code.
 - It shows the pedagogy, the learner's path, the light experience, offline use, the teacher's
   decisions and the framework switch. It does not show the server: PostgreSQL row-level
   security, sync between devices, load, or a model marking. The sign-in page says so in three
-  languages, and the application must not cite the demo as proof of those.
+  languages, and nothing public may cite the demo as proof of those.
 - The browser kernel grew from 150 to 164 KB compressed (the rubric marker). Lighthouse stays
   100/100 for both builds.

@@ -1,6 +1,6 @@
 # What it costs to serve a learner
 
-Evidence for Solve's scalability and financial-viability questions. Measured numbers are
+What it costs to run Zidara at scale, and whether that is sustainable. Measured numbers are
 marked **measured** and say where they come from; everything else is an **assumption**, stated
 so the owner can change it. Model prices are Anthropic's list prices as cached on 6 October 2026; check them before citing.
 

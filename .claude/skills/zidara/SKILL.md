@@ -1,13 +1,13 @@
 ---
 name: zidara
-description: "The Zidara project's own skill: how to build, test, design and record work in this repository. Use for ANY work in the Zidara repo - kernel and frameworks (Rust), the server (axum, sqlx, PostgreSQL row-level security), the web shell (Svelte 5, PixiJS, PWA, Arabic RTL), accessibility, gamification and game UI, playtests, the Solve pitch video and lesson videos, and the project record (changelog, journal, ADRs)."
+description: "The Zidara project's own skill: how to build, test, design and record work in this repository. Use for ANY work in the Zidara repo - kernel and frameworks (Rust), the server (axum, sqlx, PostgreSQL row-level security), the web shell (Svelte 5, PixiJS, PWA, right-to-left), accessibility, gamification and game UI, playtests, product and lesson videos, and the project record (changelog, journal, ADRs)."
 ---
 
 # Zidara
 
-A learning platform with one kernel, many pedagogies (frameworks), an experience for every
-audience, and AI agents that act only inside rules people approve. The prototype is for the
-MIT Solve 2027 Global Learning Challenge (deadline 2 November 2026, 12:00 pm EST).
+The adaptable learning engine for the AI era, open source: one kernel, many pedagogies
+(frameworks), an experience for every audience, in any language, and AI agents that act only
+inside rules people approve. The repo carries no competition, deadline or client material.
 
 Read first: `docs/superpowers/specs/2026-10-14-zidara-prototype-design.md` (what and why) and
 `AGENTS.md` (ground rules). This skill is how.
@@ -29,9 +29,10 @@ Read first: `docs/superpowers/specs/2026-10-14-zidara-prototype-design.md` (what
    Low-end gets its own experience later; never cap the main experience for it.
 7. **Experiences are swappable, the view-intent contract is not.** The kernel says what is
    true ("F2 in progress at 64%, F3 locked"); experiences decide how to draw it.
-8. **Arabic first, English by default.** Right-to-left, real text shaping, French and English
-   beside it. The interface opens in English (owner, ADR 0014); content, classes and tests stay
-   Arabic first. `/` is the front page (`girth-landing`); the game is at `#play`.
+8. **Any language, right to left from the start; English by default.** Real text shaping and
+   mirrored layouts on every screen. Never single out a language or region in public copy:
+   say "right-to-left support from the start" (owner, 2026-11-03). `/` is the front page
+   (`girth-landing`); the game is at `#play`.
 9. **The record is part of the work.** See "The record" below.
 10. **Use the best tool for each job**, chosen on evidence; HyperFrames is one option, not the
     default. When a third-party skill helps, distil what applies into this skill and remove
@@ -50,7 +51,7 @@ Read first: `docs/superpowers/specs/2026-10-14-zidara-prototype-design.md` (what
 | The web shell: Svelte 5, PixiJS map, PWA, offline, RTL | `references/web-shell.md` |
 | Any screen: WCAG 2.2 AA, contrast, focus, targets, motion | `references/accessibility.md` |
 | Gamification, game UI, visual identity, balance, playtests | `references/game-design.md` |
-| The Solve pitch video or a lesson video | `references/video.md` |
+| A product film or a lesson video | `references/video.md` |
 
 ## The record
 

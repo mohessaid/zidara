@@ -14,7 +14,7 @@ metadata:
 ---
 ## Read the brief first <!-- src: design-taste-frontend#0-brief-inference-read-the-room-before-anything-else -->
 State one line before building: page kind, audience, vibe, aesthetic family. Zidara's front page:
-a pitch for judges, funders and schools. **Zidara is the adaptable learning engine / LMS for the
+a pitch for schools, education systems and builders. **Zidara is the adaptable learning engine / LMS for the
 AI era (kernel, any framework, any experience, governed agents; `docs/proposal.md`). Never pitch
 it as a game: the game is one experience that shows the engine bends** (owner, ADR 0015). Look
 (ADR 0017): light, the demo's tokens, ink Alexandria headings, saffron only as a flat

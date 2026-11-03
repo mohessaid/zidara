@@ -1,18 +1,16 @@
-# Video: the Solve pitch and lesson videos
+# Video: product films and lesson videos
 
 Distilled from the technical-video-script skill. Tools are chosen per job (screen recording
 of the real app, a motion tool, an openly licensed clip); none is the default.
 
-## The Solve video
+## A product film
 
-Solve allows an optional video of 2 minutes at most, on public YouTube or Vimeo. Its advice:
-"if you have a tangible product, demo it". Reviewers judge whether it "functions as claimed".
+At most 2 minutes. If there is a tangible product, demo it: viewers judge whether it
+functions as claimed.
 
-1. **Promise**, in one sentence, with no "and". Draft: "A teacher in Algeria switches her
-   class from Cambridge-style to mastery teaching, and the same lesson, offline on a cheap
-   phone, becomes a different game in five seconds."
-2. **Hook**, written first, in the first 30 seconds: the framework switch on a real phone,
-   in Arabic.
+1. **Promise**, in one sentence, with no "and": one kernel, and a teacher's switch of
+   framework redraws the same learner's path.
+2. **Hook**, written first, in the first 30 seconds: the framework switch on a real phone.
 3. **Beats**, one claim each, about 20 seconds each, in a two-column table:
 
    | Visual (what is on screen) | Narration |
@@ -28,7 +26,7 @@ Solve allows an optional video of 2 minutes at most, on public YouTube or Vimeo.
    only makes sense with the picture ("as you can see here").
 6. **Off screen**: other clients and projects, real children's names or faces,
    API keys, internal hostnames.
-7. Captions are burned in for silent autoplay, in English, with an Arabic version if time allows.
+7. Captions are burned in for silent autoplay.
 
 ## Lesson videos (inside the product)
 

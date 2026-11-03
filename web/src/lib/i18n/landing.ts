@@ -61,7 +61,6 @@ export type LandingCopy = {
 
 const SOURCES: Source[] = [
   { label: "World Bank, UNESCO, UNICEF et al., The State of Global Learning Poverty: 2022 Update", href: "https://www.unicef.org/media/122921/file/StateofLearningPoverty2022.pdf" },
-  { label: "IEA, TIMSS 2023 International Results in Mathematics, Exhibit 1.1.4", href: "https://timss2023.org/?p=5644" },
   { label: "W3Techs, Usage statistics of content languages for websites (18 October 2026)", href: "https://w3techs.com/technologies/overview/content_language" },
   { label: "GSMA, The State of Mobile Internet Connectivity 2025", href: "https://www.gsma.com/somic/wp-content/uploads/2025/09/The-State-of-Mobile-Internet-Connectivity-2025-Trends-in-Mobile-Internet-Connectivity.pdf" },
   { label: "UNESCO and Teacher Task Force, Global Report on Teachers (UN News, 29 February 2024)", href: "https://news.un.org/en/story/2024/02/1147067" },
@@ -130,14 +129,14 @@ const en: LandingCopy = {
     loading: "Starting the engine…",
     failed: "The engine could not start in this browser. The demo course still works.",
   },
-  facts: ["One Rust kernel: server, browser, Android, iOS", "Any teaching framework", "Any experience", "AI agents with permissions", "Offline first", "Arabic, French, English"],
+  facts: ["One Rust kernel: server, browser, Android, iOS", "Any teaching framework", "Any experience", "AI agents with permissions", "Offline first", "Any language, right to left from the start"],
   why: {
     title: "Five whys, down to the root",
     lead: "We asked why so many children are still not learning, and kept asking until we reached something software could fix.",
     steps: [
-      { q: "Why are so many children not learning?", a: "An estimated 7 in 10 ten-year-olds in low- and middle-income countries cannot read and understand a simple text. In maths, over half of fourth graders in Kuwait and Morocco fall below the lowest international benchmark.", cite: [1, 2] },
-      { q: "Why hasn't digital learning closed the gap?", a: "Most of it is made for someone else. Arabic is 0.6% of the web's content, under half of people in the Middle East and North Africa use mobile internet, and 3 in 10 of those who do still use 3G or basic phones.", cite: [3, 4] },
-      { q: "Why can't schools shape the platforms they have?", a: "Learning platforms carry one idea of a course and bolt the rest on as plugins. A teaching approach lives inside the application and cannot be lifted out, so a new pedagogy or a new audience means a new product, or work done by hand by teachers the world is already short of: 44 million more are needed by 2030.", cite: [5] },
+      { q: "Why are so many children not learning?", a: "An estimated 7 in 10 ten-year-olds in low- and middle-income countries cannot read and understand a simple text.", cite: [1] },
+      { q: "Why hasn't digital learning closed the gap?", a: "Most of it is made for someone else. Half of all websites are in English, 3.1 billion people live where mobile internet reaches but do not use it, and 1 in 6 of those online still use 3G or basic phones.", cite: [2, 3] },
+      { q: "Why can't schools shape the platforms they have?", a: "Learning platforms carry one idea of a course and bolt the rest on as plugins. A teaching approach lives inside the application and cannot be lifted out, so a new pedagogy or a new audience means a new product, or work done by hand by teachers the world is already short of: 44 million more are needed by 2030.", cite: [4] },
       { q: "Why is the teaching locked inside?", a: "Because pedagogy was never written down as software. Its rules sit in documents and in teachers' heads, and every platform rebuilds a simplified copy for every audience: N frameworks times M experiences.", cite: [] },
       { q: "Why does it matter now?", a: "AI tutors and markers are arriving in every classroom. Without the school's rules inside the system, they guess, and nobody can check, govern or undo what they did.", cite: [] },
     ],
@@ -205,7 +204,7 @@ const en: LandingCopy = {
     title: "Questions",
     items: [
       { q: "Is Zidara a game?", a: "No. Zidara is a learning engine and the platform around it. The game on this site is one experience built on it, to show how far the engine bends; the same kernel draws a secondary grid, a teacher's studio or a text message." },
-      { q: "Who is it for?", a: "Schools, training centres and education systems that want their own way of teaching to run as software, and teams that want to build new learning experiences on a tested core. The prototype starts with primary maths in Arabic, French and English." },
+      { q: "Who is it for?", a: "Schools, training centres and education systems that want their own way of teaching to run as software, and teams that want to build new learning experiences on a tested core. The first demo course is primary maths, in any of its languages." },
       { q: "How is it different from other learning platforms?", a: "General platforms keep their teaching approach inside the application and add the rest as plugins. In Zidara, pedagogy is the core: frameworks are first class, experiences are swappable, and agents are governed actors." },
       { q: "Does AI grade learners?", a: "No. The engine never calls a model. An assessment agent may pre-mark an open answer with a confidence score; the framework's policy applies it or sends it to the teacher, and anything summative always goes to a person." },
       { q: "Can we bring our own pedagogy?", a: "Yes, that is the point. Outcomes and thresholds are data; judgement and progression are code behind one interface, held to the same tests. Mastery and Cambridge-style run today." },
@@ -279,14 +278,14 @@ const fr: LandingCopy = {
     loading: "Démarrage du moteur…",
     failed: "Le moteur n'a pas pu démarrer dans ce navigateur. Le cours de démo fonctionne quand même.",
   },
-  facts: ["Un noyau Rust : serveur, navigateur, Android, iOS", "N'importe quel cadre pédagogique", "N'importe quelle expérience", "Des agents IA avec permissions", "Hors ligne d'abord", "Arabe, français, anglais"],
+  facts: ["Un noyau Rust : serveur, navigateur, Android, iOS", "N'importe quel cadre pédagogique", "N'importe quelle expérience", "Des agents IA avec permissions", "Hors ligne d'abord", "Toute langue, de droite à gauche dès le départ"],
   why: {
     title: "Cinq pourquoi, jusqu'à la racine",
     lead: "Nous avons demandé pourquoi tant d'enfants n'apprennent toujours pas, et nous avons continué jusqu'à trouver ce qu'un logiciel peut réparer.",
     steps: [
-      { q: "Pourquoi tant d'enfants n'apprennent-ils pas ?", a: "Environ 7 enfants de dix ans sur 10 dans les pays à revenu faible et intermédiaire ne savent pas lire et comprendre un texte simple. En maths, plus de la moitié des élèves de quatrième année au Koweït et au Maroc sont sous le plus bas repère international.", cite: [1, 2] },
-      { q: "Pourquoi le numérique ne comble-t-il pas l'écart ?", a: "Il est surtout fait pour d'autres. L'arabe représente 0,6 % des contenus du web, moins de la moitié des habitants du Moyen-Orient et de l'Afrique du Nord utilisent l'internet mobile, et 3 sur 10 d'entre eux ont encore un téléphone 3G ou basique.", cite: [3, 4] },
-      { q: "Pourquoi les écoles ne peuvent-elles pas façonner leurs plateformes ?", a: "Les plateformes d'apprentissage portent une seule idée du cours et ajoutent le reste en modules. L'approche pédagogique vit dans l'application et ne peut pas en sortir : une nouvelle pédagogie ou un nouveau public demande un nouveau produit, ou un travail fait à la main par des enseignants qui manquent déjà. Il en faudra 44 millions de plus d'ici 2030.", cite: [5] },
+      { q: "Pourquoi tant d'enfants n'apprennent-ils pas ?", a: "Environ 7 enfants de dix ans sur 10 dans les pays à revenu faible et intermédiaire ne savent pas lire et comprendre un texte simple.", cite: [1] },
+      { q: "Pourquoi le numérique ne comble-t-il pas l'écart ?", a: "Il est surtout fait pour d'autres. La moitié des sites web sont en anglais, 3,1 milliards de personnes vivent là où l'internet mobile arrive mais ne l'utilisent pas, et 1 internaute sur 6 a encore un téléphone 3G ou basique.", cite: [2, 3] },
+      { q: "Pourquoi les écoles ne peuvent-elles pas façonner leurs plateformes ?", a: "Les plateformes d'apprentissage portent une seule idée du cours et ajoutent le reste en modules. L'approche pédagogique vit dans l'application et ne peut pas en sortir : une nouvelle pédagogie ou un nouveau public demande un nouveau produit, ou un travail fait à la main par des enseignants qui manquent déjà. Il en faudra 44 millions de plus d'ici 2030.", cite: [4] },
       { q: "Pourquoi l'enseignement est-il enfermé ?", a: "Parce que la pédagogie n'a jamais été écrite comme un logiciel. Ses règles vivent dans des documents et dans la tête des enseignants, et chaque plateforme en refait une copie simplifiée pour chaque public : N cadres fois M expériences.", cite: [] },
       { q: "Pourquoi est-ce urgent maintenant ?", a: "Les tuteurs et correcteurs IA arrivent dans chaque classe. Sans les règles de l'école dans le système, ils devinent, et personne ne peut vérifier, encadrer ou annuler ce qu'ils ont fait.", cite: [] },
     ],
@@ -354,7 +353,7 @@ const fr: LandingCopy = {
     title: "Questions",
     items: [
       { q: "Zidara est-il un jeu ?", a: "Non. Zidara est un moteur d'apprentissage et la plateforme qui l'entoure. Le jeu de ce site est une expérience construite dessus, pour montrer jusqu'où le moteur se plie ; le même noyau dessine une grille du secondaire, l'atelier de l'enseignant ou un message texte." },
-      { q: "À qui s'adresse-t-il ?", a: "Aux écoles, centres de formation et systèmes éducatifs qui veulent que leur façon d'enseigner tourne comme un logiciel, et aux équipes qui veulent construire de nouvelles expériences sur un cœur testé. Le prototype commence par les maths du primaire en arabe, en français et en anglais." },
+      { q: "À qui s'adresse-t-il ?", a: "Aux écoles, centres de formation et systèmes éducatifs qui veulent que leur façon d'enseigner tourne comme un logiciel, et aux équipes qui veulent construire de nouvelles expériences sur un cœur testé. Le premier cours de démonstration porte sur les maths du primaire, dans chacune de ses langues." },
       { q: "En quoi est-il différent des autres plateformes ?", a: "Les plateformes générales gardent leur approche pédagogique dans l'application et ajoutent le reste en modules. Dans Zidara, la pédagogie est le cœur : les cadres sont de premier rang, les expériences sont interchangeables et les agents sont des acteurs encadrés." },
       { q: "L'IA note-t-elle les élèves ?", a: "Non. Le moteur n'appelle jamais de modèle. Un agent d'évaluation peut pré-corriger une réponse ouverte avec un indice de confiance ; la règle du cadre l'applique ou l'envoie à l'enseignant, et toute évaluation sommative revient toujours à une personne." },
       { q: "Pouvons-nous apporter notre pédagogie ?", a: "Oui, c'est tout l'intérêt. Objectifs et seuils sont des données ; jugement et progression sont du code derrière une seule interface, soumis aux mêmes tests. La maîtrise et le style Cambridge tournent aujourd'hui." },
@@ -428,14 +427,14 @@ const ar: LandingCopy = {
     loading: "نشغّل المحرّك…",
     failed: "تعذّر تشغيل المحرّك في هذا المتصفّح. الدرس التجريبي يعمل مع ذلك.",
   },
-  facts: ["نواة Rust واحدة: الخادم والمتصفّح وأندرويد وiOS", "أي إطار تعليمي", "أي تجربة", "وكلاء ذكاء اصطناعي بصلاحيات", "يعمل دون إنترنت أولًا", "العربية والفرنسية والإنجليزية"],
+  facts: ["نواة Rust واحدة: الخادم والمتصفّح وأندرويد وiOS", "أي إطار تعليمي", "أي تجربة", "وكلاء ذكاء اصطناعي بصلاحيات", "يعمل دون إنترنت أولًا", "أي لغة، مع الكتابة من اليمين إلى اليسار منذ البداية"],
   why: {
     title: "خمسة أسئلة «لماذا»، حتى الجذر",
     lead: "سألنا لماذا لا يتعلّم كثير من الأطفال حتى اليوم، وواصلنا السؤال حتى وصلنا إلى ما يستطيع البرنامج إصلاحه.",
     steps: [
-      { q: "لماذا لا يتعلّم كثير من الأطفال؟", a: "يُقدَّر أن 7 من كل 10 أطفال في العاشرة في البلدان المنخفضة والمتوسطة الدخل لا يستطيعون قراءة نص بسيط وفهمه. وفي الرياضيات، أكثر من نصف تلاميذ السنة الرابعة في الكويت والمغرب دون أدنى معيار دولي.", cite: [1, 2] },
-      { q: "لماذا لا يسدّ التعلّم الرقمي الفجوة؟", a: "لأن معظمه صُنع لغيرهم. العربية 0.6% فقط من محتوى الويب، وأقل من نصف سكان الشرق الأوسط وشمال أفريقيا يستعملون الإنترنت عبر الهاتف، و3 من كل 10 منهم ما زالوا على هواتف 3G أو هواتف بسيطة.", cite: [3, 4] },
-      { q: "لماذا لا تستطيع المدارس تشكيل منصّاتها؟", a: "تحمل منصّات التعلّم فكرة واحدة عن الدرس وتضيف الباقي إضافاتٍ. طريقة التعليم تعيش داخل التطبيق ولا يمكن إخراجها، فتعني بيداغوجيا جديدة أو جمهور جديد منتجًا جديدًا، أو عملًا يدويًا يقوم به معلّمون ينقصون العالم أصلًا: يحتاج العالم 44 مليون معلّم إضافي بحلول 2030.", cite: [5] },
+      { q: "لماذا لا يتعلّم كثير من الأطفال؟", a: "يُقدَّر أن 7 من كل 10 أطفال في العاشرة في البلدان المنخفضة والمتوسطة الدخل لا يستطيعون قراءة نص بسيط وفهمه.", cite: [1] },
+      { q: "لماذا لا يسدّ التعلّم الرقمي الفجوة؟", a: "لأن معظمه صُنع لغيرهم. نصف مواقع الويب بالإنجليزية، و3.1 مليار شخص يعيشون حيث يصل الإنترنت عبر الهاتف لكنهم لا يستعملونه، و1 من كل 6 مستعملين ما زال على هاتف 3G أو هاتف بسيط.", cite: [2, 3] },
+      { q: "لماذا لا تستطيع المدارس تشكيل منصّاتها؟", a: "تحمل منصّات التعلّم فكرة واحدة عن الدرس وتضيف الباقي إضافاتٍ. طريقة التعليم تعيش داخل التطبيق ولا يمكن إخراجها، فتعني بيداغوجيا جديدة أو جمهور جديد منتجًا جديدًا، أو عملًا يدويًا يقوم به معلّمون ينقصون العالم أصلًا: يحتاج العالم 44 مليون معلّم إضافي بحلول 2030.", cite: [4] },
       { q: "لماذا التعليم محبوس داخلها؟", a: "لأن البيداغوجيا لم تُكتب قطّ برنامجًا. قواعدها في الوثائق وفي أذهان المعلّمين، وكل منصّة تعيد بناء نسخة مبسّطة منها لكل جمهور: N إطارًا في M تجربة.", cite: [] },
       { q: "لماذا يهمّ هذا الآن؟", a: "يصل المعلّمون والمصحّحون الآليون إلى كل قسم. ومن دون قواعد المدرسة داخل النظام فإنهم يخمّنون، ولا يستطيع أحد أن يتحقّق ممّا فعلوه أو يحكمه أو يتراجع عنه.", cite: [] },
     ],
@@ -503,7 +502,7 @@ const ar: LandingCopy = {
     title: "أسئلة",
     items: [
       { q: "هل زيدارا لعبة؟", a: "لا. زيدارا محرّك تعلّم والمنصّة المحيطة به. اللعبة في هذا الموقع تجربة واحدة مبنية عليه، لتُظهر إلى أي حدّ ينثني المحرّك، والنواة نفسها ترسم شبكة للثانوي أو استوديو للمعلّم أو رسالة نصية." },
-      { q: "لمن هي؟", a: "للمدارس ومراكز التكوين والأنظمة التعليمية التي تريد أن تعمل طريقتها في التعليم برنامجًا، وللفرق التي تريد بناء تجارب تعلّم جديدة على نواة مختبَرة. يبدأ النموذج برياضيات الابتدائي بالعربية والفرنسية والإنجليزية." },
+      { q: "لمن هي؟", a: "للمدارس ومراكز التكوين والأنظمة التعليمية التي تريد أن تعمل طريقتها في التعليم برنامجًا، وللفرق التي تريد بناء تجارب تعلّم جديدة على نواة مختبَرة. أول درس تجريبي في رياضيات الابتدائي، بأيٍّ من لغاته." },
       { q: "بماذا تختلف عن منصّات التعلّم الأخرى؟", a: "المنصّات العامة تُبقي طريقة التعليم داخل التطبيق وتضيف الباقي إضافاتٍ. في زيدارا البيداغوجيا هي القلب: الأطر في المقام الأول، والتجارب قابلة للتبديل، والوكلاء فاعلون محكومون بالقواعد." },
       { q: "هل يمنح الذكاء الاصطناعي العلامات للمتعلّمين؟", a: "لا. المحرّك لا يستدعي نموذجًا أبدًا. قد يصحّح وكيل التقييم إجابة مفتوحة مبدئيًا مع درجة ثقة، فتطبّقها سياسة الإطار أو ترسلها إلى المعلّم، وكل تقييم ختامي يعود دائمًا إلى إنسان." },
       { q: "هل نستطيع أن نأتي ببيداغوجيتنا؟", a: "نعم، وهذا هو المقصود. الأهداف والعتبات بيانات، والحكم والتدرّج شيفرة خلف واجهة واحدة تخضع للاختبارات نفسها. الإتقان وطريقة كامبريدج يعملان اليوم." },

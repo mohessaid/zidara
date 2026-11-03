@@ -1,4 +1,4 @@
-// The demo film for Solve: the real app on the real server, recorded by the browser.
+// The demo film: the real app on the real server, recorded by the browser.
 // Not a test of correctness (tests/e2e does that); a film of the product working. Each step
 // records its time and caption, so scripts/compose-demo.py places the captions exactly.
 // Run: npx playwright test --config playwright.demo.config.ts
@@ -15,8 +15,8 @@ test("Zidara in ninety seconds", async ({ browser }) => {
   const marks: { t: number; caption: string }[] = [];
   const mark = (caption: string) => marks.push({ t: (Date.now() - startedAt) / 1000, caption });
 
-  // 1. Arabic first: a learner signs in and sees her path.
-  mark("Amina signs in. Arabic first, right to left.");
+  // 1. Right to left: a learner signs in and sees her path.
+  mark("Amina signs in, right to left.");
   await signIn(amina, "amina");
   await expect(stone(amina, "F1")).toBeVisible();
   await pause(2000);

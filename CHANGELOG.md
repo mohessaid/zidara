@@ -14,6 +14,10 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Fixed
 
+- Zidara reads as what it is: an open-source learning engine for any language. The README,
+  the front page and the project skill no longer single out languages or regions ("right to
+  left from the start" says what matters), and the five whys use global figures. The
+  competition, its deadline and the application material left the repository.
 - In the demo, a disabled Check, the studio's Apply, and the empty part of every progress bar
   were the colour of the ground behind them. Disabled buttons now keep a dashed edge and
   every bar track a visible edge. The saffron Enter and Start buttons are ink, and the badges
@@ -119,19 +123,16 @@ All notable changes to Zidara are recorded here. The format follows
   without changing its data: the API refuses visitors, a learner signs in, and the app reloads
   with no network.
 - `docs/cost-model.md` (cost per learner: measured capacity plus stated assumptions),
-  `docs/pilot-plan.md` (a draft for the owner), `docs/SUBMIT.md` (the owner's dated checklist),
+  `docs/pilot-plan.md` (a draft for the owner),
   `docs/impact-facts.md` (public figures with sources, for the owner to check and choose from).
 - One process for the whole prototype: `ZIDARA_WEB_DIR` makes the server also serve the built
   web app (unknown `/api/` paths stay JSON 404s). `docs/deploy.md`: build, database roles,
   systemd, Caddy.
-- The Solve pitch video (`tools/video/pitch.mjs` → `pitch/solve/zidara-solve-pitch.mp4`, 100 s,
-  silent with English on screen): problem, the recorded demo, how it works, proof from tests.
 - `tools/load/`: k6 load and capacity tests against a release server pinned to 2 cores.
 - The 26-second demo of the real app (`web/tests/demo`, `scripts/compose-demo.py` →
   `pitch/demo/zidara-demo.mp4`).
 - The lesson film "What is a fraction?" in Arabic, French and English, drawn from code
   (`tools/video`), with a transcript as its text alternative; `content/CREDITS.md`.
-- `docs/solve-evidence.md`: the facts behind each Solve question, for the owner to write from.
 - Quiz versions: each practice quiz has three versions; the kernel rotates them per learner and
   activity and refuses any other (`WrongVariant`), so retakes are not memory tests. Exposed as
   `next_variant` / `nextVariant` to the phone; the web shell shows the version due.

@@ -29,7 +29,7 @@ act as anyone and write to the database.
 - Load tests (`tools/load`) are never run against it.
 
 ## Consequences
-- Judges get a second link that runs the real server: two phones in one class see the teacher's
+- Visitors get a second link that runs the real server: two phones in one class see the teacher's
   decisions, and the database keeps the classes apart.
 - Anyone can still change what other visitors see during the day; the sign-in page says it is a
   demo with invented people, and the night reset limits how long it lasts.

@@ -37,7 +37,7 @@ Before M3 art starts, write `docs/art-bible.md` with these sections, each tied t
 3. Shape language: round and friendly for learners, structured for the studio.
 4. Colour system: every semantic colour explained (achieved, in progress, needs support,
    locked, the agent). Each passes contrast and is never the only signal.
-5. Typography: Arabic-first type, and a size hierarchy following `accessibility.md`.
+5. Typography: type that shapes right-to-left scripts as well as Latin, and a size hierarchy following `accessibility.md`.
 6. Iconography: one style, with a label for every icon.
 7. Asset standards: spritesheet sizes, formats, the naming scheme, the 1.5 MB budget per
    lesson pack's art.

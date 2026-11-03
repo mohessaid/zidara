@@ -4,6 +4,33 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-03 — An open-source engine, not an entry, and not one region's
+
+**What happened.** The owner read the repository's GitHub About line, "Offline-first learning for
+Arabic- and French-speaking classrooms...", and asked who chose that: the engine is general, so
+why are its languages specific? Then: why does an open-source repository carry a competition,
+its deadline and an application checklist? And: never say "Arabic first"; say right to left
+works fully from the start.
+
+**The problem.** I wrote that About line myself when creating the repository on day zero,
+before the positioning was corrected, and never went back to it. The same narrowing ran through
+the README ("Arabic first"), the project skill, the front page's facts and FAQ, and two of the
+five whys (Kuwait, Morocco, the Middle East). The competition sat in the README, the skill, the
+spec, four docs and the record.
+
+**What we did.** The application material (the challenge brief, the evidence pack, the
+submission checklist, the goals list, the pitch film and its script) moved to a private folder
+outside the repository. Every other mention was reworded. The five whys now use global figures
+from `docs/impact-facts.md`: half of websites in English, 3.1 billion people with mobile
+internet in reach who do not use it, 1 in 6 users on 3G or basic phones. The fact "Arabic,
+French, English" became "Any language, right to left from the start". The About line on GitHub
+is public, so a new one waits for the owner.
+
+**The lesson.** Words written on day zero outlive the decisions that replace them. When the
+positioning changes, sweep every public string, the hosting service's settings included.
+
+---
+
 ## 2026-11-03 — Light, plain, and the two places my contrast check could not see
 
 **What happened.** The owner did not like the dark front page's colours: make it light, drop
@@ -198,7 +225,7 @@ template look, and nothing that showed why Zidara is different. Both were true.
   landscape, warm paper) with white ground and outlined cards. The bible already held the
   answer; we had walked away from it.
 - *The concept was invisible.* The project's own game-design note names the signature moment
-  (switching the pedagogy redraws the same game), but a guest could never see it. A judge saw a
+  (switching the pedagogy redraws the same game), but a guest could never see it. A visitor saw a
   lesson app.
 - *The typeface never rendered.* An inline style on `<body>` in `index.html`, there for the
   splash, set `system-ui`; `body` beats the face inherited from `:root`, so every screen in
@@ -458,19 +485,10 @@ held. Coverage and mutation builds leave about 14 GB in `target/`, so clear them
 
 ---
 
-## 2026-10-31 — Four more days, found by reading the page again
+## 2026-10-31 — The demo school, with no server
 
-**What happened.** Before the last push, we read Solve's challenge page again. It now says
-"Solution Deadline: November 6, 2026 12:00pm EST", twice on the page. On 13 October we read 2
-November, and the application PDF gave both dates.
-**The problem.** Treating 2 November as binding was the safe reading, but our docs stated it as
-fact, and the owner's checklist was planned around it.
-**What we did.** Every doc now gives 6 November with the date we read it; the checklist is
-re-dated (submit 4 November, two days spare). Local `main` now holds the work. The machine was
-shared with busy projects, so we cleared 32 GB of our own rebuildable build output first.
-**Lesson.** A date read once is a fact about that day. Re-read the source before planning on it.
-
-**The demo school.** With four more days, the most useful thing to build was a way for judges
+**What happened.** The machine was shared with busy projects, so we cleared 32 GB of our own
+rebuildable build output first. Then the most useful thing to build was a way for anyone
 to try Zidara without a server. The server does three things on top of the kernel: it runs
 commands as the signed-in person, shows each person only what they may read, and lets the
 agent mark answers. All three are pure rules, so the two the browser lacked (visibility and
@@ -534,11 +552,11 @@ network request can fail: a test that passes once has not proven a race is gone.
 
 ---
 
-## 2026-10-18 — Rehearsing the deploy, and the evidence a judge can check
+## 2026-10-18 — Rehearsing the deploy, and evidence anyone can check
 
 **What happened.** We followed `docs/deploy.md` word for word on a fresh PostgreSQL 16 with the
-release build, and wrote the evidence Solve's criteria still lacked: a cost model, a pilot
-draft, cited impact figures and the owner's dated checklist.
+release build, and wrote the evidence the project still lacked: a cost model, a pilot
+draft and cited impact figures.
 **What the rehearsal caught.** Three steps of the guide failed as written.
 - **The wrong `cargo`.** This shell found the distribution's cargo 1.75 before rustup's 1.98,
   and it cannot read the workspace ("`resolver` setting `3` is not valid"). The guide now
@@ -673,7 +691,7 @@ in the kernel they are the same rule on every device.
 
 ## 2026-10-16 — The web shell: a lesson a child can take offline
 
-**What happened.** G4 built the app learners and teachers use, in Arabic first. The Quest path
+**What happened.** G4 built the app learners and teachers use, right to left from the start. The Quest path
 is drawn by PixiJS, with every stone a real button underneath for keyboards and screen
 readers. There is a grid view, an activity player and a teacher studio. Everything runs on the
 kernel in wasm, offline first, as an installable app.
@@ -974,11 +992,10 @@ Android and iOS type-checks passed.
 
 ## 2026-10-14 — Day zero
 
-**What happened.** The repo was created around the design written on 10–11 October. Scope
-for MIT Solve (deadline 2 November 2026, 12:00 pm EST): the prototype the challenge requires,
-plus one governed AI agent. Setting: primary maths, equivalent fractions, ages 9–11, Arabic
-first with French and English, and gamification that is the framework itself (the map is the
+**What happened.** The repo was created around the design written on 10–11 October. Scope:
+a working prototype, plus one governed AI agent. Setting: primary maths, equivalent fractions,
+ages 9–11, right to left from the start, three languages, and gamification that is the framework itself (the map is the
 Progression block, stars are Judgement).
-**Numbers.** 19 days to the deadline. 13 project skills installed.
-**Lesson.** Solve asks for "convincing evidence it functions as claimed". The test gauntlet is
-that evidence, so it is built first, not last.
+**Numbers.** 13 project skills installed.
+**Lesson.** A prototype needs convincing evidence that it functions as claimed. The test
+gauntlet is that evidence, so it is built first, not last.

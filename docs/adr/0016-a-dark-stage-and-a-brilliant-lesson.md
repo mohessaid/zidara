@@ -32,4 +32,4 @@ face, colours, contrast and motion. Then: "pay attention to color contrast", whi
 - Lighthouse on `/` rose from 90 to 98 to 99: two canvases fewer than the heavy hero they replaced.
 - Every colour token carries its measured ratio; `--edge` (3.4:1 on white) is for anything you
   press or type into, `--line` only for separators.
-- The art bible's oasis is retired from the screens; the Solve film will need new captures.
+- The art bible's oasis is retired from the screens; a product film will need new captures.

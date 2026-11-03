@@ -1,13 +1,9 @@
 # Zidara
 
-A learning platform that knows how teaching works: one kernel, many pedagogies, an experience
-for every audience, and AI agents that act only inside rules people approve. The core is
-written in Rust and runs on the server, in the offline web client and (by design) inside native
-apps.
-
-This repository is the working prototype for the [MIT Solve 2027 Global Learning
-Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (deadline
-6 November 2026, 12:00 pm EST, per the live challenge page on 31 October).
+The adaptable learning engine for the AI era: an open-source LMS core that knows how teaching
+works. One tested kernel, any teaching framework, any experience for any audience, in any
+language, and AI agents that act only inside rules people approve. The core is written in Rust
+and runs on the server, in the offline web client and (by design) inside native apps.
 
 - **Try it:** https://zidara.ta9in.com. Pick a course and start: no account, no names. "How
   Zidara works" teaches the idea by playing it; "Equivalent fractions" is a complete maths
@@ -20,6 +16,9 @@ Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (dea
 
 ## What works today
 
+- **One kernel, any framework.** Outcomes, activities, evidence, judgement, progression and
+  roles are the six blocks every pedagogy we compared reduces to; a framework is rules over
+  them. Mastery learning and Cambridge-style teaching ship today, behind one trait.
 - **Lessons that play like a game, judged like a school.** Each outcome is a session in the
   style of Duolingo and Brilliant: one step per screen, a film, a reading, a toy to play with
   (fold a paper strip, a fraction wall), then questions answered by shading or cutting bars,
@@ -38,7 +37,8 @@ Challenge](https://solve.mit.edu/challenges/2027-global-learning-challenge) (dea
   (decaying average, 80%) or Cambridge-style teaching (scheme-of-work calendar, grade
   boundaries). A teacher switches the class's framework and every learner's path redraws from
   the same evidence.
-- **Arabic first**, right to left, with French and English. A lesson film in all three.
+- **Any language, right to left from the start.** Real text shaping and mirrored layouts on
+  every screen; the demo ships three languages, one of them right to left.
 - **Light on low-end phones.** With data saver on, or a phone reporting 2 GB of memory or less, the lesson opens
   without the game engine: 40% less memory and half the main-thread work (ADR 0008).
 - **Offline-first.** After one visit the app opens and the lesson works with no network; work
@@ -87,12 +87,10 @@ Deploying: `docs/deploy.md`. One binary serves the API and the app. A demo build
 | `crates/zidara-acceptance`, `features/` | Executable user stories |
 | `web/` | The offline-first app (Svelte 5, PixiJS) |
 | `content/` | The lesson pack and credits |
-| `docs/` | Design (`proposal.md`), spec and plans, decisions (`adr/`), `JOURNAL.md` (the story, mistakes included), `GOALS.md`, `solve-evidence.md` |
-| `pitch/` | The Solve pitch video and the recorded demo |
+| `docs/` | Design (`proposal.md`), spec and plans, decisions (`adr/`), `JOURNAL.md` (the story, mistakes included) |
+| `pitch/` | The recorded demo |
 | `tools/` | Video and load tooling |
 
 ## Status
 
-Prototype (Solve's definition: a working version, not yet with users). Before submitting:
-`docs/GOALS.md` lists what only the team can supply: a partner school, the application in
-the team's own words, name checks, hosting, and a voice.
+A working prototype, open source, not yet with users. Contributions and pilots welcome.

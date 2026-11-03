@@ -7,6 +7,19 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- The game and the studio now speak the front page's language (ADR 0015, art bible): every
+  picture is a grid of dots (the oasis, Bizra, palms, course badges, the burst after a right
+  answer), white ground under a faint dot grid, ink and blue buttons, thin lines, mono labels,
+  levels as dotted tiles, Readex Pro everywhere (Arabic and Latin cached for offline). Baloo
+  Bhaijaan 2 is gone.
+- `ZIDARA_DB_PORT` sets the local database's port (default 55432) for Docker, the dev server,
+  the browser tests and the load tools, for when another project holds 55432.
+- The front page now pitches Zidara as what it is (ADR 0015): the adaptable learning engine for
+  the AI era, one kernel under any framework and any experience, with governed AI agents. The
+  live console switches both the framework and the experience (children's path, secondary grid,
+  teacher's studio, text message) over one view of the real kernel. A context.dev-style face:
+  hand-written dot-matrix canvases for the hero, the architecture, each card and the wordmark;
+  ruled sections; a new share image. The game appears as one experience among many.
 - A front page at `/` (ADR 0014) that pitches Zidara: a live proof in the hero, where the real
   kernel, in a Web Worker, judges one learner's same answers under Mastery and Cambridge-style;
   five whys with every figure sourced; how it works; real screens under "Everything here is made

@@ -4,6 +4,65 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-03 — I pitched the engine as a game; the front page now says what Zidara is
+
+**What happened.** An hour after the first front page went live, the owner rejected it: "super
+wrong". Its headline, "The learning game that follows your school's rules", sold Zidara as a
+game. Zidara is the adaptable learning engine and LMS for the AI era: one kernel, any teaching
+framework, any experience, AI agents inside approved rules. `docs/proposal.md` and the README's
+first line say so; the game is one experience built to show how far the engine bends.
+
+**The mistake.** I wrote the pitch from the most recent work (the oasis, the path, the
+Duolingo-style session) instead of re-reading the proposal. The demos were the loudest thing in
+my context, so they became the subject. The page's five whys followed the same slope: three of
+them argued about children's taps, not about platforms that lock pedagogy in.
+
+**What we did.** Re-read the proposal and rebuilt the page on its spine (ADR 0015): vision, the
+three layers plus automation, the live engine, AI agents (running today versus designed, said
+apart), "Made with Zidara" with the game as one experience, and "Is Zidara a game? No." as the
+first question. The live console now proves both axes: the framework switch makes the kernel
+judge again; the experience switch draws one `LearnerView` as a children's path, a secondary
+grid, a teacher's studio line and a text message, and a browser test asserts every outcome keeps
+its state across all four. The owner also asked for context.dev's look with its pixel
+animations: their canvases are hand-drawn (no library), so `landing/pixels.ts` is ours, one 2D
+canvas per drawing with dots stamped from sprites, 30 frames a second at most, nothing drawn off
+screen, a still frame under reduced motion. A positioning memory and a rule in `girth-landing`
+make the proposal the first read for any pitch.
+
+**The game too.** Mid-way the owner asked for the game in the same pixel style. The oasis
+survives, drawn in dots: the sun, dunes and water are SVG shapes filled with dot patterns, the
+palms and Bizra are character grids (`play/dots.ts`) drawn as circles, the course badges too,
+and the burst after a right answer is square pixels. Levels became dotted tiles (blue mastered,
+ink next, teal open, grey locked); tokens, buttons and type follow the front page (Readex Pro,
+mono labels, thin lines). No canvas and no frame loop in the game: static SVG, so the path keeps
+its frame budget. The showcase then swapped its drawings for real captures of the restyled app.
+
+**Problems on the way.** A canvas sized during one layout widened its grid column by 136 px on
+the next (the cards overflowed the page); drawings now sit outside layout flow. Full-page
+screenshots came out blank twice: once because elements fade in on scroll, once because
+`content-visibility: auto` skips off-screen sections in a capture (the same trap axe met).
+Another project's database took port 55432 mid-run, so the port is now `ZIDARA_DB_PORT`
+(default 55432) and our tests ran on 55433, leaving theirs alone.
+
+**Holding the speed gate.** The new page first scored 73 (TBT 590 ms, CLS 0.23). In order:
+the hero canvas resized after start and shifted the page (canvases now appear only once drawn at
+their final size: CLS 0); every canvas drew its first frame at once, off screen too (now only on
+screen); each canvas read `getComputedStyle` at mount, a full style pass each (read once, shared);
+the service worker registered on `load`, in the middle of the first screen's work (now on idle,
+1.5 s after load); the page mounted in one task (now the hero first, then one section per idle
+task). Two experiments that changed nothing were undone (the body's dot grid; deferring the
+app's start). A reveal that faded text in let axe catch it half transparent twice (the legend,
+then a course door): reveals now slide without fading.
+
+**The numbers.** Lighthouse mobile: `/` 90 and 100 (TBT 360 ms, CLS 0), `#play` 98 and 100. The
+front page sits on its gate: its first task (module evaluation and the hero's first style pass)
+is the floor left. 44 web unit tests; 13/13 browser tests (the front page on both axes and under
+axe in light, dark and Arabic; the restyled game through every screen); demo 3/3; the path 58.3
+fps median with no long task. Precache 40 entries, 1.0 MB (Readex Pro Arabic and Latin, 53 KB).
+
+**The lesson.** Before writing what a thing is, read what it was designed to be. The newest work
+is not the thesis.
+
 ## 2026-11-03 — A front page that pitches, with the engine live in the hero
 
 **What happened.** The owner asked for zidara.ta9in.com to present the vision first, like a

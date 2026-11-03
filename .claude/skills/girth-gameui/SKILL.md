@@ -19,7 +19,7 @@ world (an image, an animation, an interactive moment), not a headline over cards
 
 ## The house look (ADR 0016)
 The learner screens are a lesson in the manner of Brilliant, owner's call, "don't overdo it":
-white ground, ink, Alexandria headings, one saffron accent, one idea per screen, chunky answer
+white ground, ink, Alexandria headings, one cobalt accent (#2445e0), one idea per screen, chunky answer
 cards with a firm lip, Check pinned at the bottom, a green or orange panel that says why. No
 mascot or scenery. Every colour measured: text 4.5:1, control edges (`--edge`) 3:1.
 

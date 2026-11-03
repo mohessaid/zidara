@@ -26,6 +26,14 @@ internet in reach who do not use it, 1 in 6 users on 3G or basic phones. The fac
 French, English" became "Any language, right to left from the start". The About line on GitHub
 is public, so a new one waits for the owner.
 
+**Then the colour.** The owner did not like the light page's colours either. After three looks
+chosen by my taste, I showed four measured palettes instead (cobalt, forest, brick, black and
+white), each with its ratios, and the owner picked cobalt: #2445e0, 7.0:1 on white both ways,
+so one colour can be text, a button and a lit dot. The GitHub About line became the one the
+owner approved. One regression surfaced on screen: the new dashed disabled style also caught
+answer tiles after Check. A test now fails if an answered tile goes dashed, and it did fail,
+before the fix.
+
 **The lesson.** Words written on day zero outlive the decisions that replace them. When the
 positioning changes, sweep every public string, the hosting service's settings included.
 

@@ -17,9 +17,9 @@ State one line before building: page kind, audience, vibe, aesthetic family. Zid
 a pitch for schools, education systems and builders. **Zidara is the adaptable learning engine / LMS for the
 AI era (kernel, any framework, any experience, governed agents; `docs/proposal.md`). Never pitch
 it as a game: the game is one experience that shows the engine bends** (owner, ADR 0015). Look
-(ADR 0017): light, the demo's tokens, ink Alexandria headings, saffron only as a flat
-highlighter and in the drawings. **No logo, gradients or badges** (owner: AI tells; a test fails on
-gradients). Saffron fails 3:1 on white: controls are ink. Start from the owner's references, not from taste.
+(ADR 0017): light, the demo's tokens, ink Alexandria headings, one cobalt accent (#2445e0,
+7.0 both ways on white; owner's pick). **No logo, gradients or badges** (owner: AI tells).
+Start from the owner's references, not from taste.
 
 ## Hard layout rules <!-- src: design-taste-frontend#4-7-layout-discipline-hard-rules-failing-any-of-these-is-shipping-broken-work -->
 - Hero fits the first screen: headline ≤ 3 lines, subtext ≤ 20 words, CTAs visible. Max 4 text elements.

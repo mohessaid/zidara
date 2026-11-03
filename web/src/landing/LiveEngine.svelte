@@ -179,7 +179,7 @@
   }
   .tabs button:hover { background: var(--l-raise); }
   .tabs button:active { transform: scale(0.97); }
-  .tabs button.on { background: var(--l-ink); color: #fff; }
+  .tabs button.on { background: var(--l-accent); color: var(--l-on-accent); }
   .story { margin: 10px 0 12px; color: var(--l-muted); font-size: 15px; line-height: 1.55; }
   .stage { min-height: 268px; }
   .muted { color: var(--l-muted); font-weight: 400; }
@@ -190,10 +190,10 @@
   .dot { width: 38px; height: 38px; flex: none; display: grid; place-items: center; border-radius: 50%; font-weight: 700; color: #fff; background: var(--c); }
   .text { display: grid; gap: 1px; font-size: 15px; }
   .status { font-size: 14px; }
-  .achieved { --c: var(--l-accent); }
-  .stone.achieved { border-color: var(--l-ink); }
-  .in_progress { --c: #0b7285; }
-  .not_started { --c: #1d7a45; }
+  .achieved { --c: #17773f; }
+  .stone.achieved { border-color: #17773f; }
+  .in_progress { --c: var(--l-accent); }
+  .not_started { --c: var(--l-ink); }
   .needs_support { --c: #b4471f; }
   .locked { --c: var(--l-locked); }
   .stone.locked .dot { color: var(--l-ink); }

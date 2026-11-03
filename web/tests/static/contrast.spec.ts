@@ -69,6 +69,9 @@ test("every learner screen, measured: cards, path, each step, right and wrong, t
   await expectAccessible(page, "lesson: answer picked");
   await button(page, "تحقّق").click();
   await expectAccessible(page, "lesson: not this time");
+  // Answers already given stay solid tiles; only a button not ready yet wears the dashed edge.
+  for (const style of await page.getByRole("radio").evaluateAll((els) => els.map((e) => getComputedStyle(e).borderTopStyle)))
+    expect(style).toBe("solid");
   await button(page, "تابع").click();
   await page.getByRole("spinbutton", { name: "البسط" }).fill("1");
   await page.getByRole("spinbutton", { name: "المقام" }).fill("1");

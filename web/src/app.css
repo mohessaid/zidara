@@ -1,11 +1,11 @@
-/* Tokens for every screen of the app (ADR 0016): a light, quiet lesson in the manner of Brilliant,
-   sharing the front page's faces and its saffron. White ground, ink text, heavy Alexandria
-   headings, one idea per screen, chunky choices, Check and Continue pinned at the bottom. Colour
-   is never the only signal: every state also has a glyph or words. Contrast, measured (WCAG 2.2:
-   text 4.5, large text and control edges 3): on white, ink 19.2, muted 7.4, accent text 6.3,
-   green 5.6, orange text 5.5 on its tint, star 5.0; ink on saffron 10.7; white on green 5.6, on
-   orange 4.6. Anything pressed or typed into has an --edge of 3.4 on white (3.1 on --paper-2);
-   --line is only for separators that carry no meaning. tests/e2e/contrast.spec.ts checks it. */
+/* Tokens for every screen of the app (ADR 0017): a light, quiet lesson in the manner of Brilliant,
+   sharing the front page's faces and its one accent, cobalt. White ground, ink text, heavy
+   Alexandria headings, one idea per screen, chunky choices, Check and Continue pinned at the
+   bottom. Colour is never the only signal: every state also has a glyph or words. Contrast,
+   measured (WCAG 2.2: text 4.5, large text and control edges 3): on white, ink 19.2, muted 7.4,
+   cobalt 7.0, green 5.6, orange text 5.5 on its tint; white on cobalt 7.0, on green 5.6, on
+   orange 4.6; ink on --accent-soft 17.0. Anything pressed or typed into has an --edge of 3.4 on
+   white (3.1 on --paper-2); --line is only for separators. tests/static/contrast.spec.ts. */
 :root {
   --paper: #ffffff;
   --paper-2: #f4f4f5;
@@ -16,20 +16,20 @@
   --ink: #0f0f10;
   --muted: #55555d;
   --display: "Alexandria Variable", "Alexandria", "Readex Pro Variable", system-ui, sans-serif;
-  --accent: #f7b63c;         /* saffron fills; text on it is ink */
-  --accent-soft: #fff4dc;
-  --accent-ink: #8a5300;     /* saffron as text */
-  --on-accent: #0f0f10;
-  --accent-edge: #c98a17;
-  --accent-tint: #fff4dc;
+  --accent: #2445e0;         /* cobalt: 7.0 on white, white on it 7.0 */
+  --accent-soft: #eef1fd;
+  --accent-ink: #2445e0;
+  --on-accent: #ffffff;
+  --accent-edge: #1a34b0;    /* the lip under a cobalt button */
+  --accent-tint: #eef1fd;
   --achieved: #17773f;       /* right, mastered: 5.6 on white, white on it 5.6 */
   --achieved-edge: #0f5a2f;
   --right-tint: #e9f7ef;
   --try: #c4520f;            /* not yet: white on it 4.6 */
   --try-ink: #a8430c;
   --try-tint: #fff1e7;
-  --go: #0f0f10;
-  --go-edge: #000000;
+  --go: #2445e0;
+  --go-edge: #1a34b0;
   --in-progress: #0f0f10;
   --blue-edge: #000000;
   --teal-text: #55555d;
@@ -42,14 +42,14 @@
   --locked-fill: #f4f4f5;
   --locked-edge: #8a8a93;
   --agent: #6d3fc4;          /* reserved: anything an AI did or proposed */
-  --star: #9a6400;
-  --gold: #f7b63c;
-  --gold-edge: #c98a17;
+  --star: #2445e0;
+  --gold: #2445e0;
+  --gold-edge: #1a34b0;
   --flame: #c4520f;
   --mint: #e9f7ef;
   --sky: #f4f4f5;
   --sky-top: #f4f4f5;
-  --dune: #fff4dc;
+  --dune: #eef1fd;
   --dune-deep: #d4d4d8;
   --dot: transparent;
   --focus: #0f0f10;
@@ -76,7 +76,7 @@ button:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 0 v
 button.primary {
   background: var(--go); border-color: var(--go); box-shadow: 0 3px 0 var(--go-edge); color: #fff; font-size: 18px; font-weight: 700;
 }
-button.primary:hover:not(:disabled) { border-color: var(--go); background: #26262a; }
+button.primary:hover:not(:disabled) { border-color: var(--go-edge); background: var(--go-edge); }
 /* A button that cannot be pressed yet still shows where it is: a dashed edge (3.4), muted words
    (7.4), no lip. A grey face on a white ground read as nothing at all (owner, 2026-11-03). */
 button:disabled, button.primary:disabled { cursor: default; background: var(--paper); border: 2px dashed var(--edge); box-shadow: none; color: var(--muted); }

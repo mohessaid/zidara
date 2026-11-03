@@ -100,9 +100,9 @@
   .live { font: 600 12px/1 var(--l-mono); color: var(--l-accent-ink); }
   .body { padding: 18px 20px 8px; min-height: 196px; }
   .q { margin: 0 0 14px; font-size: 16px; color: var(--l-ink); display: flex; gap: 10px; align-items: baseline; }
-  .caret { color: var(--l-ink); font-weight: 700; }
+  .caret { color: var(--l-accent); font-weight: 700; }
   :global([dir="rtl"]) .caret { transform: scaleX(-1); display: inline-block; }
-  .cursor { display: inline-block; width: 8px; height: 1.05em; margin-inline-start: 2px; background: var(--l-ink); vertical-align: text-bottom; animation: blink 900ms steps(1) infinite; }
+  .cursor { display: inline-block; width: 8px; height: 1.05em; margin-inline-start: 2px; background: var(--l-accent); vertical-align: text-bottom; animation: blink 900ms steps(1) infinite; }
   .a { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
   .a li { display: grid; grid-template-columns: 7.5rem 1fr; gap: 12px; font-size: 14.5px; line-height: 1.45; animation: line-in 320ms cubic-bezier(.16,1,.3,1) both; }
   .k { font: 600 12px/1.9 var(--l-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--l-accent-ink); }

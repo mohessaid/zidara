@@ -125,6 +125,10 @@
   .cells { display: flex; width: min(100%, 420px); gap: 6px; }
   .cell { flex: 1; min-width: 0; min-height: 76px; padding: 0; border-radius: 10px; transition: background-color 140ms ease; }
   .cell.on { background: var(--accent); border-color: var(--ink); box-shadow: 0 3px 0 var(--ink); }
-  .cell:disabled, .tile:disabled { opacity: 1; }
+  /* Once checked, the answer stays as it was given: a solid tile, not the dashed edge of a
+     button that is not ready yet (app.css). */
+  .cell:disabled, .tile:disabled { opacity: 1; border-style: solid; }
+  .cell:disabled, .tiles:not(.live) .tile:disabled { color: var(--ink); }
+  .tiles:not(.live) .tile:disabled:not([aria-checked="true"]) { background: var(--paper); box-shadow: 0 3px 0 var(--edge); }
   .count { font: 700 26px/1.2 var(--display); margin: 0; }
 </style>

@@ -13,9 +13,11 @@ skipped them), and every progress track was #f4f4f5 on white (1.1:1), so empty b
 ## Decision
 - **One design system.** The front page uses the demo's light tokens: white and one grey
   surface for alternate sections, ink Alexandria headings, grey reading text.
-- **Saffron is a highlighter, not a control.** On white it is 1.8:1, so no control is
-  saffron. Buttons and tabs are ink. Saffron marks one phrase of the headline (ink on it, 10.7)
-  and lights the drawings.
+- **One accent, cobalt (#2445e0), the owner's pick from four measured palettes.** It is 7.0:1
+  on white and white on it is 7.0:1, so it serves as text, as a button face and as the
+  drawings' lit dots. Saffron failed as a control (1.8:1 on white) and is gone. Cobalt on the
+  ink block is 2.7:1, so it never sits there. States keep their own colours, the same on both
+  pages: mastered green, in progress cobalt, help orange, locked grey.
 - **No logo, gradients or badges.** The name is a word. Frames are one plain edge. States
   are words with a small square of colour. Pills, chips, glows and dotted gradient fills are
   removed. A test fails on any gradient or logo on the front page.

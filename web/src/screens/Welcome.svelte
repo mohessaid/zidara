@@ -86,7 +86,7 @@
   .name { font: 700 20px/1.2 var(--display); }
   .blurb { font-size: 16px; font-weight: 400; line-height: 1.4; color: var(--muted); }
   .meta { font-size: 14px; font-weight: 500; color: var(--muted); }
-  .enter { flex: none; padding: 10px 18px; border-radius: 12px; background: var(--ink); color: #fff; font-weight: 700; font-size: 16px; }
+  .enter { flex: none; padding: 10px 18px; border-radius: 12px; background: var(--accent); color: var(--on-accent); font-weight: 700; font-size: 16px; }
   .busy { font-weight: 600; color: var(--achieved); }
   .alert { border-color: var(--needs-support); color: var(--needs-support); }
   /* Three plain facts on one line, separated by dots: words, not badges. */

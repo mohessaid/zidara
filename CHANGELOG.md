@@ -8,12 +8,15 @@ All notable changes to Zidara are recorded here. The format follows
 ### Added
 
 - The front page is light (ADR 0017), in the demo's own tokens: ink headings, white and grey
-  sections, saffron only as a highlighter. No logo, no gradients, no badges; a test fails on
+  sections, one cobalt accent (#2445e0) on both pages, the owner's pick of four measured
+  palettes; saffron is gone. No logo, no gradients, no badges; a test fails on
   any gradient or logo. Its screenshots and share image show the new look.
 - The contrast walk now measures disabled buttons and every progress bar's track too.
 
 ### Fixed
 
+- After Check, the answers already given stayed solid tiles; for a moment they had taken the
+  dashed edge meant for buttons not ready yet.
 - Zidara reads as what it is: an open-source learning engine for any language. The README,
   the front page and the project skill no longer single out languages or regions ("right to
   left from the start" says what matters), and the five whys use global figures. The

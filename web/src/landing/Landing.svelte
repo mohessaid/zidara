@@ -3,8 +3,7 @@
   // says: an adaptable learning engine, one kernel under any framework under any experience, with
   // AI agents inside approved rules. The demo course is shown as one experience among many. The
   // look (ADR 0017): a light page in the demo's own tokens, heavy Alexandria headings in ink, one
-  // saffron accent used as a highlighter, a console in the hero, dot-matrix drawings that argue
-  // each point. No logo, no gradients, no badges, no numbered labels.
+  // cobalt accent, a console in the hero, dot-matrix drawings that argue each point. No logo, no gradients, no badges, no numbered labels.
   import { onMount } from "svelte";
   import { app } from "../lib/app.svelte.ts";
   import { LANDING } from "../lib/i18n/landing.ts";
@@ -266,10 +265,10 @@
 <style>
   /* The page's design system (ADR 0017): light, in the demo's own tokens, so the pitch and the
      product are one system. White ground, ink headings in heavy Alexandria, grey for reading,
-     saffron only as a highlighter and in the drawings, never as text or as the face of a control.
-     No logo, no gradients, no badges. Contrast, measured: on white ink 19.2, muted 7.4, accent
-     text 6.3; on --l-surface ink 17.4, muted 6.7, accent text 5.8; white on ink 19.2; ink on
-     saffron 10.7. Control edges (--l-line-strong) 3.4 on white, 3.1 on the surface; --l-line is
+     one cobalt accent for the highlighted phrase, the main buttons and the drawings' lit dots.
+     No logo, no gradients, no badges. Contrast, measured: on white ink 19.2, muted 7.4, cobalt
+     7.0; on --l-surface ink 17.4, muted 6.7, cobalt 6.4; white on cobalt 7.0, on ink 19.2.
+     Cobalt on ink is 2.7, so cobalt never sits on the ink block. Control edges (--l-line-strong) 3.4 on white, 3.1 on the surface; --l-line is
      only for separators. tests/static/contrast.spec.ts measures the page. */
   .landing {
     --l-bg: #ffffff;
@@ -280,15 +279,16 @@
     --l-line: #e4e4e7;
     --l-line-strong: #8a8a93;    /* the edge of every control: 3.4 on white */
     --l-tint: #f4f4f5;
-    --l-accent: #f7b63c;          /* saffron: a highlighter and the drawings' lit dots */
-    --l-accent-ink: #8a5300;      /* saffron as words */
-    --l-on-accent: #0f0f10;
+    --l-accent: #2445e0;          /* cobalt: the one accent, the whole page */
+    --l-accent-ink: #2445e0;
+    --l-accent-dark: #1a34b0;
+    --l-on-accent: #ffffff;
     --l-locked: #8a8a93;
     --l-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
     --l-display: "Alexandria Variable", "Alexandria", "Readex Pro Variable", system-ui, sans-serif;
     --px-ring: #e4e4e7;
     --px-dim: #a1a1aa;
-    --px-on: #f7b63c;
+    --px-on: #2445e0;
     --px-ink: #0f0f10;
     font-family: "Readex Pro Variable", "Readex Pro", system-ui, sans-serif;
     font-size: 17px;
@@ -317,10 +317,10 @@
   /* Buttons: ink pills for the one thing to do, outlined pills for the other. */
   .cta {
     display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 24px; border-radius: 999px;
-    background: var(--l-ink); color: #fff; font-weight: 600; text-decoration: none; white-space: nowrap;
+    background: var(--l-accent); color: var(--l-on-accent); font-weight: 600; text-decoration: none; white-space: nowrap;
     transition: transform 160ms ease, background-color 160ms ease;
   }
-  .cta:hover { background: #26262a; transform: translateY(-1px); }
+  .cta:hover { background: var(--l-accent-dark); transform: translateY(-1px); }
   .cta:active { transform: translateY(1px) scale(0.98); }
   .cta.small { min-height: 40px; padding: 0 18px; font-size: 14.5px; }
   .ghost { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 24px; border-radius: 999px; border: 2px solid var(--l-line-strong); background: var(--l-bg); color: var(--l-ink); text-decoration: none; font-weight: 600; white-space: nowrap; }
@@ -346,9 +346,9 @@
   /* Hero: the claim, the console that proves it, then the live engine. */
   .hero { position: relative; padding: 96px 0 80px; }
   .pitch { text-align: center; display: grid; justify-items: center; }
-  h1 { font-size: clamp(42px, 6.2vw, 84px); line-height: 1.05; margin: 0 0 24px; font-weight: 900; letter-spacing: -0.035em; max-width: 15ch; }
-  /* The one highlighted phrase: a flat saffron marker under ink words (ink on saffron 10.7). */
-  h1 em { font-style: normal; background: var(--l-accent); box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 0 0.12em; border-radius: 0.12em; }
+  h1 { font-size: clamp(42px, 6.2vw, 84px); line-height: 1.05; margin: 0 0 24px; font-weight: 900; letter-spacing: -0.035em; max-width: 18ch; }
+  /* The one highlighted phrase, in cobalt (7.0 on white). */
+  h1 em { font-style: normal; color: var(--l-accent); }
   .lead { font-size: 19px; color: var(--l-muted); max-width: 56ch; margin: 0 0 36px; }
   .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 28px; }
   .note { margin: 18px 0 0; font-size: 15px; color: var(--l-muted); }
@@ -362,7 +362,7 @@
   .facts ul { list-style: none; margin: 0 auto; display: grid; grid-template-columns: repeat(6, 1fr); }
   .facts li { display: flex; gap: 10px; align-items: flex-start; padding: 22px 14px; font-size: 15px; font-weight: 500; color: var(--l-ink); border-inline-start: 1px solid var(--l-line); line-height: 1.4; }
   .facts li:last-child { border-inline-end: 1px solid var(--l-line); }
-  .tick { width: 8px; height: 8px; margin-top: 6px; flex: none; background: var(--l-ink); border-radius: 50%; }
+  .tick { width: 8px; height: 8px; margin-top: 6px; flex: none; background: var(--l-accent); border-radius: 50%; }
 
   .split { display: grid; grid-template-columns: 1fr 1.7fr; gap: 56px; }
   .side { align-self: start; position: sticky; top: 96px; }
@@ -412,7 +412,7 @@
   :global([dir="rtl"]) .flow li:not(:last-child)::after { content: "←"; }
   .step { font: 700 13px/1 var(--l-mono); color: var(--l-muted); }
   .flow li.person { font-weight: 800; }
-  .flow li.person > :not(.step) { background: var(--l-accent); }
+  .flow li.person > :not(.step) { color: var(--l-accent); }
   .agents { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 2px solid var(--l-ink); }
   .agents li { padding: 22px 22px 8px 0; border-inline-end: 1px solid var(--l-raise); padding-inline-start: 22px; }
   .agents li:first-child { padding-inline-start: 0; }
@@ -457,7 +457,7 @@
   .end-in p { margin: 0; color: #d4d4d8; }
   .end-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
   .end-cta .cta { background: #fff; color: var(--l-ink); }
-  .end-cta .cta:hover { background: var(--l-accent); }
+  .end-cta .cta:hover { background: var(--l-accent); color: #fff; }
   .end-cta .ghost { background: var(--l-ink); color: #fff; border-color: #a1a1aa; }
   .end-cta .ghost:hover { border-color: #fff; }
 
@@ -469,7 +469,7 @@
   .words { max-width: 1200px; margin: 0 auto; padding: 56px 24px 72px; text-align: center; font: 900 clamp(30px, 6vw, 84px)/1.15 var(--l-display); letter-spacing: -0.035em; }
   .words:lang(ar) { letter-spacing: 0; }
   .w { position: relative; display: inline-block; padding: 0 0.12em; }
-  .w::before, .w::after { content: ""; position: absolute; inset: -0.04em 0; border: 3px solid var(--l-ink); opacity: 0; pointer-events: none; }
+  .w::before, .w::after { content: ""; position: absolute; inset: -0.04em 0; border: 3px solid var(--l-accent); opacity: 0; pointer-events: none; }
   .w::before { border-inline-end: 0; width: 0.22em; inset-inline-end: auto; }
   .w::after { border-inline-start: 0; width: 0.22em; inset-inline-start: auto; }
   .sep { color: var(--l-muted); }

@@ -165,7 +165,7 @@
   /* The level to play next: a card around the row, and a Start button inside it. */
   .next .node { padding: 12px; margin-inline: -12px; width: calc(100% + 24px); background: var(--surface); border: 2px solid var(--ink); box-shadow: 0 4px 0 var(--ink); }
   .next::before { inset-inline-start: 31px; }
-  .start { flex: none; padding: 10px 18px; border-radius: 12px; background: var(--ink); color: #fff; font-weight: 700; font-size: 16px; }
+  .start { flex: none; padding: 10px 18px; border-radius: 12px; background: var(--accent); color: var(--on-accent); font-weight: 700; font-size: 16px; }
   .next:not(:last-child)::before { top: 80px; }
   .goal .disc { font-size: 28px; filter: grayscale(1); opacity: 0.85; box-shadow: none; }
   .goal.won .disc { filter: none; opacity: 1; --disc: var(--accent-soft); --disc-edge: var(--accent); }

@@ -7,6 +7,14 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- A front page at `/` (ADR 0014) that pitches Zidara: a live proof in the hero, where the real
+  kernel, in a Web Worker, judges one learner's same answers under Mastery and Cambridge-style;
+  five whys with every figure sourced; how it works; real screens under "Everything here is made
+  with Zidara"; the gauntlet's numbers; questions. Arabic, French and English, light and dark,
+  with share metadata and a share image taken from the real hero.
+- `girth-landing`, a project skill for the front page, distilled from design-taste-frontend and
+  seo-aeo-best-practices.
+
 - The pilot server is live at https://zidara.ta9in.com (DNS record added, certificate issued).
 - The pedagogy lens (ADR 0013): under the path, "School rules: Mastery | Cambridge-style"
   replays the learner's own evidence in a throwaway kernel under the other framework and
@@ -162,6 +170,8 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Changed
 
+- The game moved to `#play`; `/` is the front page, and an installed app opens the game.
+- The interface opens in English unless the visitor chose a language before (ADR 0014).
 - New look (ADR 0012): white ground, chunky buttons with a solid edge, one rounded typeface for
   Arabic and Latin (Baloo Bhaijaan 2), brighter colours kept to WCAG AA, a feedback sheet that
   rises in green or blue, and finish cards for the session's points, all points and the streak.

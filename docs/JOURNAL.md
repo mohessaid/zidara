@@ -4,6 +4,53 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-03 — A front page that pitches, with the engine live in the hero
+
+**What happened.** The owner asked for zidara.ta9in.com to present the vision first, like a
+pitch with its five whys, professional, in the manner of context.dev, then lead into the game;
+to say that all of it is made with Zidara; and, mid-way, that English be the default.
+
+**What we did.** Studied context.dev from full-page captures (one accent, dot fields, framed
+product visuals, a ladder of sections, a giant wordmark) and kept its structure, not its look.
+Distilled design-taste-frontend and the Open Graph rules into `girth-landing`. The hero's proof
+is real: the kernel judges one learner's same first quiz under both frameworks (test first:
+`tests/unit/showcase.test.ts`). Every figure in the five whys comes from a verified row of
+`impact-facts.md`, linked. "Made with Zidara" shows real captures of the English app. Routes:
+`/` the page, `#play` the game, `#classes` the demo classes (ADR 0014).
+
+**Mistakes and catches.**
+- The app's global `main { max-width: 960px }` squeezed the first render; seen in the capture.
+- Two French sentences carried extra digits ("CM1", "de 10 ans sur 10"); the new copy test, which
+  checks every language keeps the same figures, caught both.
+- axe caught the sideways-scrolling row of screens on phones: not reachable by keyboard. It is
+  now a focusable, labelled region.
+- First Lighthouse run on the new page: performance 84 (TBT 560 ms). Long tasks on a phone
+  slowed four times showed why: the page's mount (186 ms) and the showcase kernel (234 ms) on
+  the main thread. The kernel moved into a Web Worker, and sections below the fold skip
+  rendering until seen (`content-visibility: auto`). Then axe in dark mode reported contrast
+  failures that were not there: it cannot measure sections the browser has not rendered. The
+  test renders them all before checking; real ratios on the dark theme are 6.9 to 15.3.
+- Docker kept a stale port allocation for 55432 after an earlier run; recreating our own db
+  container (only ours) restored it.
+- A review before commit caught three more. The proof section quoted "98 for performance",
+  measured when `/` was the game; the page itself scores less, so the claim now says "90 or
+  more on every screen", and the Lighthouse gate audits both `/` and `#play`. The citation links
+  pointed into a closed disclosure, which some browsers do not open on a link; the sources are a
+  plain list now. And the offline cache had taken in the front page's share image and face,
+  which no learner needs offline; they are left out, and the kernel is no longer prefetched on
+  the front page, which runs its own copy in a worker.
+
+**The numbers.** Lighthouse mobile on `/`: performance 96, 96, 91, then 95 after the review
+fixes (TBT 170–340 ms), accessibility 100; on `#play`, 97 and 100. Long tasks on load: 93 ms, once. 43 web unit tests; 13/13 browser tests on the real server
+(the front page in light, dark and Arabic under axe, the live switch, the way into the game);
+demo build 3/3; the path still 60 fps, heap 4.3 MB. In the full gauntlet: `/` 95 (TBT 230 ms)
+and `#play` 96, both accessibility 100; 230/230 branches; 308 core and 115 server mutants,
+none missed.
+
+**The lesson.** A pitch page is judged like the product: the proof in it must be real, sourced
+and fast. Measuring long tasks named the cost exactly, and the kernel's purity made the fix
+(a worker) a small one.
+
 ## 2026-11-02 — "You literally copied Notion": the oasis, and a lens on the concept
 
 **What happened.** The owner opened the live guest flow and said it was far from winning: a

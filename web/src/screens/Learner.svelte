@@ -110,13 +110,13 @@
   .title { flex: 1; font-size: 20px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pill { padding: 0.25rem 0.5rem; display: flex; align-items: center; gap: 0.25rem; }
   .hud { display: flex; gap: 0.5rem; }
-  .chip { display: flex; align-items: center; gap: 0.2rem; font-weight: 800; font-size: 20px; padding: 0 0.25rem; }
+  .chip { display: flex; align-items: center; gap: 0.2rem; font: 600 18px/1 var(--mono); padding: 0 0.25rem; }
   .flame { color: #c25e00; }
   .gem { color: var(--in-progress); }
   .menu { position: sticky; top: 66px; z-index: 4; max-width: 560px; margin: 0.5rem auto; display: grid; gap: 0.75rem; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); }
   .menu h2 { margin: 0; font-size: 20px; }
   .courses { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
   .course-row { width: 100%; display: flex; align-items: center; gap: 0.75rem; text-align: start; }
-  .course-row[aria-current="true"] { border-color: #84d8ff; background: var(--sky); border-bottom-color: #4fb8ef; }
+  .course-row[aria-current="true"] { border-color: var(--accent); background: var(--accent-tint); border-bottom-color: var(--accent-edge); }
   .status { display: flex; justify-content: center; margin-bottom: 0.75rem; }
 </style>

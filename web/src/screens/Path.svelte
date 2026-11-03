@@ -1,8 +1,8 @@
 <script lang="ts">
-  // The learner's path across the oasis (ADR 0013). Every colour and lock is the kernel's view
-  // of the evidence: gold when the framework says mastered (and a palm grows beside it), water
-  // blue for the level to play next, sand and locked until its rule opens it. The levels are
-  // eight-pointed stars, the khatam of the region's tiles. Plain buttons, so it is light on any
+  // The learner's path across the oasis (ADR 0013), in dots (ADR 0015). Every colour and lock is
+  // the kernel's view of the evidence: blue when the framework says mastered (and a palm of dots
+  // grows beside it), ink for the level to play next, teal while open, grey and locked until its
+  // rule opens it. The levels are dotted tiles, like the front page's pictures. Plain buttons, so it is light on any
   // phone and readable by any screen reader.
   import { app } from "../lib/app.svelte.ts";
   import { direction, formatDate, t, type Key } from "../lib/i18n/i18n.ts";
@@ -129,7 +129,7 @@
           <span class="stars" aria-hidden="true">{#each Array.from({ length: earned.of }, (_, k) => k) as k (k)}<span class:lit={k < earned.n}>★</span>{/each}</span>
         {/if}
         {#if state === "achieved"}
-          <svg class="palm" width="70" height="96" viewBox="-40 -96 90 100" aria-hidden="true"><Palm /></svg>
+          <svg class="palm" width="70" height="96" viewBox="-46 -96 92 100" aria-hidden="true"><Palm /></svg>
         {/if}
         {#if o.outcome === next || (won && i === view.outcomes.length - 1)}
           <div class="buddy" class:right={shift(i) < 0} aria-hidden="true"><Mascot size={84} mood={won ? "cheer" : "idle"} still={!won} /></div>
@@ -149,23 +149,23 @@
 
 <style>
   .unit { max-width: 560px; margin: 0 auto; }
-  .oasis { position: relative; border-radius: 24px; overflow: hidden; border: 3px solid var(--ink); border-bottom-width: 6px; }
+  .oasis { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); border-bottom-width: 4px; background: var(--surface); }
   .plate {
     position: absolute; inset-inline-start: 0.75rem; top: 0.75rem; padding: 0.4rem 0.9rem 0.5rem; border-radius: 16px;
-    background: rgba(255, 255, 255, 0.94); border: 2px solid var(--ink);
+    background: var(--surface); border: 1px solid var(--line);
   }
-  .plate h2 { margin: 0; font-size: 22px; line-height: 1.15; }
-  .kicker { margin: 0; font-weight: 800; font-size: 15px; color: var(--teal-text); }
-  .progress { margin: 0.1rem 0 0; font-weight: 700; font-size: 15px; }
+  .plate h2 { margin: 0.1rem 0 0; font-size: 21px; line-height: 1.15; }
+  .kicker { margin: 0; font: 500 12.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); }
+  .progress { margin: 0.1rem 0 0; font-weight: 500; font-size: 15px; color: var(--muted); }
 
-  .lens { margin: 0.9rem 0 0; padding: 0.6rem 0.75rem 0.7rem; border-radius: 20px; background: var(--surface); border: 2px solid var(--line); border-bottom-width: 5px; }
-  .lens.on { border-color: var(--zellige); background: #eef4ff; }
-  .lens-title { margin: 0 0 0.35rem; font-weight: 800; font-size: 16px; }
+  .lens { margin: 0.9rem 0 0; padding: 0.6rem 0.75rem 0.7rem; border-radius: 16px; background: var(--surface); border: 1px solid var(--line); border-bottom-width: 4px; }
+  .lens.on { border-color: var(--accent); background: var(--accent-tint); }
+  .lens-title { margin: 0 0 0.4rem; font: 500 12.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
   .switch { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
   .opt { padding: 0.3rem 0.5rem; font-size: 17px; line-height: 1.2; display: grid; justify-items: center; }
   .opt[aria-pressed="true"] { background: var(--zellige); border-color: var(--zellige); border-bottom-color: var(--zellige-edge); color: #fff; }
-  .yours { font-size: 13px; font-weight: 700; opacity: 0.9; }
-  .lens-note { margin: 0.45rem 0 0; font-size: 15px; line-height: 1.4; color: var(--muted); font-weight: 600; }
+  .yours { font: 500 12px/1.2 var(--mono); opacity: 0.9; }
+  .lens-note { margin: 0.45rem 0 0; font-size: 15px; line-height: 1.4; color: var(--muted); font-weight: 500; }
   .lens.on .lens-note { color: var(--zellige-edge); }
 
   .map { position: relative; overflow-x: clip; }
@@ -174,57 +174,59 @@
   .trail path { fill: none; stroke: var(--dune-deep); stroke-width: 7; stroke-linecap: round; stroke-dasharray: 0.5 16; opacity: 0.8; }
   .level { position: relative; display: grid; justify-items: center; align-content: start; gap: 0.1rem; transform: translateX(var(--shift)); }
 
-  /* The level: an eight-pointed star with a darker copy below it that it sinks into. */
+  /* The level: a dotted tile with a darker copy below it that it sinks into. */
   .node, .trophy { position: relative; width: 92px; height: 98px; padding: 0; border: none; background: none; min-height: 0; display: block; }
   .node:active:not(:disabled) { transform: none; }
   .edge, .face {
-    position: absolute; inset-inline: 0; width: 92px; height: 92px;
-    clip-path: polygon(50% 0%, 65.3% 13%, 85.4% 14.6%, 87% 34.7%, 100% 50%, 87% 65.3%, 85.4% 85.4%, 65.3% 87%, 50% 100%, 34.7% 87%, 14.6% 85.4%, 13% 65.3%, 0% 50%, 13% 34.7%, 14.6% 14.6%, 34.7% 13%);
+    position: absolute; inset-inline: 4px; width: 84px; height: 84px; border-radius: 22px;
   }
   .edge { top: 6px; }
-  .face { top: 0; display: grid; place-items: center; font-size: 32px; font-weight: 800; color: #fff; transition: transform 80ms ease, background-color 300ms ease; }
+  .face {
+    top: 0; display: grid; place-items: center; font: 600 30px/1 var(--mono); color: #fff; transition: transform 80ms ease, background-color 300ms ease;
+    background-image: radial-gradient(circle, rgb(255 255 255 / 0.2) 1.3px, transparent 1.7px); background-size: 9px 9px;
+  }
   .node:active:not([aria-disabled="true"]) .face { transform: translateY(4px); }
-  .not_started .face, .in_progress .face { background: var(--in-progress); }
+  .not_started .face, .in_progress .face { background-color: var(--in-progress); }
   .not_started .edge, .in_progress .edge { background: var(--blue-edge); }
-  .next .face { background: var(--go); }
+  .next .face { background-color: var(--go); }
   .next .edge { background: var(--go-edge); }
   /* The level to play next wears a fixed halo: a glow that never stops would cost every frame. */
   .next::before {
-    content: ""; position: absolute; inset: -12px -12px -6px; border-radius: 50%; background: radial-gradient(closest-side, #c9f0b0 62%, transparent 100%);
+    content: ""; position: absolute; inset: -14px -10px -8px; border-radius: 30px; border: 2px dotted var(--accent); background: var(--accent-tint);
   }
-  .achieved .face { background: var(--gold); color: var(--ink); }
-  .achieved .edge { background: var(--gold-edge); }
-  .needs_support .face { background: var(--terra); }
+  .achieved .face { background-color: var(--accent); color: #fff; }
+  .achieved .edge { background: var(--accent-edge); }
+  .needs_support .face { background-color: var(--terra); }
   .needs_support .edge { background: var(--terra-edge); }
-  .locked .face { background: var(--locked-fill); font-size: 28px; }
+  .locked .face { background-color: var(--locked-fill); font-size: 26px; background-image: radial-gradient(circle, var(--locked-edge) 1.3px, transparent 1.7px); }
   .locked .edge { background: var(--locked-edge); }
   .locked { cursor: default; }
-  .trophy .face { background: var(--locked-fill); font-size: 40px; filter: grayscale(1); }
+  .trophy .face { background-color: var(--locked-fill); font-size: 38px; filter: grayscale(1); }
   .trophy .edge { background: var(--locked-edge); }
-  .trophy.won .face { background: var(--gold); filter: none; }
+  .trophy.won .face { background-color: var(--gold); filter: none; }
   .trophy.won .edge { background: var(--gold-edge); }
 
   .start {
-    position: absolute; top: -2.5rem; padding: 0.05rem 0.9rem; border: 2px solid var(--ink); border-bottom-width: 4px; border-radius: 12px; background: #fff;
-    color: var(--go-edge); font-weight: 800; z-index: 1;
+    position: absolute; top: -2.6rem; padding: 0.1rem 0.8rem; border: 1px solid var(--ink); border-bottom-width: 3px; border-radius: 10px; background: #fff;
+    color: var(--ink); font: 600 14px/1.5 var(--mono); text-transform: uppercase; letter-spacing: 0.05em; z-index: 1;
   }
   .start::after {
     content: ""; position: absolute; left: 50%; bottom: -9px; width: 12px; height: 12px; margin-left: -6px; background: #fff;
-    border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: rotate(45deg);
+    border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); transform: rotate(45deg);
   }
-  .label { font-weight: 800; font-size: 16px; max-width: 11rem; text-align: center; line-height: 1.2; padding: 0.05rem 0.5rem; border-radius: 10px; background: var(--paper); }
+  .label { font-weight: 600; font-size: 16px; max-width: 11rem; text-align: center; line-height: 1.2; padding: 0.05rem 0.5rem; border-radius: 10px; background: var(--paper); }
   .stars { font-size: 18px; color: var(--locked-edge); letter-spacing: 0.1rem; line-height: 1; }
   .stars .lit { color: var(--gold-edge); }
   .palm { position: absolute; inset-inline-end: calc(100% - 0.5rem); top: -0.5rem; pointer-events: none; }
   /* The guide stands on whichever side of the level has room. */
   .buddy { position: absolute; right: calc(50% + 3.2rem); top: 0.75rem; }
   .buddy.right { right: auto; left: calc(50% + 3.2rem); }
-  .tip { text-align: center; font-weight: 700; color: var(--muted); min-height: 1.5em; }
+  .tip { text-align: center; font-weight: 500; color: var(--muted); min-height: 1.5em; }
 
   @media (prefers-reduced-motion: no-preference) {
-    .start { animation: float 1.6s ease-in-out infinite; }
+    .start { animation: float 1.6s steps(4) infinite; }
     /* The palm grows as a whole box (composited), not shape by shape inside the SVG. */
-    .palm { transform-origin: 50% 100%; animation: sprout 400ms cubic-bezier(.2,1.5,.4,1) both; }
+    .palm { transform-origin: 50% 100%; animation: sprout 400ms steps(5) both; }
   }
   @keyframes sprout { from { transform: scale(0.1, 0); } }
   @keyframes float { 50% { transform: translateY(-5px); } }

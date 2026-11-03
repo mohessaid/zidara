@@ -19,6 +19,6 @@
 </header>
 
 <style>
-  header { padding: 0.5rem 1rem; border-bottom: 1px solid #e6dcc8; background: var(--surface); }
+  header { padding: 0.5rem 1rem; border-bottom: 1px solid var(--line); background: var(--surface); }
   .spacer { flex: 1; }
 </style>

@@ -70,19 +70,19 @@
   .finish { position: relative; flex: 1; display: grid; align-content: center; justify-items: center; gap: 0.5rem; padding: 1rem; text-align: center; overflow: hidden; }
   .emblem { position: relative; display: flex; align-items: flex-end; animation: land 420ms cubic-bezier(.2,1.6,.4,1) both; }
   .palm { margin-inline-end: -1.5rem; }
-  .grew { margin: 0; font-weight: 800; color: var(--achieved); font-size: 19px; }
+  .grew { margin: 0; font-weight: 600; color: var(--achieved); font-size: 19px; }
   @media (prefers-reduced-motion: no-preference) { .stars .lit { display: inline-block; animation: star 380ms cubic-bezier(.2,1.8,.4,1) var(--d) both; } }
   @keyframes star { from { transform: scale(2.4) rotate(-30deg); opacity: 0; } }
-  h2 { font-size: 34px; margin: 0; color: #c25e00; }
+  h2 { font-size: 34px; margin: 0; color: var(--accent); font-weight: 600; letter-spacing: -0.02em; }
   .state-achieved h2 { color: var(--star); }
   .state-in_progress h2 { color: var(--in-progress); }
   .outcome { font-size: 20px; margin: 0; font-weight: 700; }
   .stars { font-size: 44px; margin: 0; letter-spacing: 0.2rem; color: var(--line); }
   .stars .lit { color: var(--gold); -webkit-text-stroke: 2px var(--gold-edge); }
   .tally { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin: 1rem 0; }
-  .tally div { border-radius: var(--radius); border: 2px solid; overflow: hidden; min-width: 6.5rem; background: #fff; }
-  dt { font-size: 15px; font-weight: 800; color: #fff; padding: 0.15rem 0.5rem; text-transform: uppercase; letter-spacing: 0.03em; }
-  dd { margin: 0; font-size: 26px; font-weight: 800; padding: 0.35rem 0.75rem; }
+  .tally div { border-radius: var(--radius); border: 1px solid; overflow: hidden; min-width: 6.5rem; background: #fff; }
+  dt { font: 600 12.5px/1.6 var(--mono); color: #fff; padding: 0.15rem 0.5rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  dd { margin: 0; font: 600 26px/1.3 var(--mono); padding: 0.35rem 0.75rem; }
   .gold { border-color: #e0a800 !important; } .gold dt { background: #e0a800; color: #3d2a00; } .gold dd { color: #8a6100; }
   .blue { border-color: var(--in-progress) !important; } .blue dt { background: var(--in-progress); } .blue dd { color: var(--teal-text); }
   .flame { border-color: #ff9600 !important; } .flame dt { background: #ff9600; color: #3d2400; } .flame dd { color: #b35400; }

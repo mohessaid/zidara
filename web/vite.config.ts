@@ -10,12 +10,13 @@ export default defineConfig({
     svelte(),
     VitePWA({
       registerType: "autoUpdate",
-      injectRegister: "script-defer",
+      // Registered by main.ts once the page is idle, not on load (ADR 0015).
+      injectRegister: false,
       includeAssets: ["icon.svg"],
       manifest: {
         name: "Zidara",
         short_name: "Zidara",
-        description: "A learning game that follows your school's rules · طريق تعلّم يعرف كيف يكون التعليم",
+        description: "The adaptable learning engine for the AI era · محرّك التعلّم القابل للتكيّف لعصر الذكاء الاصطناعي",
         lang: "en",
         dir: "ltr",
         // An installed app opens the game; the front page is for visitors (ADR 0014).
@@ -33,8 +34,9 @@ export default defineConfig({
         // The shell, the kernel's wasm and the fonts: everything needed to learn offline.
         // API data is not cached here; the IndexedDB log and outbox hold it.
         globPatterns: ["**/*.{js,css,html,wasm,woff2,svg,png}"],
-        // The front page's share image and face are for visitors, not for learning offline.
-        globIgnores: ["**/og.png", "**/readex-pro-*.woff2"],
+        // The share image is for visitors, not for learning offline.
+        // The face works offline in Arabic and Latin (53 KB); the other subsets load only if needed.
+        globIgnores: ["**/og.png", "**/readex-pro-vietnamese-*.woff2", "**/readex-pro-latin-ext-*.woff2"],
         maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
         navigateFallback: "index.html",
         navigateFallbackDenylist: [/^\/api\//],

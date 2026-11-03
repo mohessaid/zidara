@@ -4,6 +4,13 @@ Pillars: **clarity** (a child knows what to do next without reading), **warmth**
 is a friendly place to try and fail), **honesty** (the game shows what the learner can do,
 never more).
 
+> **Revised 3 November 2026 (ADR 0015): the oasis in dots.** The same world drawn the way the
+> front page draws everything: every picture a grid of dots (sun, dunes, water, palms, Bizra,
+> course badges, the burst after a right answer), white ground under a faint dot grid, ink text,
+> one blue accent (#2450d3), thin lines, mono labels, Readex Pro. Levels are dotted tiles: blue
+> when mastered, ink for the one to play next, teal while open, grey when locked. Pixel motion
+> moves in whole steps. Honesty, feedback and sound rules are unchanged.
+>
 > **Revised 2 November 2026 (ADR 0013): the oasis.** Back to this bible's own world: sand
 > ground, a morning sky, dunes, water and date palms, horseshoe-arch doors and eight-pointed star
 > levels; a palm grows for each outcome achieved. Tokens and contrast ratios: `web/src/app.css`.

@@ -220,18 +220,18 @@
   .close:active, .mute:active { transform: none; }
   .progress { flex: 1; height: 20px; background: var(--locked-fill); border-radius: 999px; overflow: hidden; }
   .progress span {
-    display: block; height: 100%; background: linear-gradient(90deg, var(--gold), #3fb950); border-radius: 999px; transition: width 400ms cubic-bezier(.3,1.4,.5,1);
-    background-image: linear-gradient(transparent 22%, rgba(255,255,255,0.35) 22%, rgba(255,255,255,0.35) 42%, transparent 42%);
+    display: block; height: 100%; background-color: var(--accent); border-radius: 999px; transition: width 400ms steps(6);
+    background-image: radial-gradient(circle, rgb(255 255 255 / 0.45) 1.4px, transparent 1.8px); background-size: 8px 8px; background-position: center;
   }
-  .combo { font-weight: 800; font-size: 20px; color: #c25e00; animation: pop 300ms ease both; }
+  .combo { font: 600 18px/1.2 var(--mono); color: #c25e00; animation: pop 300ms steps(3) both; }
   .step { flex: 1; width: 100%; max-width: 760px; margin: 0 auto; padding: 0.5rem 1rem 1.5rem; animation: enter 260ms ease both; }
-  .kicker { margin: 0; color: var(--teal-text); font-size: 16px; font-weight: 800; }
+  .kicker { margin: 0; color: var(--accent); font: 500 13px/1.3 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
   h2 { font-size: 28px; margin: 0.25rem 0 1rem; line-height: 1.25; }
   .reading { font-size: 21px; display: block; }
   .speaker { display: flex; align-items: flex-start; gap: 0.75rem; }
   .speaker :global(.mascot) { flex: none; }
   .bubble {
-    position: relative; margin: 0.5rem 0 0; padding: 0.9rem 1.1rem; border: 2px solid var(--line); border-radius: var(--radius);
+    position: relative; margin: 0.5rem 0 0; padding: 0.9rem 1.1rem; border: 1px solid var(--line); border-radius: var(--radius);
     background: var(--surface); line-height: 1.55;
   }
   .bubble::before {
@@ -240,7 +240,7 @@
   }
   :global([dir="rtl"]) .bubble::before { transform: rotate(-45deg); }
   video { width: 100%; border-radius: var(--radius); background: #000; }
-  textarea { width: 100%; font-size: 20px; border: 2px solid var(--line); border-bottom-width: 4px; border-radius: var(--radius); padding: 0.75rem; background: #f7f7f7; }
+  textarea { width: 100%; font-size: 20px; border: 1px solid var(--line); border-bottom-width: 3px; border-radius: var(--radius); padding: 0.75rem; background: var(--surface); }
   .agent { color: var(--agent); font-weight: 700; }
   .sheet { position: sticky; bottom: 0; padding: 1rem 1rem 1.25rem; border-top: 2px solid var(--line); background: var(--surface); display: grid; gap: 0.75rem; }
   .sheet > * { width: 100%; max-width: 760px; margin: 0 auto; }
@@ -248,17 +248,17 @@
   .sheet.again { background: var(--sky); border-color: transparent; animation: rise 220ms ease both; }
   .feedback { display: grid; grid-template-columns: auto 1fr; column-gap: 0.75rem; align-items: center; }
   .feedback > p { grid-column: 2; }
-  .badge { position: relative; grid-row: span 3; width: 76px; height: 76px; border-radius: 50%; background: #fff; display: grid; place-items: center; border: 3px solid currentColor; }
+  .badge { position: relative; grid-row: span 3; width: 76px; height: 76px; border-radius: 22px; background: #fff; display: grid; place-items: center; border: 2px dotted currentColor; }
   .plus { position: absolute; top: -1.9rem; left: 50%; translate: -50% 0; padding: 0 0.5rem; border-radius: 999px; background: var(--gold); color: var(--ink); font-weight: 800; font-size: 16px; white-space: nowrap; }
   @media (prefers-reduced-motion: no-preference) { .plus { animation: plus 700ms cubic-bezier(.2,1.4,.4,1) both; } }
   @keyframes plus { from { transform: translateY(16px) scale(0.4); opacity: 0; } }
   .right .badge { color: var(--achieved); }
   .again .badge { color: var(--blue-edge); }
   .feedback p { margin: 0.1rem 0; font-size: 19px; }
-  .headline { font-weight: 800; font-size: 26px !important; }
+  .headline { font-weight: 600; font-size: 26px !important; }
   .right .headline { color: #1a7431; }
   .again .headline { color: var(--blue-edge); }
-  .solution { font-weight: 800; }
+  .solution { font-weight: 600; }
   :global(button.big) { min-height: 56px; font-size: 20px; }
   @keyframes enter { from { opacity: 0; transform: translateY(10px); } }
   @keyframes rise { from { transform: translateY(100%); } }

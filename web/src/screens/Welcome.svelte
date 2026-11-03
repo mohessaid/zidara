@@ -1,7 +1,7 @@
 <script lang="ts">
-  // The front door: the oasis, Bizra, and two doorways, one per course. A tap on a doorway
-  // starts a guest learner in that course (ADR 0012); the demo classes for teachers sit behind
-  // a small link (#classes). The look is the oasis of the art bible (ADR 0013).
+  // The game's front door (#play): the oasis in dots, Bizra, and two doorways, one per course.
+  // A tap on a doorway starts a guest learner in that course (ADR 0012); the demo classes for
+  // teachers sit behind a small link (#classes). The look is the front page's (ADR 0015).
   import { app } from "../lib/app.svelte.ts";
   import { t, type Key } from "../lib/i18n/i18n.ts";
   import LanguagePicker from "../components/LanguagePicker.svelte";
@@ -34,7 +34,7 @@
 <div class="hero">
   <Scene height={300} />
   <div class="top">
-    <span class="logo" lang="en">zidara</span>
+    <a class="logo" href="#top" lang="en">zidara</a>
     <LanguagePicker />
   </div>
   <div class="guide">
@@ -77,50 +77,53 @@
 <style>
   .hero { position: relative; overflow: hidden; }
   .top { position: absolute; inset: 0 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1rem; max-width: 760px; margin: 0 auto; }
-  .logo { font-size: 34px; font-weight: 800; color: #fff; letter-spacing: -0.01em; text-shadow: 0 2px 0 var(--blue-edge), 0 0 1px var(--blue-edge); }
+  .logo { font-size: 26px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; text-decoration: none; padding: 0.1rem 0.7rem; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); }
   .guide { position: absolute; bottom: 14px; inset-inline-start: 50%; translate: -50%; display: flex; align-items: flex-end; gap: 0.25rem; width: max-content; }
   :global([dir="rtl"]) .guide { translate: 50%; }
   .bubble {
-    position: relative; margin: 0 0 4.5rem; max-width: 12.5rem; padding: 0.6rem 0.9rem; border-radius: 18px; background: #fff;
-    border: 2px solid var(--ink); border-bottom-width: 4px; font-weight: 700; font-size: 17px; line-height: 1.35;
+    position: relative; margin: 0 0 4.5rem; max-width: 12.5rem; padding: 0.6rem 0.9rem; border-radius: 14px; background: #fff;
+    border: 1px solid var(--ink); border-bottom-width: 3px; font-weight: 500; font-size: 17px; line-height: 1.35;
   }
   .bubble::after {
     content: ""; position: absolute; inset-inline-end: -11px; bottom: 14px; width: 16px; height: 16px; background: #fff;
-    border-inline-end: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: rotate(-45deg);
+    border-inline-end: 1px solid var(--ink); border-bottom: 1px solid var(--ink); transform: rotate(-45deg);
   }
   :global([dir="rtl"]) .bubble::after { transform: rotate(45deg); }
   .welcome { max-width: 760px; padding-top: 0.5rem; }
-  h1 { font-size: 44px; text-align: center; margin: 0.25rem 0 0; line-height: 1.1; }
+  h1 { font-size: 44px; text-align: center; margin: 0.25rem 0 0; line-height: 1.1; font-weight: 600; letter-spacing: -0.03em; }
   .lead { font-size: 19px; color: var(--muted); max-width: 34rem; margin: 0.5rem auto 0; text-align: center; }
-  h2 { text-align: center; margin-top: 1.5rem; font-size: 22px; }
+  h2 { text-align: center; margin-top: 1.5rem; font: 500 13px/1.2 var(--mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
   .doors { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-  /* A doorway: a horseshoe arch, as in the old towns' gates, with the course in its window. */
+  /* A doorway: a horseshoe arch, as in the old towns' gates, with the course in a dotted window. */
   .door {
     width: 100%; height: 100%; display: grid; justify-items: center; align-content: start; gap: 0.2rem; padding: 0.9rem 0.6rem 1rem;
-    border-radius: 999px 999px 20px 20px / 120px 120px 20px 20px; color: #fff; text-align: center; border-width: 0 0 7px;
+    border-radius: 999px 999px 18px 18px / 120px 120px 18px 18px; color: var(--ink); text-align: center; background: var(--surface);
+    border: 1px solid var(--line); border-bottom-width: 5px;
   }
-  .door.teal { background: var(--in-progress); border-color: var(--blue-edge); }
-  .door.terra { background: var(--terra); border-color: var(--terra-edge); }
-  .door:active:not(:disabled) { border-bottom-width: 3px; transform: translateY(4px); }
+  .door:hover:not(:disabled) { border-color: var(--accent); }
+  .door.teal { --tone: var(--in-progress); }
+  .door.terra { --tone: var(--terra); }
+  .door:active:not(:disabled) { border-bottom-width: 2px; transform: translateY(3px); }
   .window {
-    display: grid; place-items: center; width: 108px; height: 120px; margin-bottom: 0.35rem; background: #fff4dc;
-    border-radius: 999px 999px 12px 12px / 90px 90px 12px 12px; box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.55), 0 0 0 4px rgba(0, 0, 0, 0.12);
+    display: grid; place-items: center; width: 108px; height: 120px; margin-bottom: 0.35rem; background-color: var(--accent-tint);
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--tone) 22%, transparent) 1.2px, transparent 1.6px); background-size: 8px 8px;
+    border-radius: 999px 999px 12px 12px / 90px 90px 12px 12px; border: 1px dashed color-mix(in srgb, var(--tone) 45%, var(--line));
   }
-  .name { font-size: 21px; font-weight: 800; line-height: 1.2; }
-  .blurb { font-size: 16px; font-weight: 500; line-height: 1.35; }
-  .meta { font-size: 15px; font-weight: 700; opacity: 0.95; }
-  .enter { margin-top: 0.5rem; padding: 0.15rem 1rem; border-radius: 999px; background: #fff; font-weight: 800; font-size: 17px; }
-  .teal .enter { color: var(--teal-text); }
-  .terra .enter { color: var(--terra-edge); }
-  .busy { text-align: center; font-weight: 700; color: var(--achieved); }
+  .name { font-size: 21px; font-weight: 600; line-height: 1.2; }
+  .blurb { font-size: 16px; font-weight: 400; line-height: 1.35; color: var(--muted); }
+  .meta { font: 500 13px/1.4 var(--mono); color: var(--tone); }
+  .enter { margin-top: 0.6rem; padding: 0.25rem 1.1rem; border-radius: 999px; background: var(--ink); color: #fff; font-weight: 600; font-size: 16px; }
+  .door:hover:not(:disabled) .enter { background: var(--accent); }
+  .busy { text-align: center; font-weight: 600; color: var(--achieved); }
   .alert { border-color: var(--needs-support); color: var(--needs-support); }
-  .points { list-style: none; padding: 0; margin: 1.5rem 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.25rem; color: var(--muted); font-weight: 600; }
+  .points { list-style: none; padding: 0; margin: 1.5rem 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.25rem; color: var(--muted); font-weight: 500; font-size: 16px; }
   .teachers { text-align: center; margin-top: 1.25rem; }
-  .teachers a { color: var(--zellige); font-weight: 700; }
+  .teachers a { color: var(--accent); font-weight: 600; }
   @media (prefers-reduced-motion: no-preference) {
-    .door { animation: rise 420ms cubic-bezier(.2,1.3,.4,1) backwards; }
+    .door { animation: rise 420ms steps(6) backwards; }
     li:nth-child(2) .door { animation-delay: 90ms; }
   }
-  @keyframes rise { from { transform: translateY(24px); opacity: 0; } }
+  /* Slide without fading: text is never caught half transparent, or below its real contrast. */
+  @keyframes rise { from { transform: translateY(24px); } }
   @media (max-width: 380px) { h1 { font-size: 36px; } .name { font-size: 19px; } .bubble { max-width: 10rem; font-size: 16px; } }
 </style>

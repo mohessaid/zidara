@@ -144,9 +144,12 @@
   .studio :global(.card) { border-radius: var(--radius-studio); }
   .bars { list-style: none; padding: 0; display: grid; gap: 0.5rem; }
   .bars li { display: grid; grid-template-columns: minmax(10rem, 1fr) 2fr auto auto; gap: 0.5rem; align-items: center; }
-  .bar { block-size: 12px; background: #e6dcc8; border-radius: 6px; overflow: hidden; }
-  .fill { display: block; block-size: 100%; background: var(--achieved); }
-  .proposal { border-top: 1px solid #e6dcc8; padding-top: 0.5rem; }
+  .bar {
+    block-size: 12px; border-radius: 6px; overflow: hidden; background-color: var(--locked-fill);
+    background-image: radial-gradient(circle, var(--locked-edge) 1.5px, transparent 1.9px); background-size: 10px 12px;
+  }
+  .fill { display: block; block-size: 100%; background-color: var(--accent); background-image: radial-gradient(circle, rgb(255 255 255 / 0.45) 1.5px, transparent 1.9px); background-size: 10px 12px; }
+  .proposal { border-top: 1px solid var(--line); padding-top: 0.5rem; }
   blockquote { margin: 0.5rem 0; padding: 0.5rem 1rem; border-inline-start: 4px solid var(--ink); background: var(--paper); }
   .agent { color: var(--agent); }
   select { min-height: 48px; border-radius: var(--radius-studio); border: 2px solid var(--ink); padding: 0 0.5rem; }

@@ -1,68 +1,80 @@
-/* Tokens from docs/art-bible.md, "the oasis" (ADR 0013). Contrast on sand (#fff4dc) and white:
-   ink 14.5/15.9, muted 6.0/6.6, palm 4.9/5.4, teal 5.1/5.6, terracotta 5.0/5.4, zellige
-   7.3/7.9, gold text 5.4/5.9; white on palm, teal, terracotta and zellige is at least 5.3. */
+/* Tokens for every screen of the app (ADR 0015): the front page's language, made for a game.
+   White ground with a faint grid of dots, ink text, one blue accent, dot-matrix pictures, thin
+   lines, mono labels. The states keep their own colours, so a level is never told by colour
+   alone (each also has a glyph). Contrast on white and on the ground (#f7f8fd): ink 18.0/17.1,
+   muted 7.4/7.0, blue 6.6/6.3, teal 5.6/5.3, terracotta 5.4/5.1, green 5.4/5.2, gold text
+   5.9/5.6; white on blue, teal, terracotta, green and ink is at least 5.1. */
 :root {
-  --paper: #fff4dc;          /* sand: the ground of every learner screen */
+  --paper: #f7f8fd;          /* the ground of every learner screen, under a grid of dots */
   --surface: #ffffff;
-  --line: #ead9b5;           /* a sand-coloured edge, not grey */
-  --ink: #2a1b3d;            /* night over the desert */
-  --muted: #6b5a4e;
-  --sky: #bfe9f2;
-  --sky-top: #7fd3e6;
-  --dune: #f2c879;
-  --dune-deep: #e3a24f;
+  --line: #e2e4ee;
+  --ink: #14121c;
+  --muted: #555263;
+  --dot: rgb(36 80 211 / 0.12);
+  --accent: #2450d3;
+  --accent-edge: #17348a;
+  --accent-tint: #eef2fd;
+  --sky: #eef2fd;
+  --sky-top: #dfe7fb;
+  --dune: #f1d59a;
+  --dune-deep: #9fb3e6;      /* the path's trail: a line of soft blue dots */
   --achieved: #1d7a45;
-  --go: #1d7a45;             /* palm green */
-  --go-edge: #135530;
-  --in-progress: #0b7285;    /* oasis water */
+  --go: #14121c;             /* the main action: ink, like the front page's buttons */
+  --go-edge: #000000;
+  --in-progress: #0b7285;
   --blue-edge: #08525f;
   --teal-text: #0a6170;
-  --zellige: #1b4f9c;
-  --zellige-edge: #123870;
-  --needs-support: #b4471f;  /* terracotta */
+  --zellige: #2450d3;
+  --zellige-edge: #17348a;
+  --needs-support: #b4471f;
   --terra: #b4471f;
   --terra-edge: #85320f;
-  --locked: #6b5a4e;
-  --locked-fill: #eadcc0;
-  --locked-edge: #cdb98f;
+  --locked: #555263;
+  --locked-fill: #eceef5;
+  --locked-edge: #cfd3e2;
   --agent: #7c3fc4;          /* reserved: anything an AI did or proposed */
   --star: #8a5a00;
   --gold: #f5b301;
   --gold-edge: #c98a00;
   --flame: #e8700a;
-  --mint: #d9f5c9;
-  --focus: #1b4f9c;
-  --radius: 18px;
+  --mint: #e3f4e9;
+  --focus: #2450d3;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --radius: 14px;
   --radius-studio: 8px;
-  font-family: "Baloo Bhaijaan 2", "Noto Sans Arabic", system-ui, sans-serif;
+  font-family: "Readex Pro Variable", "Readex Pro", "Noto Sans Arabic", system-ui, sans-serif;
   font-size: 18px;
   line-height: 1.5;
   color: var(--ink);
   background: var(--paper);
 }
 * { box-sizing: border-box; }
-body { margin: 0; min-height: 100vh; background: var(--paper); font-family: inherit; overflow-x: clip; }
+body {
+  margin: 0; min-height: 100vh; font-family: inherit; overflow-x: clip;
+  background-color: var(--paper); background-image: radial-gradient(circle, var(--dot) 1.2px, transparent 1.6px); background-size: 14px 14px;
+}
 button, input, select, textarea { font: inherit; color: inherit; }
-/* Chunky buttons: a solid edge underneath that the button sinks into when pressed. */
+/* Buttons: a thin line and a firm edge underneath that the button sinks into when pressed. */
 button {
   min-height: 48px; min-width: 48px; border-radius: var(--radius); cursor: pointer;
-  border: 2px solid var(--line); border-bottom-width: 5px; background: var(--surface);
-  padding: 0.4rem 1rem; font-weight: 700; transition: transform 80ms ease, border-bottom-width 80ms ease;
+  border: 1px solid var(--line); border-bottom-width: 4px; background: var(--surface);
+  padding: 0.4rem 1rem; font-weight: 600; transition: transform 80ms ease, border-bottom-width 80ms ease, background-color 160ms ease;
 }
-button:active:not(:disabled) { transform: translateY(3px); border-bottom-width: 2px; }
+button:active:not(:disabled) { transform: translateY(3px); border-bottom-width: 1px; }
 button.primary {
   background: var(--go); border-color: var(--go); border-bottom-color: var(--go-edge); color: #fff;
-  font-size: 20px; font-weight: 800;
+  font-size: 19px; font-weight: 600;
 }
-button.blue { background: var(--in-progress); border-color: var(--in-progress); border-bottom-color: var(--blue-edge); color: #fff; font-weight: 800; }
+button.primary:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); border-bottom-color: var(--accent-edge); }
+button.blue { background: var(--accent); border-color: var(--accent); border-bottom-color: var(--accent-edge); color: #fff; font-weight: 600; }
 button:disabled { cursor: default; }
 button.primary:disabled { background: var(--locked-fill); border-color: var(--locked-fill); border-bottom-color: var(--locked-edge); color: var(--muted); }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 main { max-width: 960px; margin: 0 auto; padding: 1rem; }
-h1 { font-size: 30px; margin: 0.5rem 0; line-height: 1.2; font-weight: 800; }
-h2 { font-size: 24px; margin: 1rem 0 0.5rem; line-height: 1.25; font-weight: 800; }
-.card { background: var(--surface); border-radius: var(--radius); padding: 1rem; border: 2px solid var(--line); }
+h1 { font-size: 30px; margin: 0.5rem 0; line-height: 1.2; font-weight: 600; letter-spacing: -0.02em; }
+h2 { font-size: 24px; margin: 1rem 0 0.5rem; line-height: 1.25; font-weight: 600; letter-spacing: -0.01em; }
+.card { background: var(--surface); border-radius: var(--radius); padding: 1rem; border: 1px solid var(--line); }
 .row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
 .state-achieved { color: var(--achieved); }
 .state-in_progress { color: var(--in-progress); }

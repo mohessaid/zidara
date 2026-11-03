@@ -1,14 +1,22 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#7FD3E6" />
-    <meta name="description" content="Zidara: a learning path that knows how teaching works." />
-    <title>زيدارا · Zidara</title>
+    <meta name="theme-color" content="#fbfbfd" />
+    <meta name="description" content="Zidara turns a school's own way of teaching into a game children play on the phones they have, even offline." />
+    <title>Zidara · the learning game that follows your school's rules</title>
+    <link rel="canonical" href="https://zidara.ta9in.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://zidara.ta9in.com/" />
+    <meta property="og:title" content="Zidara · the learning game that follows your school's rules" />
+    <meta property="og:description" content="One engine for any pedagogy: a school's rules, played as a game on the phones children have, even offline. Arabic, French and English." />
+    <meta property="og:image" content="https://zidara.ta9in.com/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
     <style>
       /* No font-family here: it would beat the app's own face on :root (it did, until 2 November). */
-      body { margin: 0; background: #fff4dc; color: #2a1b3d; }
+      body { margin: 0; background: #fbfbfd; color: #1f1733; }
+      @media (prefers-color-scheme: dark) { body { background: #0f0d18; color: #eeeaf7; } }
       .splash { min-height: 100vh; display: grid; place-content: center; justify-items: center; gap: 0.5rem; font-size: 28px; font-weight: 700; }
     </style>
   </head>
@@ -16,8 +24,8 @@
     <div id="app">
       <!-- Painted before any JavaScript runs; the app replaces it on mount. -->
       <div class="splash">
-        <img src="/icon.svg" width="160" height="160" alt="" />
-        <p lang="ar">زيدارا</p>
+        <img src="/icon.svg" width="96" height="96" alt="" />
+        <p lang="en">zidara</p>
       </div>
     </div>
     <script type="module" src="/src/main.ts"></script>

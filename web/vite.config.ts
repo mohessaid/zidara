@@ -15,10 +15,11 @@ export default defineConfig({
       manifest: {
         name: "Zidara",
         short_name: "Zidara",
-        description: "طريق تعلّم يعرف كيف يكون التعليم · A learning path that knows how teaching works",
-        lang: "ar",
-        dir: "rtl",
-        start_url: "/",
+        description: "A learning game that follows your school's rules · طريق تعلّم يعرف كيف يكون التعليم",
+        lang: "en",
+        dir: "ltr",
+        // An installed app opens the game; the front page is for visitors (ADR 0014).
+        start_url: "/#play",
         display: "standalone",
         background_color: "#FFF8EC",
         theme_color: "#FFF8EC",
@@ -32,6 +33,8 @@ export default defineConfig({
         // The shell, the kernel's wasm and the fonts: everything needed to learn offline.
         // API data is not cached here; the IndexedDB log and outbox hold it.
         globPatterns: ["**/*.{js,css,html,wasm,woff2,svg,png}"],
+        // The front page's share image and face are for visitors, not for learning offline.
+        globIgnores: ["**/og.png", "**/readex-pro-*.woff2"],
         maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
         navigateFallback: "index.html",
         navigateFallbackDenylist: [/^\/api\//],

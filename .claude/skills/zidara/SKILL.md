@@ -29,7 +29,9 @@ Read first: `docs/superpowers/specs/2026-10-14-zidara-prototype-design.md` (what
    Low-end gets its own experience later; never cap the main experience for it.
 7. **Experiences are swappable, the view-intent contract is not.** The kernel says what is
    true ("F2 in progress at 64%, F3 locked"); experiences decide how to draw it.
-8. **Arabic first.** Right-to-left, real text shaping, French and English beside it.
+8. **Arabic first, English by default.** Right-to-left, real text shaping, French and English
+   beside it. The interface opens in English (owner, ADR 0014); content, classes and tests stay
+   Arabic first. `/` is the front page (`girth-landing`); the game is at `#play`.
 9. **The record is part of the work.** See "The record" below.
 10. **Use the best tool for each job**, chosen on evidence; HyperFrames is one option, not the
     default. When a third-party skill helps, distil what applies into this skill and remove

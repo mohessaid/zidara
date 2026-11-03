@@ -24,7 +24,7 @@
 </script>
 
 <main>
-  <p><a href="#start" class="back">‹ {t(app.locale, "welcome.back")}</a></p>
+  <p><a href="#play" class="back">‹ {t(app.locale, "welcome.back")}</a></p>
   <div class="row"><h1>{t(app.locale, "signin.title")}</h1><span class="spacer"></span><LanguagePicker /></div>
   {#if DEMO}<p class="card notice" data-testid="demo-notice">{t(app.locale, "demo.notice")}</p>{/if}
   {#if app.error}<p role="alert" class="state-needs_support">{app.error}</p>{/if}

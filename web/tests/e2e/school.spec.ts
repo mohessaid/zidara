@@ -1,8 +1,41 @@
 import { expect, test } from "@playwright/test";
-import { backToPath, button, expectAccessible, explainF2, F3_OPENS, playF1, signIn, startAsGuest, stone } from "./helpers.ts";
+import { arabic, backToPath, button, expectAccessible, explainF2, F3_OPENS, playF1, signIn, startAsGuest, stone } from "./helpers.ts";
 
-test("the front door is in Arabic, right to left, accessible, and lists no one", async ({ page }) => {
+test("the front page tells the story in English, judges live with the real engine, and leads into the game", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.locator("html")).toHaveAttribute("dir", "ltr");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("The learning game that follows your school's rules.");
+  await expect(page.getByText("Made with Zidara").first()).toBeVisible();
+  // The live switch: the kernel in the page judges one learner's same answers two ways.
+  await expect(stone(page, "F1")).toHaveAttribute("data-state", "achieved");
+  await expect(stone(page, "F2")).toHaveAttribute("data-state", "not_started");
+  await page.getByRole("button", { name: "Cambridge-style", exact: true }).click();
+  await expect(stone(page, "F1")).toHaveAttribute("data-state", "in_progress");
+  await expect(stone(page, "F3")).toContainText("Opens on");
+  await expect(page.getByText(/practice is not an assessment/)).toBeVisible();
+  // Sections below the fold skip rendering until seen (content-visibility); axe cannot measure
+  // colours it cannot see, so render them all, then check every one in light, dark and Arabic.
+  await page.addStyleTag({ content: ".landing section { content-visibility: visible !important; }" });
+  await expectAccessible(page, "front page");
+  await page.emulateMedia({ reducedMotion: "reduce", colorScheme: "dark" });
+  await expectAccessible(page, "front page, dark");
+  await page.emulateMedia({ reducedMotion: "reduce", colorScheme: "light" });
+  // The same page in Arabic, right to left, then into the game.
+  await page.getByRole("combobox").first().selectOption("ar");
+  await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("قواعد مدرستك");
+  await expectAccessible(page, "front page, Arabic");
+  await page.getByRole("combobox").first().selectOption("en");
+  await page.getByRole("link", { name: "Play a lesson" }).first().click();
+  await expect(page).toHaveURL(/#play$/);
+  await expect(page.getByRole("heading", { name: "Learn by playing." })).toBeVisible();
+});
+
+test("the game's front door speaks Arabic, right to left, accessible, and lists no one", async ({ page }) => {
+  await arabic(page);
+  await page.goto("/#play");
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
   await expect(page.getByRole("heading", { name: "تعلّم وأنت تلعب." })).toBeVisible();
   await expect(page.getByText("أمينة")).toHaveCount(0);

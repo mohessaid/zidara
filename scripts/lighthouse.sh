@@ -8,4 +8,6 @@ node_modules/.bin/vite preview --port 4174 --strictPort --host 127.0.0.1 > /dev/
 server=$!
 trap 'kill $server 2> /dev/null || true' EXIT
 for _ in $(seq 1 50); do curl -s -o /dev/null http://127.0.0.1:4174/ && break; sleep 0.2; done
+# The front page (ADR 0014) and the game behind it are gated alike.
 node scripts/lighthouse.mjs http://127.0.0.1:4174/
+node scripts/lighthouse.mjs "http://127.0.0.1:4174/#play"

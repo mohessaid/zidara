@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { backToPath, expectAccessible, explainF2, F3_OPENS, playF1, signIn, startAsGuest, stone } from "../e2e/helpers.ts";
+import { arabic, backToPath, expectAccessible, explainF2, F3_OPENS, playF1, signIn, startAsGuest, stone } from "../e2e/helpers.ts";
 
 async function signOut(page: import("@playwright/test").Page) {
   // A learner's sign-out is in the menu; a teacher's is in the header.
@@ -13,6 +13,7 @@ test("the whole school story runs in one browser, with no server", async ({ page
   const api: string[] = [];
   page.on("request", (r) => r.url().includes("/api/") && api.push(r.url()));
 
+  await arabic(page);
   await page.goto("/#classes");
   await expect(page.getByTestId("demo-notice")).toContainText("يعمل كلّه في متصفّحك");
   await expectAccessible(page, "demo sign-in");

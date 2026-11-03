@@ -42,7 +42,8 @@ class App {
     if (session) {
       this.api = new Api(session.token);
       await this.#enter(session.cohort ?? session.cohorts[0]?.id).catch(() => this.signOut());
-    } else {
+    } else if (location.hash === "#play" || location.hash === "#classes") {
+      // Warm the kernel for the game only; the front page runs its own copy in a worker.
       setTimeout(() => void this.#kernel(), 2_000);
     }
     addEventListener("online", () => {
@@ -191,7 +192,7 @@ class App {
 
 function readLocale(): Locale {
   const saved = localStorage.getItem("zidara.locale");
-  return isLocale(saved) ? saved : "ar";
+  return isLocale(saved) ? saved : "en";
 }
 
 export const app = new App();

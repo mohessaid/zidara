@@ -1,20 +1,30 @@
 import { expect, test } from "@playwright/test";
 import { arabic, backToPath, button, expectAccessible, explainF2, F3_OPENS, playF1, signIn, startAsGuest, stone } from "./helpers.ts";
 
-test("the front page tells the story in English, judges live with the real engine, and leads into the game", async ({ page }) => {
+test("the front page pitches the engine, judges live on both axes, and leads into the demos", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.locator("html")).toHaveAttribute("dir", "ltr");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("The learning game that follows your school's rules.");
-  await expect(page.getByText("Made with Zidara").first()).toBeVisible();
-  // The live switch: the kernel in the page judges one learner's same answers two ways.
-  await expect(stone(page, "F1")).toHaveAttribute("data-state", "achieved");
-  await expect(stone(page, "F2")).toHaveAttribute("data-state", "not_started");
-  await page.getByRole("button", { name: "Cambridge-style", exact: true }).click();
-  await expect(stone(page, "F1")).toHaveAttribute("data-state", "in_progress");
-  await expect(stone(page, "F3")).toContainText("Opens on");
-  await expect(page.getByText(/practice is not an assessment/)).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("The adaptable learning engine for the AI era.");
+  await expect(page.getByText("Every demo on this page is made with Zidara")).toBeVisible();
+  const engine = page.locator("figure.console");
+  const at = (outcome: string) => engine.locator(`[data-outcome="${outcome}"]`);
+  // The framework axis: the kernel in the page judges one learner's same answers two ways.
+  await expect(at("F1")).toHaveAttribute("data-state", "achieved");
+  await expect(at("F2")).toHaveAttribute("data-state", "not_started");
+  await engine.getByRole("button", { name: "Cambridge-style", exact: true }).click();
+  await expect(at("F1")).toHaveAttribute("data-state", "in_progress");
+  await expect(at("F3")).toContainText("Opens on");
+  await expect(engine.getByText(/practice is not an assessment/)).toBeVisible();
+  // The experience axis: four drawings of one view, every outcome in the same state (N + M).
+  const states = async () => Promise.all(["F1", "F2", "F3"].map((o) => at(o).getAttribute("data-state")));
+  const judged = await states();
+  for (const name of ["Secondary grid", "Teacher's studio", "Text message", "Children's path"]) {
+    await engine.getByRole("button", { name, exact: true }).click();
+    await expect(engine.getByRole("button", { name, exact: true })).toHaveAttribute("aria-pressed", "true");
+    expect(await states(), name).toEqual(judged);
+  }
   // Sections below the fold skip rendering until seen (content-visibility); axe cannot measure
   // colours it cannot see, so render them all, then check every one in light, dark and Arabic.
   await page.addStyleTag({ content: ".landing section { content-visibility: visible !important; }" });
@@ -22,13 +32,13 @@ test("the front page tells the story in English, judges live with the real engin
   await page.emulateMedia({ reducedMotion: "reduce", colorScheme: "dark" });
   await expectAccessible(page, "front page, dark");
   await page.emulateMedia({ reducedMotion: "reduce", colorScheme: "light" });
-  // The same page in Arabic, right to left, then into the game.
+  // The same page in Arabic, right to left, then into a demo course.
   await page.getByRole("combobox").first().selectOption("ar");
   await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("قواعد مدرستك");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("محرّك التعلّم");
   await expectAccessible(page, "front page, Arabic");
   await page.getByRole("combobox").first().selectOption("en");
-  await page.getByRole("link", { name: "Play a lesson" }).first().click();
+  await page.getByRole("link", { name: "Try a demo course" }).first().click();
   await expect(page).toHaveURL(/#play$/);
   await expect(page.getByRole("heading", { name: "Learn by playing." })).toBeVisible();
 });

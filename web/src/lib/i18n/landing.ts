@@ -1,5 +1,7 @@
-// The landing page's words (ADR 0014), in the app's three languages. Every figure comes from a
-// row marked "verified" in docs/impact-facts.md, and each one names its source on the page.
+// The front page's words (ADR 0014, ADR 0015), in the app's three languages. Zidara is pitched as
+// what docs/proposal.md says it is: an adaptable learning engine (one kernel, any framework, any
+// experience, AI agents inside approved rules). The demo course is one experience among many.
+// Every figure comes from a row marked "verified" in docs/impact-facts.md and names its source.
 // House style for this page: no em or en dashes; plain sentences; one label per intent.
 import type { Locale } from "./i18n.ts";
 
@@ -7,41 +9,44 @@ export type Source = { label: string; href: string };
 export type Why = { q: string; a: string; cite: number[] };
 export type Tile = { title: string; body: string };
 export type Qa = { q: string; a: string };
+export type Agent = { name: string; body: string; today: boolean };
+export type Made = { title: string; body: string; href: string; shot: string; alt: string };
 
 export type LandingCopy = {
-  nav: { why: string; how: string; proof: string; play: string; menu: string };
-  hero: { before: string; accent: string; after: string; lead: string; more: string };
+  nav: { why: string; how: string; engine: string; ai: string; made: string; play: string; menu: string };
+  hero: { badge: string; before: string; accent: string; after: string; lead: string; primary: string; secondary: string };
+  engine: { title: string; lead: string };
   live: {
     label: string;
+    tag: string;
+    frameworkAxis: string;
+    experienceAxis: string;
+    experiences: Record<"path" | "grid" | "studio" | "text", string>;
     story: string;
     level: string;
     state: Record<"achieved" | "in_progress" | "not_started" | "needs_support", string>;
     open: string;
     after: string;
     on: string;
+    band: string;
+    cols: { outcome: string; status: string; score: string; band: string };
+    studioHead: string;
+    attempts: string;
+    smsNote: string;
     verdict: Record<"mastery" | "cambridge-style", string>;
     engine: string;
-    band: string;
     loading: string;
     failed: string;
   };
   facts: string[];
   why: { title: string; lead: string; steps: Why[]; rootTitle: string; root: string; sources: string };
   sources: Source[];
-  how: {
-    title: string;
-    lead: string;
-    blocks: Tile[];
-    blocksTitle: string;
-    layers: Tile[];
-    layersTitle: string;
-    tiles: Tile[];
-    flow: string[];
-  };
-  made: { title: string; lead: string; shots: { src: string; alt: string; caption: string }[] };
+  how: { title: string; lead: string; layersTitle: string; layers: Tile[]; cards: Tile[] };
+  ai: { title: string; lead: string; flow: string[]; agents: Agent[]; today: string; designed: string };
+  made: { title: string; lead: string; items: Made[]; open: string };
   proof: { title: string; lead: string; stats: { value: string; label: string }[]; code: string };
   faq: { title: string; items: Qa[] };
-  end: { title: string; lead: string; classes: string };
+  end: { title: string; lead: string; primary: string; classes: string };
   footer: { line: string; made: string; code: string };
 };
 
@@ -54,82 +59,103 @@ const SOURCES: Source[] = [
 ];
 
 const en: LandingCopy = {
-  nav: { why: "Why", how: "How it works", proof: "Proof", play: "Play a lesson", menu: "Sections" },
+  nav: { why: "Vision", how: "Architecture", engine: "Live engine", ai: "AI agents", made: "Made with Zidara", play: "Try the demo", menu: "Sections" },
   hero: {
-    before: "The learning game that follows ",
-    accent: "your school's rules",
+    badge: "Every demo on this page is made with Zidara",
+    before: "The adaptable learning engine for ",
+    accent: "the AI era",
     after: ".",
-    lead: "Zidara turns a school's own way of teaching into a game children play on the phones they have, even offline.",
-    more: "How it works",
+    lead: "Zidara is a learning platform built on one tested kernel. Bring any teaching framework, present it as any experience, and let AI agents work only inside the rules your educators approve.",
+    primary: "See the engine live",
+    secondary: "Try a demo course",
+  },
+  engine: {
+    title: "One judgement, any framework, any experience",
+    lead: "This is the real kernel, running in your browser. Change the framework and the judgement changes. Change the experience and only the drawing does.",
   },
   live: {
-    label: "School rules",
-    story: "One learner answered the first fractions quiz once, and got both questions right. Switch the rules:",
+    label: "zidara / live engine",
+    tag: "Running in your browser",
+    frameworkAxis: "Framework",
+    experienceAxis: "Experience",
+    experiences: { path: "Children's path", grid: "Secondary grid", studio: "Teacher's studio", text: "Text message" },
+    story: "One learner answered the first fractions quiz once and got both questions right.",
     level: "Level {n}",
     state: { achieved: "Mastered", in_progress: "In progress", not_started: "Not started", needs_support: "Needs support" },
     open: "Open",
     after: "Opens after level {n}",
     on: "Opens on {date}",
+    band: "Band {n} of {of}",
+    cols: { outcome: "Outcome", status: "Status", score: "Score", band: "Band" },
+    studioHead: "Equivalent fractions, one learner",
+    attempts: "attempts: {n}",
+    smsNote: "For basic phones: the same view, sent as text.",
     verdict: {
       mastery: "Mastery: two right answers prove it. Level 1 is mastered and level 2 opens.",
       "cambridge-style": "Cambridge-style: the same answers earn a top band, but practice is not an assessment, and level 3 waits for the scheme of work.",
     },
-    engine: "Live: the real Zidara engine, compiled to WebAssembly, is judging this in your browser.",
-    band: "band {n} of {of}",
+    engine: "The real Zidara kernel, compiled to WebAssembly, decides this in your browser. Nothing is sent.",
     loading: "Starting the engine…",
-    failed: "The engine could not start in this browser. The lesson still works.",
+    failed: "The engine could not start in this browser. The demo course still works.",
   },
-  facts: ["One Rust engine for web, Android and iOS", "Works offline", "Arabic, French and English", "WCAG 2.2 AA", "Public source code"],
+  facts: ["One Rust kernel: server, browser, Android, iOS", "Any teaching framework", "Any experience", "AI agents with permissions", "Offline first", "Arabic, French, English"],
   why: {
     title: "Five whys, down to the root",
-    lead: "We asked why so many children are not learning, and kept asking.",
+    lead: "We asked why so many children are still not learning, and kept asking until we reached something software could fix.",
     steps: [
       { q: "Why are so many children not learning?", a: "An estimated 7 in 10 ten-year-olds in low- and middle-income countries cannot read and understand a simple text. In maths, over half of fourth graders in Kuwait and Morocco fall below the lowest international benchmark.", cite: [1, 2] },
-      { q: "Why doesn't digital learning close the gap?", a: "Most of it is made for someone else. Arabic is 0.6% of the web's content, under half of people in the Middle East and North Africa use mobile internet, and 3 in 10 of those who do still use 3G or basic phones.", cite: [3, 4] },
-      { q: "Why don't schools adapt the tools they have?", a: "Because the way of teaching is built in. A platform carries one idea of progress, and changing it means a new product. Teachers fill the gap by hand, and the world needs 44 million more of them by 2030.", cite: [5] },
-      { q: "Why is the way of teaching built in?", a: "Because nobody wrote pedagogy down as something software can run. Its rules live in documents and in teachers' heads, so every app rebuilds a simplified copy.", cite: [] },
-      { q: "Why does that matter for a child?", a: "Software that does not know how teaching works rewards taps instead of learning, and AI that does not know the rules guesses.", cite: [] },
+      { q: "Why hasn't digital learning closed the gap?", a: "Most of it is made for someone else. Arabic is 0.6% of the web's content, under half of people in the Middle East and North Africa use mobile internet, and 3 in 10 of those who do still use 3G or basic phones.", cite: [3, 4] },
+      { q: "Why can't schools shape the platforms they have?", a: "Learning platforms carry one idea of a course and bolt the rest on as plugins. A teaching approach lives inside the application and cannot be lifted out, so a new pedagogy or a new audience means a new product, or work done by hand by teachers the world is already short of: 44 million more are needed by 2030.", cite: [5] },
+      { q: "Why is the teaching locked inside?", a: "Because pedagogy was never written down as software. Its rules sit in documents and in teachers' heads, and every platform rebuilds a simplified copy for every audience: N frameworks times M experiences.", cite: [] },
+      { q: "Why does it matter now?", a: "AI tutors and markers are arriving in every classroom. Without the school's rules inside the system, they guess, and nobody can check, govern or undo what they did.", cite: [] },
     ],
-    rootTitle: "So we built the missing piece: pedagogy as software.",
-    root: "Zidara makes a school's rules something the engine runs, tests and can swap. The game, the rewards and the AI all follow them.",
+    rootTitle: "So we built the missing engine: pedagogy as software.",
+    root: "Zidara turns any way of teaching into rules a tested kernel runs. Any experience and any AI agent then works on top of it, inside rules people approve.",
     sources: "Sources",
   },
   sources: SOURCES,
   how: {
-    title: "One engine. Any pedagogy. Every audience.",
-    lead: "Every way of teaching we studied reduces to six building blocks. Only the rules change.",
-    blocksTitle: "Six building blocks",
-    blocks: [
-      { title: "Outcomes", body: "What a learner should be able to do" },
-      { title: "Activities", body: "What the learner does" },
-      { title: "Evidence", body: "What the work proves" },
-      { title: "Judgement", body: "How evidence becomes a level" },
-      { title: "Progression", body: "What opens next" },
-      { title: "Roles", body: "Who teaches, assesses and helps" },
-    ],
-    layersTitle: "Three layers",
+    title: "One kernel. Any framework. Any experience.",
+    lead: "Every teaching approach we compared, from Cambridge and mastery learning to IB criteria, competency-based education and spaced repetition, reduces to the same six building blocks. The blocks stay; only the rules change.",
+    layersTitle: "Three layers, and automation through all of them",
     layers: [
-      { title: "Experience", body: "How it looks, for each audience and device" },
-      { title: "Framework", body: "What learning means: Mastery, Cambridge-style, a school's own" },
-      { title: "Engine", body: "Built once, tested hard, no network or clock inside" },
+      { title: "Experience", body: "How it looks and feels for each audience and device: a child's path, a secondary grid, a teacher's studio, a parent's summary, a tutor in chat." },
+      { title: "Framework", body: "What learning means: outcomes, evidence and the rules that judge them. Mastery, Cambridge-style, or a school's own." },
+      { title: "Kernel", body: "People, groups, content, activities, the evidence log, scheduling and security. Built once, tested hard, with no network or clock inside." },
+      { title: "Automation", body: "Events, rules and AI agents as actors, running through all three layers." },
     ],
-    tiles: [
-      { title: "Not N × M", body: "Frameworks and experiences mix freely. Adding a pedagogy costs weeks, not a new product." },
-      { title: "AI that follows the rules", body: "Agents are actors with roles and permissions. An assessment agent pre-marks; anything unsure goes to the teacher. Every action is logged and can be undone." },
-      { title: "Built for the phones children have", body: "Works with no network and syncs later without conflicts. Holds 60 frames a second on an economy-phone profile." },
-      { title: "Each class keeps its own data", body: "The database itself keeps every class apart, so no screen, query or agent can cross over." },
+    cards: [
+      { title: "Six building blocks", body: "Outcomes, activities, evidence, judgement, progression and roles. Every pedagogy is a set of rules over the same six." },
+      { title: "Any framework", body: "Outcome trees and thresholds are data. Judgement and progression are compiled code behind one interface, held to the same tests. A new framework costs weeks, not a new product." },
+      { title: "Any experience, not N × M", body: "A framework says what is true; an experience decides how to show it. N frameworks and M experiences cost N + M to build." },
+      { title: "AI agents are actors", body: "They pass through the same permissions as people. Anything unsure or summative stops at a teacher, and every action can be undone." },
+      { title: "Offline first, on every device", body: "The same kernel runs on the server, in the browser as WebAssembly and inside native apps. Work done offline replays through the same rules when it syncs." },
+      { title: "Isolation in the database", body: "Every row carries its class and school, and PostgreSQL row-level security keeps them apart. No screen, query or agent can cross." },
     ],
+  },
+  ai: {
+    title: "Built for the AI era, governed by people",
+    lead: "The kernel never calls a model. Agents propose; the framework's policy decides what applies and what waits for a teacher. Every agent action is logged and can be undone.",
     flow: ["Agent proposes", "Rules check", "Teacher decides"],
+    agents: [
+      { name: "Assessment agent", body: "Pre-marks open answers with a confidence score. Only confident formative marks apply; summative work always goes to a teacher.", today: true },
+      { name: "Tutor agent", body: "Reads a learner's evidence and suggests what to do next. It never grades summative work.", today: false },
+      { name: "Operations agent", body: "Spots learners at risk and opens a case for a person to follow up.", today: false },
+      { name: "Authoring agent", body: "Turns a curriculum document into a draft framework for a designer to approve.", today: false },
+    ],
+    today: "Running today",
+    designed: "Designed",
   },
   made: {
-    title: "Everything here is made with Zidara",
-    lead: "The courses, the game, the teacher's studio and the live demo above all run on the same engine. One course even teaches Zidara, with Zidara.",
-    shots: [
-      { src: "/landing/path.webp", alt: "The fractions path under Mastery: level 1 gold with a palm beside it, level 2 open, level 3 locked.", caption: "The path is the framework's progression, drawn as a game." },
-      { src: "/landing/lens.webp", alt: "The same path under Cambridge-style rules: level 1 still open with three stars, levels 2 and 3 open.", caption: "Switch the school's rules and the same answers are judged again." },
-      { src: "/landing/right.webp", alt: "A fractions question answered right: Bizra cheers and ten points rise.", caption: "Feedback at once, marked by the engine." },
-      { src: "/landing/finish.webp", alt: "The finish screen: You can do this now, a palm grew in your oasis, two stars.", caption: "Rewards come only from evidence of learning." },
+    title: "Made with Zidara",
+    lead: "Everything you can open from this page runs on the same kernel. The demo course is one experience among many, built to show how far the engine bends. One course even teaches Zidara, with Zidara.",
+    items: [
+      { title: "A learning game", body: "A course in the style of Duolingo and Brilliant for ages 9 to 11: films, toys and questions, marked by the kernel at once. Rewards come only from evidence.", href: "#play", shot: "/landing/path.webp", alt: "The fractions path after one session: level 1 mastered in blue with a palm of dots beside it, level 2 next, Bizra waiting." },
+      { title: "Live rounds", body: "A round on the class board in the style of Kahoot, every phone answering. No timer and no ranking; the answers become practice evidence.", href: "#classes", shot: "/landing/board.webp", alt: "The teacher's studio during a live round: the question, three answers in colour, and buttons to show the answer or move on." },
+      { title: "The teacher's studio", body: "The class's progress, the agent's queued marks and every undo, in one place.", href: "#classes", shot: "/landing/studio.webp", alt: "The teacher's studio: where the class is on each outcome, answers waiting for a decision, and the class's teaching approach." },
+      { title: "A pedagogy switch", body: "A teacher moves the class from mastery to Cambridge-style, and every learner is judged again from the same evidence.", href: "#classes", shot: "/landing/lens.webp", alt: "The same path under Cambridge-style rules: level 1 is back to open, and a note says the engine, not the game, judges by the school's rules." },
     ],
+    open: "Open",
   },
   proof: {
     title: "Proof, not promises",
@@ -146,94 +172,116 @@ const en: LandingCopy = {
   faq: {
     title: "Questions",
     items: [
-      { q: "Who is Zidara for?", a: "Children in school and the teachers who run their classes. The prototype starts with primary maths, fractions for ages 9 to 11, in Arabic, French and English." },
-      { q: "Is it a product or a prototype?", a: "A working prototype. Two courses, the teacher's studio, a live class game, offline sync and the governed AI assessor run today. It has not yet been piloted in a school." },
-      { q: "Does AI grade children?", a: "No. The engine never calls a model. An assessment agent may pre-mark an open answer with a confidence score; the school's policy applies it or sends it to the teacher, and anything summative always goes to a person." },
-      { q: "Does it need the internet?", a: "Only for the first visit. Learners keep playing offline, and their work syncs when the connection returns, checked again by the same rules on the server." },
-      { q: "Can a school bring its own pedagogy?", a: "Yes, that is the point. Outcomes and thresholds are data; judgement and progression are code behind one interface, held to the same tests. Mastery and Cambridge-style run today." },
+      { q: "Is Zidara a game?", a: "No. Zidara is a learning engine and the platform around it. The game on this site is one experience built on it, to show how far the engine bends; the same kernel draws a secondary grid, a teacher's studio or a text message." },
+      { q: "Who is it for?", a: "Schools, training centres and education systems that want their own way of teaching to run as software, and teams that want to build new learning experiences on a tested core. The prototype starts with primary maths in Arabic, French and English." },
+      { q: "How is it different from other learning platforms?", a: "General platforms keep their teaching approach inside the application and add the rest as plugins. In Zidara, pedagogy is the core: frameworks are first class, experiences are swappable, and agents are governed actors." },
+      { q: "Does AI grade learners?", a: "No. The engine never calls a model. An assessment agent may pre-mark an open answer with a confidence score; the framework's policy applies it or sends it to the teacher, and anything summative always goes to a person." },
+      { q: "Can we bring our own pedagogy?", a: "Yes, that is the point. Outcomes and thresholds are data; judgement and progression are code behind one interface, held to the same tests. Mastery and Cambridge-style run today." },
+      { q: "Is it a product or a prototype?", a: "A working prototype. Two frameworks, two courses, the teacher's studio, live rounds, offline sync and the governed AI assessor run today. It has not yet been piloted in a school." },
     ],
   },
-  end: { title: "Play the first lesson", lead: "Two minutes, no account, in your language.", classes: "Teachers: open the demo classes" },
-  footer: { line: "A learning engine that knows how teaching works.", made: "Made with Zidara", code: "Source code" },
+  end: { title: "See what the engine can do", lead: "Open a demo course as a guest, or the teacher's studio. No account needed.", primary: "Try a demo course", classes: "Open the teacher's studio" },
+  footer: { line: "The adaptable learning engine for the AI era.", made: "Made with Zidara", code: "Source code" },
 };
 
 const fr: LandingCopy = {
-  nav: { why: "Pourquoi", how: "Comment ça marche", proof: "Preuves", play: "Jouer une leçon", menu: "Sections" },
+  nav: { why: "Vision", how: "Architecture", engine: "Moteur en direct", ai: "Agents IA", made: "Fait avec Zidara", play: "Essayer la démo", menu: "Sections" },
   hero: {
-    before: "Le jeu d'apprentissage qui suit ",
-    accent: "les règles de votre école",
+    badge: "Chaque démo de cette page est faite avec Zidara",
+    before: "Le moteur d'apprentissage adaptable pour ",
+    accent: "l'ère de l'IA",
     after: ".",
-    lead: "Zidara transforme la façon d'enseigner d'une école en un jeu que les enfants jouent sur leur téléphone, même hors ligne.",
-    more: "Comment ça marche",
+    lead: "Zidara est une plateforme d'apprentissage bâtie sur un seul noyau testé. Apportez n'importe quel cadre pédagogique, présentez-le sous n'importe quelle expérience, et laissez les agents IA agir seulement dans les règles que vos enseignants approuvent.",
+    primary: "Voir le moteur en direct",
+    secondary: "Essayer un cours de démo",
+  },
+  engine: {
+    title: "Un jugement, n'importe quel cadre, n'importe quelle expérience",
+    lead: "Voici le vrai noyau, qui tourne dans votre navigateur. Changez le cadre et le jugement change. Changez l'expérience et seul le dessin change.",
   },
   live: {
-    label: "Règles de l'école",
-    story: "Un élève a répondu une fois au premier quiz de fractions, et juste aux deux questions. Changez les règles :",
+    label: "zidara / moteur en direct",
+    tag: "Dans votre navigateur",
+    frameworkAxis: "Cadre",
+    experienceAxis: "Expérience",
+    experiences: { path: "Chemin des enfants", grid: "Grille du secondaire", studio: "Atelier de l'enseignant", text: "Message texte" },
+    story: "Un élève a répondu une fois au premier quiz de fractions, et juste aux deux questions.",
     level: "Niveau {n}",
     state: { achieved: "Maîtrisé", in_progress: "En cours", not_started: "Pas commencé", needs_support: "Besoin d'aide" },
     open: "Ouvert",
     after: "S'ouvre après le niveau {n}",
     on: "S'ouvre le {date}",
+    band: "Mention {n} sur {of}",
+    cols: { outcome: "Objectif", status: "État", score: "Score", band: "Mention" },
+    studioHead: "Fractions équivalentes, un élève",
+    attempts: "essais : {n}",
+    smsNote: "Pour les téléphones basiques : la même vue, envoyée en texte.",
     verdict: {
       mastery: "Maîtrise : deux bonnes réponses le prouvent. Le niveau 1 est maîtrisé et le niveau 2 s'ouvre.",
       "cambridge-style": "Style Cambridge : les mêmes réponses obtiennent la meilleure mention, mais un entraînement n'est pas une évaluation, et le niveau 3 attend la progression annuelle.",
     },
-    engine: "En direct : le vrai moteur de Zidara, compilé en WebAssembly, juge ceci dans votre navigateur.",
-    band: "mention {n} sur {of}",
+    engine: "Le vrai noyau de Zidara, compilé en WebAssembly, décide ceci dans votre navigateur. Rien n'est envoyé.",
     loading: "Démarrage du moteur…",
-    failed: "Le moteur n'a pas pu démarrer dans ce navigateur. La leçon fonctionne quand même.",
+    failed: "Le moteur n'a pas pu démarrer dans ce navigateur. Le cours de démo fonctionne quand même.",
   },
-  facts: ["Un moteur Rust pour le web, Android et iOS", "Marche hors ligne", "Arabe, français et anglais", "WCAG 2.2 AA", "Code source public"],
+  facts: ["Un noyau Rust : serveur, navigateur, Android, iOS", "N'importe quel cadre pédagogique", "N'importe quelle expérience", "Des agents IA avec permissions", "Hors ligne d'abord", "Arabe, français, anglais"],
   why: {
     title: "Cinq pourquoi, jusqu'à la racine",
-    lead: "Nous avons demandé pourquoi tant d'enfants n'apprennent pas, et nous avons continué à demander.",
+    lead: "Nous avons demandé pourquoi tant d'enfants n'apprennent toujours pas, et nous avons continué jusqu'à trouver ce qu'un logiciel peut réparer.",
     steps: [
       { q: "Pourquoi tant d'enfants n'apprennent-ils pas ?", a: "Environ 7 enfants de dix ans sur 10 dans les pays à revenu faible et intermédiaire ne savent pas lire et comprendre un texte simple. En maths, plus de la moitié des élèves de quatrième année au Koweït et au Maroc sont sous le plus bas repère international.", cite: [1, 2] },
       { q: "Pourquoi le numérique ne comble-t-il pas l'écart ?", a: "Il est surtout fait pour d'autres. L'arabe représente 0,6 % des contenus du web, moins de la moitié des habitants du Moyen-Orient et de l'Afrique du Nord utilisent l'internet mobile, et 3 sur 10 d'entre eux ont encore un téléphone 3G ou basique.", cite: [3, 4] },
-      { q: "Pourquoi les écoles n'adaptent-elles pas leurs outils ?", a: "Parce que la façon d'enseigner y est figée. Une plateforme porte une seule idée du progrès, et la changer revient à faire un autre produit. Les enseignants comblent le manque à la main, et le monde en manquera de 44 millions d'ici 2030.", cite: [5] },
-      { q: "Pourquoi la façon d'enseigner est-elle figée ?", a: "Parce que personne n'a écrit la pédagogie sous une forme qu'un logiciel peut exécuter. Ses règles vivent dans des documents et dans la tête des enseignants, alors chaque appli en refait une copie simplifiée.", cite: [] },
-      { q: "Pourquoi est-ce important pour un enfant ?", a: "Un logiciel qui ne sait pas comment on enseigne récompense les clics au lieu de l'apprentissage, et une IA qui ignore les règles devine.", cite: [] },
+      { q: "Pourquoi les écoles ne peuvent-elles pas façonner leurs plateformes ?", a: "Les plateformes d'apprentissage portent une seule idée du cours et ajoutent le reste en modules. L'approche pédagogique vit dans l'application et ne peut pas en sortir : une nouvelle pédagogie ou un nouveau public demande un nouveau produit, ou un travail fait à la main par des enseignants qui manquent déjà. Il en faudra 44 millions de plus d'ici 2030.", cite: [5] },
+      { q: "Pourquoi l'enseignement est-il enfermé ?", a: "Parce que la pédagogie n'a jamais été écrite comme un logiciel. Ses règles vivent dans des documents et dans la tête des enseignants, et chaque plateforme en refait une copie simplifiée pour chaque public : N cadres fois M expériences.", cite: [] },
+      { q: "Pourquoi est-ce urgent maintenant ?", a: "Les tuteurs et correcteurs IA arrivent dans chaque classe. Sans les règles de l'école dans le système, ils devinent, et personne ne peut vérifier, encadrer ou annuler ce qu'ils ont fait.", cite: [] },
     ],
-    rootTitle: "Alors nous avons construit la pièce qui manquait : la pédagogie en logiciel.",
-    root: "Zidara fait des règles d'une école quelque chose que le moteur exécute, teste et peut remplacer. Le jeu, les récompenses et l'IA les suivent tous.",
+    rootTitle: "Alors nous avons construit le moteur qui manquait : la pédagogie comme logiciel.",
+    root: "Zidara transforme n'importe quelle façon d'enseigner en règles qu'un noyau testé exécute. Toute expérience et tout agent IA travaillent ensuite par-dessus, dans des règles que des personnes approuvent.",
     sources: "Sources",
   },
   sources: SOURCES,
   how: {
-    title: "Un moteur. Toute pédagogie. Chaque public.",
-    lead: "Chaque façon d'enseigner que nous avons étudiée se ramène à six briques. Seules les règles changent.",
-    blocksTitle: "Six briques",
-    blocks: [
-      { title: "Objectifs", body: "Ce qu'un élève doit savoir faire" },
-      { title: "Activités", body: "Ce que fait l'élève" },
-      { title: "Preuves", body: "Ce que le travail démontre" },
-      { title: "Jugement", body: "Comment les preuves deviennent un niveau" },
-      { title: "Progression", body: "Ce qui s'ouvre ensuite" },
-      { title: "Rôles", body: "Qui enseigne, évalue et aide" },
-    ],
-    layersTitle: "Trois couches",
+    title: "Un noyau. N'importe quel cadre. N'importe quelle expérience.",
+    lead: "Chaque approche que nous avons comparée, de Cambridge et la pédagogie de la maîtrise aux critères de l'IB, à l'approche par compétences et à la répétition espacée, se ramène aux mêmes six briques. Les briques restent ; seules les règles changent.",
+    layersTitle: "Trois couches, et l'automatisation à travers toutes",
     layers: [
-      { title: "Expérience", body: "L'apparence, pour chaque public et chaque appareil" },
-      { title: "Cadre", body: "Ce qu'apprendre veut dire : maîtrise, style Cambridge, celui d'une école" },
-      { title: "Moteur", body: "Construit une fois, testé à fond, sans réseau ni horloge" },
+      { title: "Expérience", body: "L'apparence pour chaque public et chaque appareil : le chemin d'un enfant, une grille du secondaire, l'atelier de l'enseignant, le résumé des parents, un tuteur en conversation." },
+      { title: "Cadre", body: "Ce qu'apprendre veut dire : objectifs, preuves et règles qui les jugent. Maîtrise, style Cambridge, ou celui d'une école." },
+      { title: "Noyau", body: "Personnes, groupes, contenus, activités, journal des preuves, calendrier et sécurité. Construit une fois, testé à fond, sans réseau ni horloge à l'intérieur." },
+      { title: "Automatisation", body: "Événements, règles et agents IA en acteurs, à travers les trois couches." },
     ],
-    tiles: [
-      { title: "Pas N × M", body: "Cadres et expériences se combinent librement. Ajouter une pédagogie prend des semaines, pas un nouveau produit." },
-      { title: "Une IA qui suit les règles", body: "Les agents sont des acteurs avec des rôles et des droits. Un agent d'évaluation pré-corrige ; le moindre doute va à l'enseignant. Chaque action est tracée et réversible." },
-      { title: "Fait pour les téléphones des enfants", body: "Marche sans réseau et se synchronise ensuite sans conflit. Tient 60 images par seconde sur un profil de téléphone d'entrée de gamme." },
-      { title: "Chaque classe garde ses données", body: "La base de données sépare elle-même chaque classe : aucun écran, requête ou agent ne peut passer de l'une à l'autre." },
+    cards: [
+      { title: "Six briques", body: "Objectifs, activités, preuves, jugement, progression et rôles. Chaque pédagogie est un ensemble de règles sur les mêmes six." },
+      { title: "N'importe quel cadre", body: "Arbres d'objectifs et seuils sont des données. Jugement et progression sont du code compilé derrière une seule interface, soumis aux mêmes tests. Un nouveau cadre coûte des semaines, pas un nouveau produit." },
+      { title: "N'importe quelle expérience, pas N × M", body: "Un cadre dit ce qui est vrai ; une expérience décide comment le montrer. N cadres et M expériences coûtent N + M à construire." },
+      { title: "Les agents IA sont des acteurs", body: "Ils passent par les mêmes permissions que les personnes. Tout ce qui est incertain ou sommatif s'arrête chez l'enseignant, et chaque action peut être annulée." },
+      { title: "Hors ligne d'abord, sur tout appareil", body: "Le même noyau tourne sur le serveur, dans le navigateur en WebAssembly et dans les applis natives. Le travail fait hors ligne repasse par les mêmes règles à la synchronisation." },
+      { title: "L'isolement dans la base de données", body: "Chaque ligne porte sa classe et son école, et la sécurité au niveau des lignes de PostgreSQL les sépare. Aucun écran, requête ou agent ne peut passer." },
     ],
+  },
+  ai: {
+    title: "Conçu pour l'ère de l'IA, gouverné par des personnes",
+    lead: "Le noyau n'appelle jamais de modèle. Les agents proposent ; la règle du cadre décide ce qui s'applique et ce qui attend l'enseignant. Chaque action d'agent est journalisée et peut être annulée.",
     flow: ["L'agent propose", "Les règles vérifient", "L'enseignant décide"],
+    agents: [
+      { name: "Agent d'évaluation", body: "Pré-corrige les réponses ouvertes avec un indice de confiance. Seules les notes formatives sûres s'appliquent ; le sommatif revient toujours à l'enseignant.", today: true },
+      { name: "Agent tuteur", body: "Lit les preuves d'un élève et propose la suite. Il ne note jamais un travail sommatif.", today: false },
+      { name: "Agent des opérations", body: "Repère les élèves en difficulté et ouvre un dossier pour qu'une personne s'en occupe.", today: false },
+      { name: "Agent de conception", body: "Transforme un programme officiel en cadre provisoire qu'un concepteur approuve.", today: false },
+    ],
+    today: "Tourne aujourd'hui",
+    designed: "Conçu",
   },
   made: {
-    title: "Tout ce que vous voyez est fait avec Zidara",
-    lead: "Les cours, le jeu, l'atelier de l'enseignant et la démo en direct ci-dessus tournent sur le même moteur. Un cours enseigne même Zidara, avec Zidara.",
-    shots: [
-      { src: "/landing/path.webp", alt: "Le chemin des fractions en maîtrise : niveau 1 doré avec un palmier, niveau 2 ouvert, niveau 3 verrouillé.", caption: "Le chemin est la progression du cadre, dessinée comme un jeu." },
-      { src: "/landing/lens.webp", alt: "Le même chemin selon les règles du style Cambridge : niveau 1 encore ouvert avec trois étoiles, niveaux 2 et 3 ouverts.", caption: "Changez les règles de l'école : les mêmes réponses sont jugées à nouveau." },
-      { src: "/landing/right.webp", alt: "Une question de fractions bien répondue : Bizra applaudit et dix points montent.", caption: "Un retour immédiat, corrigé par le moteur." },
-      { src: "/landing/finish.webp", alt: "L'écran de fin : tu sais le faire maintenant, un palmier a poussé dans ton oasis, deux étoiles.", caption: "Les récompenses viennent seulement des preuves d'apprentissage." },
+    title: "Fait avec Zidara",
+    lead: "Tout ce que vous pouvez ouvrir depuis cette page tourne sur le même noyau. Le cours de démo est une expérience parmi d'autres, faite pour montrer jusqu'où le moteur se plie. Un cours enseigne même Zidara, avec Zidara.",
+    items: [
+      { title: "Un jeu d'apprentissage", body: "Un cours dans le style de Duolingo et Brilliant pour les 9 à 11 ans : films, jouets et questions, corrigés aussitôt par le noyau. Les récompenses ne viennent que des preuves.", href: "#play", shot: "/landing/path.webp", alt: "Le chemin des fractions après une séance : le niveau 1 maîtrisé en bleu avec un palmier de points à côté, le niveau 2 ensuite, Bizra qui attend." },
+      { title: "Des manches en direct", body: "Une manche sur le tableau de la classe dans le style de Kahoot, chaque téléphone répond. Pas de chrono ni de classement ; les réponses deviennent des preuves d'entraînement.", href: "#classes", shot: "/landing/board.webp", alt: "L'atelier de l'enseignant pendant une manche en direct : la question, trois réponses en couleur, et des boutons pour montrer la réponse ou continuer." },
+      { title: "L'atelier de l'enseignant", body: "Les progrès de la classe, les notes proposées par l'agent et chaque annulation, au même endroit.", href: "#classes", shot: "/landing/studio.webp", alt: "L'atelier de l'enseignant : où en est la classe pour chaque objectif, les réponses en attente de décision, et l'approche pédagogique de la classe." },
+      { title: "Changer de pédagogie", body: "Un enseignant passe la classe de la maîtrise au style Cambridge, et chaque élève est jugé à nouveau à partir des mêmes preuves.", href: "#classes", shot: "/landing/lens.webp", alt: "Le même chemin selon le style Cambridge : le niveau 1 redevient ouvert, et une note dit que c'est le moteur, pas le jeu, qui juge selon les règles de l'école." },
     ],
+    open: "Ouvrir",
   },
   proof: {
     title: "Des preuves, pas des promesses",
@@ -250,98 +298,120 @@ const fr: LandingCopy = {
   faq: {
     title: "Questions",
     items: [
-      { q: "À qui s'adresse Zidara ?", a: "Aux enfants scolarisés et aux enseignants qui font leur classe. Le prototype commence par les maths du primaire, les fractions de 9 à 11 ans, en arabe, en français et en anglais." },
-      { q: "Produit ou prototype ?", a: "Un prototype qui fonctionne. Deux cours, l'atelier de l'enseignant, un jeu de classe en direct, la synchronisation hors ligne et l'évaluateur IA encadré tournent aujourd'hui. Il n'a pas encore été testé dans une école." },
-      { q: "L'IA note-t-elle les enfants ?", a: "Non. Le moteur n'appelle jamais de modèle. Un agent d'évaluation peut pré-corriger une réponse ouverte avec un indice de confiance ; la règle de l'école l'applique ou l'envoie à l'enseignant, et toute évaluation sommative revient toujours à une personne." },
-      { q: "Faut-il internet ?", a: "Seulement pour la première visite. Les élèves continuent hors ligne, et leur travail se synchronise au retour de la connexion, revérifié par les mêmes règles sur le serveur." },
-      { q: "Une école peut-elle apporter sa pédagogie ?", a: "Oui, c'est tout l'intérêt. Objectifs et seuils sont des données ; jugement et progression sont du code derrière une seule interface, soumis aux mêmes tests. La maîtrise et le style Cambridge tournent aujourd'hui." },
+      { q: "Zidara est-il un jeu ?", a: "Non. Zidara est un moteur d'apprentissage et la plateforme qui l'entoure. Le jeu de ce site est une expérience construite dessus, pour montrer jusqu'où le moteur se plie ; le même noyau dessine une grille du secondaire, l'atelier de l'enseignant ou un message texte." },
+      { q: "À qui s'adresse-t-il ?", a: "Aux écoles, centres de formation et systèmes éducatifs qui veulent que leur façon d'enseigner tourne comme un logiciel, et aux équipes qui veulent construire de nouvelles expériences sur un cœur testé. Le prototype commence par les maths du primaire en arabe, en français et en anglais." },
+      { q: "En quoi est-il différent des autres plateformes ?", a: "Les plateformes générales gardent leur approche pédagogique dans l'application et ajoutent le reste en modules. Dans Zidara, la pédagogie est le cœur : les cadres sont de premier rang, les expériences sont interchangeables et les agents sont des acteurs encadrés." },
+      { q: "L'IA note-t-elle les élèves ?", a: "Non. Le moteur n'appelle jamais de modèle. Un agent d'évaluation peut pré-corriger une réponse ouverte avec un indice de confiance ; la règle du cadre l'applique ou l'envoie à l'enseignant, et toute évaluation sommative revient toujours à une personne." },
+      { q: "Pouvons-nous apporter notre pédagogie ?", a: "Oui, c'est tout l'intérêt. Objectifs et seuils sont des données ; jugement et progression sont du code derrière une seule interface, soumis aux mêmes tests. La maîtrise et le style Cambridge tournent aujourd'hui." },
+      { q: "Produit ou prototype ?", a: "Un prototype qui fonctionne. Deux cadres, deux cours, l'atelier de l'enseignant, les manches en direct, la synchronisation hors ligne et l'évaluateur IA encadré tournent aujourd'hui. Il n'a pas encore été testé dans une école." },
     ],
   },
-  end: { title: "Jouez la première leçon", lead: "Deux minutes, sans compte, dans votre langue.", classes: "Enseignants : ouvrir les classes de démo" },
-  footer: { line: "Un moteur d'apprentissage qui sait comment on enseigne.", made: "Fait avec Zidara", code: "Code source" },
+  end: { title: "Voyez ce que le moteur sait faire", lead: "Ouvrez un cours de démo en invité, ou l'atelier de l'enseignant. Aucun compte nécessaire.", primary: "Essayer un cours de démo", classes: "Ouvrir l'atelier de l'enseignant" },
+  footer: { line: "Le moteur d'apprentissage adaptable pour l'ère de l'IA.", made: "Fait avec Zidara", code: "Code source" },
 };
 
 const ar: LandingCopy = {
-  nav: { why: "لماذا", how: "كيف تعمل", proof: "الإثبات", play: "العب درسًا", menu: "الأقسام" },
+  nav: { why: "الرؤية", how: "البنية", engine: "المحرّك مباشرة", ai: "وكلاء الذكاء الاصطناعي", made: "صُنع بزيدارا", play: "جرّب العرض", menu: "الأقسام" },
   hero: {
-    before: "لعبة التعلّم التي تتّبع ",
-    accent: "قواعد مدرستك",
+    badge: "كل عرض في هذه الصفحة مصنوع بزيدارا",
+    before: "محرّك التعلّم القابل للتكيّف ",
+    accent: "لعصر الذكاء الاصطناعي",
     after: ".",
-    lead: "تحوّل زيدارا طريقة المدرسة في التعليم إلى لعبة يلعبها الأطفال على هواتفهم، حتى دون إنترنت.",
-    more: "كيف تعمل",
+    lead: "زيدارا منصّة تعلّم مبنية على نواة واحدة مختبَرة. أحضر أي إطار تعليمي، واعرضه بأي تجربة، ودع وكلاء الذكاء الاصطناعي يعملون داخل القواعد التي يوافق عليها معلّموك فقط.",
+    primary: "شاهد المحرّك مباشرة",
+    secondary: "جرّب درسًا تجريبيًا",
+  },
+  engine: {
+    title: "حكم واحد، بأي إطار، وبأي تجربة",
+    lead: "هذه هي النواة الحقيقية، تعمل في متصفّحك. غيّر الإطار فيتغيّر الحكم. غيّر التجربة فلا يتغيّر إلا الرسم.",
   },
   live: {
-    label: "قواعد المدرسة",
-    story: "أجاب متعلّم مرة واحدة عن أول اختبار في الكسور، وأصاب في السؤالين. بدّل القواعد:",
+    label: "zidara / المحرّك مباشرة",
+    tag: "يعمل في متصفّحك",
+    frameworkAxis: "الإطار",
+    experienceAxis: "التجربة",
+    experiences: { path: "طريق الأطفال", grid: "شبكة الثانوي", studio: "استوديو المعلّم", text: "رسالة نصية" },
+    story: "أجاب متعلّم مرة واحدة عن أول اختبار في الكسور، وأصاب في السؤالين.",
     level: "المستوى {n}",
     state: { achieved: "أتقنه", in_progress: "قيد التعلّم", not_started: "لم يبدأ", needs_support: "يحتاج دعمًا" },
     open: "مفتوح",
     after: "يُفتح بعد المستوى {n}",
     on: "يُفتح في {date}",
+    band: "الدرجة {n} من {of}",
+    cols: { outcome: "الهدف", status: "الحالة", score: "النتيجة", band: "الدرجة" },
+    studioHead: "الكسور المتكافئة، متعلّم واحد",
+    attempts: "المحاولات: {n}",
+    smsNote: "للهواتف البسيطة: العرض نفسه، مرسلًا نصًّا.",
     verdict: {
       mastery: "الإتقان: إجابتان صحيحتان تكفيان دليلًا. أُتقن المستوى 1 وفُتح المستوى 2.",
       "cambridge-style": "على طريقة كامبريدج: الإجابات نفسها تنال أعلى درجة، لكن التمرين ليس تقييمًا، والمستوى 3 ينتظر موعده في خطة السنة.",
     },
-    engine: "مباشر: محرّك زيدارا الحقيقي، مترجمًا إلى WebAssembly، يحكم على هذا داخل متصفّحك.",
-    band: "الدرجة {n} من {of}",
+    engine: "نواة زيدارا الحقيقية، مترجمة إلى WebAssembly، تقرّر هذا داخل متصفّحك. لا يُرسل شيء.",
     loading: "نشغّل المحرّك…",
-    failed: "تعذّر تشغيل المحرّك في هذا المتصفّح. الدرس يعمل مع ذلك.",
+    failed: "تعذّر تشغيل المحرّك في هذا المتصفّح. الدرس التجريبي يعمل مع ذلك.",
   },
-  facts: ["محرّك واحد بلغة Rust للويب وأندرويد وiOS", "يعمل دون إنترنت", "العربية والفرنسية والإنجليزية", "WCAG 2.2 AA", "شيفرة مصدرية علنية"],
+  facts: ["نواة Rust واحدة: الخادم والمتصفّح وأندرويد وiOS", "أي إطار تعليمي", "أي تجربة", "وكلاء ذكاء اصطناعي بصلاحيات", "يعمل دون إنترنت أولًا", "العربية والفرنسية والإنجليزية"],
   why: {
     title: "خمسة أسئلة «لماذا»، حتى الجذر",
-    lead: "سألنا لماذا لا يتعلّم كثير من الأطفال، وواصلنا السؤال.",
+    lead: "سألنا لماذا لا يتعلّم كثير من الأطفال حتى اليوم، وواصلنا السؤال حتى وصلنا إلى ما يستطيع البرنامج إصلاحه.",
     steps: [
       { q: "لماذا لا يتعلّم كثير من الأطفال؟", a: "يُقدَّر أن 7 من كل 10 أطفال في العاشرة في البلدان المنخفضة والمتوسطة الدخل لا يستطيعون قراءة نص بسيط وفهمه. وفي الرياضيات، أكثر من نصف تلاميذ السنة الرابعة في الكويت والمغرب دون أدنى معيار دولي.", cite: [1, 2] },
       { q: "لماذا لا يسدّ التعلّم الرقمي الفجوة؟", a: "لأن معظمه صُنع لغيرهم. العربية 0.6% فقط من محتوى الويب، وأقل من نصف سكان الشرق الأوسط وشمال أفريقيا يستعملون الإنترنت عبر الهاتف، و3 من كل 10 منهم ما زالوا على هواتف 3G أو هواتف بسيطة.", cite: [3, 4] },
-      { q: "لماذا لا تكيّف المدارس أدواتها؟", a: "لأن طريقة التعليم مبنية داخلها. تحمل المنصّة فكرة واحدة عن التقدّم، وتغييرها يعني منتجًا جديدًا. يسدّ المعلّمون النقص بأيديهم، والعالم يحتاج 44 مليون معلّم إضافي بحلول 2030.", cite: [5] },
-      { q: "لماذا طريقة التعليم مبنية داخل الأدوات؟", a: "لأن أحدًا لم يكتب البيداغوجيا بصيغة يستطيع البرنامج تشغيلها. قواعدها في الوثائق وفي أذهان المعلّمين، فيعيد كل تطبيق بناء نسخة مبسّطة منها.", cite: [] },
-      { q: "لماذا يهمّ هذا الطفل؟", a: "البرنامج الذي لا يعرف كيف يكون التعليم يكافئ النقرات بدل التعلّم، والذكاء الاصطناعي الذي لا يعرف القواعد يخمّن.", cite: [] },
+      { q: "لماذا لا تستطيع المدارس تشكيل منصّاتها؟", a: "تحمل منصّات التعلّم فكرة واحدة عن الدرس وتضيف الباقي إضافاتٍ. طريقة التعليم تعيش داخل التطبيق ولا يمكن إخراجها، فتعني بيداغوجيا جديدة أو جمهور جديد منتجًا جديدًا، أو عملًا يدويًا يقوم به معلّمون ينقصون العالم أصلًا: يحتاج العالم 44 مليون معلّم إضافي بحلول 2030.", cite: [5] },
+      { q: "لماذا التعليم محبوس داخلها؟", a: "لأن البيداغوجيا لم تُكتب قطّ برنامجًا. قواعدها في الوثائق وفي أذهان المعلّمين، وكل منصّة تعيد بناء نسخة مبسّطة منها لكل جمهور: N إطارًا في M تجربة.", cite: [] },
+      { q: "لماذا يهمّ هذا الآن؟", a: "يصل المعلّمون والمصحّحون الآليون إلى كل قسم. ومن دون قواعد المدرسة داخل النظام فإنهم يخمّنون، ولا يستطيع أحد أن يتحقّق ممّا فعلوه أو يحكمه أو يتراجع عنه.", cite: [] },
     ],
-    rootTitle: "فبنينا القطعة الناقصة: البيداغوجيا برنامجًا.",
-    root: "تجعل زيدارا قواعد المدرسة شيئًا يشغّله المحرّك ويختبره ويستبدله. واللعبة والمكافآت والذكاء الاصطناعي كلّها تتّبعها.",
+    rootTitle: "فبنينا المحرّك الذي كان ينقص: البيداغوجيا برنامجًا.",
+    root: "تحوّل زيدارا أي طريقة في التعليم إلى قواعد تشغّلها نواة مختبَرة. ثم تعمل فوقها أي تجربة وأي وكيل ذكاء اصطناعي، داخل قواعد يوافق عليها الناس.",
     sources: "المصادر",
   },
   sources: SOURCES,
   how: {
-    title: "محرّك واحد. أي بيداغوجيا. لكل جمهور.",
-    lead: "كل طريقة تعليم درسناها ترجع إلى ست لبنات. القواعد وحدها تتغيّر.",
-    blocksTitle: "ست لبنات",
-    blocks: [
-      { title: "الأهداف", body: "ما ينبغي أن يقدر عليه المتعلّم" },
-      { title: "الأنشطة", body: "ما يفعله المتعلّم" },
-      { title: "الأدلّة", body: "ما يثبته العمل" },
-      { title: "الحكم", body: "كيف تصير الأدلّة مستوى" },
-      { title: "التدرّج", body: "ما الذي يُفتح بعد ذلك" },
-      { title: "الأدوار", body: "من يعلّم ويقيّم ويساعد" },
-    ],
-    layersTitle: "ثلاث طبقات",
+    title: "نواة واحدة. أي إطار. أي تجربة.",
+    lead: "كل طريقة تعليم قارنّاها، من كامبريدج والتعلّم بالإتقان إلى معايير البكالوريا الدولية والتعليم بالكفايات والتكرار المتباعد، تعود إلى ستّ لبنات بناء نفسها. اللبنات تبقى، والقواعد وحدها تتغيّر.",
+    layersTitle: "ثلاث طبقات، والأتمتة تمرّ عبرها كلّها",
     layers: [
-      { title: "التجربة", body: "الشكل، لكل جمهور ولكل جهاز" },
-      { title: "الإطار", body: "معنى التعلّم: الإتقان، طريقة كامبريدج، طريقة المدرسة نفسها" },
-      { title: "المحرّك", body: "يُبنى مرة ويُختبر بصرامة، بلا شبكة ولا ساعة بداخله" },
+      { title: "التجربة", body: "الشكل والإحساس لكل جمهور وجهاز: طريق للطفل، وشبكة للثانوي، واستوديو للمعلّم، وملخّص للأولياء، ومعلّم في محادثة." },
+      { title: "الإطار", body: "معنى التعلّم: الأهداف والأدلّة والقواعد التي تحكم عليها. الإتقان، أو طريقة كامبريدج، أو طريقة المدرسة نفسها." },
+      { title: "النواة", body: "الأشخاص والمجموعات والمحتوى والأنشطة وسجلّ الأدلّة والجدولة والأمان. تُبنى مرة وتُختبر بصرامة، بلا شبكة ولا ساعة داخلها." },
+      { title: "الأتمتة", body: "أحداث وقواعد ووكلاء ذكاء اصطناعي فاعلون، عبر الطبقات الثلاث." },
     ],
-    tiles: [
-      { title: "لا N × M", body: "الأطر والتجارب تتركّب بحرّية. إضافة بيداغوجيا تكلّف أسابيع، لا منتجًا جديدًا." },
-      { title: "ذكاء اصطناعي يتّبع القواعد", body: "الوكلاء فاعلون لهم أدوار وصلاحيات. وكيل التقييم يصحّح مبدئيًا، وكل ما فيه شكّ يذهب إلى المعلّم. كل فعل مسجَّل ويمكن التراجع عنه." },
-      { title: "مصنوع لهواتف الأطفال", body: "يعمل دون شبكة ويتزامن لاحقًا بلا تعارض. يحافظ على 60 صورة في الثانية على ملف هاتف اقتصادي." },
-      { title: "لكل قسم بياناته", body: "قاعدة البيانات نفسها تفصل الأقسام، فلا شاشة ولا استعلام ولا وكيل يعبر من قسم إلى آخر." },
+    cards: [
+      { title: "ستّ لبنات بناء", body: "الأهداف والأنشطة والأدلّة والحكم والتدرّج والأدوار. كل بيداغوجيا مجموعة قواعد فوق اللبنات الستّ نفسها." },
+      { title: "أي إطار", body: "أشجار الأهداف والعتبات بيانات. والحكم والتدرّج شيفرة مترجمة خلف واجهة واحدة، تخضع للاختبارات نفسها. الإطار الجديد يكلّف أسابيع، لا منتجًا جديدًا." },
+      { title: "أي تجربة، لا N × M", body: "الإطار يقول ما هو صحيح، والتجربة تقرّر كيف تعرضه. N إطارًا وM تجربة تكلّف N + M في البناء." },
+      { title: "وكلاء الذكاء الاصطناعي فاعلون", body: "يمرّون بالصلاحيات نفسها التي يمرّ بها الناس. كل ما هو غير مؤكَّد أو ختامي يتوقّف عند المعلّم، ويمكن التراجع عن كل فعل." },
+      { title: "دون إنترنت أولًا، على كل جهاز", body: "النواة نفسها تعمل على الخادم، وفي المتصفّح بصيغة WebAssembly، وداخل التطبيقات الأصلية. العمل المنجز دون اتصال يمرّ بالقواعد نفسها عند المزامنة." },
+      { title: "العزل داخل قاعدة البيانات", body: "كل سطر يحمل قسمه ومدرسته، وأمان مستوى الأسطر في PostgreSQL يفصل بينها. لا شاشة ولا استعلام ولا وكيل يستطيع العبور." },
     ],
-    flow: ["الوكيل يقترح", "القواعد تفحص", "المعلّم يقرّر"],
+  },
+  ai: {
+    title: "مصنوع لعصر الذكاء الاصطناعي، ويحكمه الناس",
+    lead: "النواة لا تستدعي نموذجًا أبدًا. الوكلاء يقترحون، وسياسة الإطار تقرّر ما يُطبَّق وما ينتظر المعلّم. كل فعل لوكيل مسجَّل ويمكن التراجع عنه.",
+    flow: ["الوكيل يقترح", "القواعد تتحقّق", "المعلّم يقرّر"],
+    agents: [
+      { name: "وكيل التقييم", body: "يصحّح الإجابات المفتوحة مبدئيًا مع درجة ثقة. لا يُطبَّق إلا التقييم التكويني المؤكَّد، والختامي يعود دائمًا إلى المعلّم.", today: true },
+      { name: "الوكيل المعلّم", body: "يقرأ أدلّة المتعلّم ويقترح الخطوة التالية. لا يقيّم عملًا ختاميًا أبدًا.", today: false },
+      { name: "وكيل العمليات", body: "يرصد المتعلّمين المعرّضين للتعثّر ويفتح ملفًّا ليتابعه شخص.", today: false },
+      { name: "وكيل التأليف", body: "يحوّل وثيقة منهاج إلى إطار أوّلي يوافق عليه مصمّم.", today: false },
+    ],
+    today: "يعمل اليوم",
+    designed: "مصمَّم",
   },
   made: {
-    title: "كل ما تراه هنا مصنوع بزيدارا",
-    lead: "الدروس واللعبة واستوديو المعلّم والعرض المباشر أعلاه كلّها تعمل على المحرّك نفسه. وأحد الدروس يعلّم زيدارا، بزيدارا.",
-    shots: [
-      { src: "/landing/path.webp", alt: "طريق الكسور بقواعد الإتقان: المستوى 1 ذهبي وبجانبه نخلة، المستوى 2 مفتوح، المستوى 3 مقفل.", caption: "الطريق هو تدرّج الإطار، مرسومًا لعبة." },
-      { src: "/landing/lens.webp", alt: "الطريق نفسه بقواعد طريقة كامبريدج: المستوى 1 ما زال مفتوحًا بثلاث نجوم، والمستويان 2 و3 مفتوحان.", caption: "بدّل قواعد المدرسة فتُقيَّم الإجابات نفسها من جديد." },
-      { src: "/landing/right.webp", alt: "سؤال في الكسور أُجيب عنه صحيحًا: بذرة تهتف وتصعد عشر نقاط.", caption: "ملاحظة فورية، يصحّحها المحرّك." },
-      { src: "/landing/finish.webp", alt: "شاشة النهاية: أصبحت تستطيع هذا، نبتت نخلة في واحتك، نجمتان.", caption: "المكافآت تأتي من أدلّة التعلّم وحدها." },
+    title: "صُنع بزيدارا",
+    lead: "كل ما تستطيع فتحه من هذه الصفحة يعمل على النواة نفسها. الدرس التجريبي تجربة واحدة من تجارب كثيرة، صُنع ليُظهر إلى أي حدّ ينثني المحرّك. بل إن أحد الدروس يعلّم زيدارا، بزيدارا.",
+    items: [
+      { title: "لعبة تعلّم", body: "درس على طريقة Duolingo وBrilliant للأعمار من 9 إلى 11: أفلام وألعاب وأسئلة تصحّحها النواة فورًا. المكافآت لا تأتي إلا من الأدلّة.", href: "#play", shot: "/landing/path.webp", alt: "طريق الكسور بعد حصّة واحدة: المستوى 1 متقَن بالأزرق وبجانبه نخلة من النقاط، والمستوى 2 هو التالي، وبذرة تنتظر." },
+      { title: "جولات مباشرة", body: "جولة على سبّورة القسم على طريقة Kahoot، وكل هاتف يجيب. لا مؤقّت ولا ترتيب، والإجابات تصير أدلّة تمرّن.", href: "#classes", shot: "/landing/board.webp", alt: "استوديو المعلّم أثناء جولة مباشرة: السؤال، وثلاث إجابات ملوّنة، وأزرار لإظهار الإجابة أو المتابعة." },
+      { title: "استوديو المعلّم", body: "تقدّم القسم، وتقييمات الوكيل المنتظرة، وكل تراجع، في مكان واحد.", href: "#classes", shot: "/landing/studio.webp", alt: "استوديو المعلّم: أين وصل القسم في كل هدف، والإجابات التي تنتظر قرارًا، وطريقة التدريس في القسم." },
+      { title: "تبديل البيداغوجيا", body: "ينقل المعلّم القسم من الإتقان إلى طريقة كامبريدج، فيُحكم على كل متعلّم من جديد بالأدلّة نفسها.", href: "#classes", shot: "/landing/lens.webp", alt: "الطريق نفسه بقواعد طريقة كامبريدج: يعود المستوى 1 مفتوحًا، وتقول ملاحظة إن المحرّك، لا اللعبة، يحكم بقواعد المدرسة." },
     ],
+    open: "افتح",
   },
   proof: {
-    title: "إثبات، لا وعود",
-    lead: "أمر واحد يفحص كل ادّعاء قبل أن يُنشر أي شيء.",
+    title: "أدلّة، لا وعود",
+    lead: "أمر واحد يتحقّق من كل ادّعاء قبل أي نشر.",
     stats: [
       { value: "100%", label: "من الأسطر والدوال والفروع تغطّيها الاختبارات" },
       { value: "369", label: "خطأً زُرع عمدًا في الشيفرة، وكُشف كلّها" },
@@ -354,15 +424,16 @@ const ar: LandingCopy = {
   faq: {
     title: "أسئلة",
     items: [
-      { q: "لمن زيدارا؟", a: "للأطفال في المدرسة وللمعلّمين الذين يديرون أقسامهم. يبدأ النموذج برياضيات الابتدائي، الكسور من 9 إلى 11 سنة، بالعربية والفرنسية والإنجليزية." },
-      { q: "منتج أم نموذج أولي؟", a: "نموذج أولي يعمل. درسان واستوديو المعلّم ولعبة القسم المباشرة والمزامنة دون إنترنت والمقيّم الآلي المحكوم بالقواعد تعمل اليوم. لم يُجرَّب بعد في مدرسة." },
-      { q: "هل يمنح الذكاء الاصطناعي العلامات للأطفال؟", a: "لا. المحرّك لا يستدعي نموذجًا أبدًا. قد يصحّح وكيل التقييم إجابة مفتوحة مبدئيًا مع درجة ثقة، فتطبّقها قاعدة المدرسة أو ترسلها إلى المعلّم، وكل تقييم ختامي يعود دائمًا إلى إنسان." },
-      { q: "هل يحتاج إلى الإنترنت؟", a: "في الزيارة الأولى فقط. يواصل المتعلّمون اللعب دون اتصال، ويتزامن عملهم حين يعود الاتصال، ويُفحص من جديد بالقواعد نفسها على الخادم." },
-      { q: "هل تستطيع مدرسة أن تأتي ببيداغوجيتها؟", a: "نعم، وهذا هو المقصود. الأهداف والعتبات بيانات، والحكم والتدرّج شيفرة خلف واجهة واحدة تخضع للاختبارات نفسها. الإتقان وطريقة كامبريدج يعملان اليوم." },
+      { q: "هل زيدارا لعبة؟", a: "لا. زيدارا محرّك تعلّم والمنصّة المحيطة به. اللعبة في هذا الموقع تجربة واحدة مبنية عليه، لتُظهر إلى أي حدّ ينثني المحرّك، والنواة نفسها ترسم شبكة للثانوي أو استوديو للمعلّم أو رسالة نصية." },
+      { q: "لمن هي؟", a: "للمدارس ومراكز التكوين والأنظمة التعليمية التي تريد أن تعمل طريقتها في التعليم برنامجًا، وللفرق التي تريد بناء تجارب تعلّم جديدة على نواة مختبَرة. يبدأ النموذج برياضيات الابتدائي بالعربية والفرنسية والإنجليزية." },
+      { q: "بماذا تختلف عن منصّات التعلّم الأخرى؟", a: "المنصّات العامة تُبقي طريقة التعليم داخل التطبيق وتضيف الباقي إضافاتٍ. في زيدارا البيداغوجيا هي القلب: الأطر في المقام الأول، والتجارب قابلة للتبديل، والوكلاء فاعلون محكومون بالقواعد." },
+      { q: "هل يمنح الذكاء الاصطناعي العلامات للمتعلّمين؟", a: "لا. المحرّك لا يستدعي نموذجًا أبدًا. قد يصحّح وكيل التقييم إجابة مفتوحة مبدئيًا مع درجة ثقة، فتطبّقها سياسة الإطار أو ترسلها إلى المعلّم، وكل تقييم ختامي يعود دائمًا إلى إنسان." },
+      { q: "هل نستطيع أن نأتي ببيداغوجيتنا؟", a: "نعم، وهذا هو المقصود. الأهداف والعتبات بيانات، والحكم والتدرّج شيفرة خلف واجهة واحدة تخضع للاختبارات نفسها. الإتقان وطريقة كامبريدج يعملان اليوم." },
+      { q: "منتج أم نموذج أولي؟", a: "نموذج أولي يعمل. إطاران ودرسان واستوديو المعلّم والجولات المباشرة والمزامنة دون إنترنت والمقيّم الآلي المحكوم بالقواعد تعمل اليوم. لم يُجرَّب بعد في مدرسة." },
     ],
   },
-  end: { title: "العب الدرس الأول", lead: "دقيقتان، بلا حساب، بلغتك.", classes: "للمعلّمين: الأقسام التجريبية" },
-  footer: { line: "محرّك تعلّم يعرف كيف يكون التعليم.", made: "صُنع بزيدارا", code: "الشيفرة المصدرية" },
+  end: { title: "شاهد ما يستطيعه المحرّك", lead: "افتح درسًا تجريبيًا ضيفًا، أو استوديو المعلّم. لا حاجة إلى حساب.", primary: "جرّب درسًا تجريبيًا", classes: "افتح استوديو المعلّم" },
+  footer: { line: "محرّك التعلّم القابل للتكيّف لعصر الذكاء الاصطناعي.", made: "صُنع بزيدارا", code: "الشيفرة المصدرية" },
 };
 
 export const LANDING: Record<Locale, LandingCopy> = { en, fr, ar };

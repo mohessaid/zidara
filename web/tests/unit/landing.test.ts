@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
 import { LANDING } from "../../src/lib/i18n/landing.ts";
 
 /** Every string in a value, with its path. */
@@ -33,9 +33,19 @@ describe("the landing page's words", () => {
     for (const locale of ["ar", "fr", "en"] as const) for (const [at, s] of strings(LANDING[locale])) expect(s, `${locale}${at}`).not.toMatch(/[–—]/);
   });
 
-  it("cite only sources and pictures that exist", () => {
+  it("cite only sources and screens that exist, and link only to the app's own", () => {
     const n = LANDING.en.sources.length;
     for (const step of LANDING.en.why.steps) for (const c of step.cite) expect(c).toBeGreaterThanOrEqual(1), expect(c).toBeLessThanOrEqual(n);
-    for (const shot of LANDING.en.made.shots) expect(() => readFileSync(new URL(`../../public${shot.src}`, import.meta.url))).not.toThrow();
+    for (const locale of ["ar", "fr", "en"] as const) for (const item of LANDING[locale].made.items) expect(["#play", "#classes"]).toContain(item.href);
+    for (const item of LANDING.en.made.items) expect(() => readFileSync(new URL(`../../public${item.shot}`, import.meta.url))).not.toThrow();
+  });
+
+  it("pitch the engine, not a game (ADR 0015)", () => {
+    const en = LANDING.en;
+    expect(`${en.hero.before}${en.hero.accent}`).toMatch(/learning engine/);
+    expect(en.hero.lead).toMatch(/any teaching framework/);
+    expect(en.hero.lead).toMatch(/any experience/);
+    expect(en.faq.items[0]!.q).toBe("Is Zidara a game?");
+    expect(en.faq.items[0]!.a).toMatch(/^No\./);
   });
 });

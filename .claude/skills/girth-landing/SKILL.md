@@ -14,14 +14,16 @@ metadata:
 ---
 ## Read the brief first <!-- src: design-taste-frontend#0-brief-inference-read-the-room-before-anything-else -->
 State one line before building: page kind, audience, vibe, aesthetic family. Zidara's front page:
-a pitch for judges, funders and schools; calm, exact, "infrastructure" language (context.dev's
-structure, not its look); the game keeps the oasis.
+a pitch for judges, funders and schools. **Zidara is the adaptable learning engine / LMS for the
+AI era (kernel, any framework, any experience, governed agents; `docs/proposal.md`). Never pitch
+it as a game: the game is one experience that shows the engine bends** (owner, ADR 0015). Look:
+context.dev's (dot streams, blue dotted frame, ruled sections, mono labels, dot-matrix drawings).
 
 ## Hard layout rules <!-- src: design-taste-frontend#4-7-layout-discipline-hard-rules-failing-any-of-these-is-shipping-broken-work -->
 - Hero fits the first screen: headline ≤ 3 lines, subtext ≤ 20 words, CTAs visible. Max 4 text elements.
-- Navigation on one line, ≤ 80 px. One label per intent ("Play a lesson" everywhere).
+- Navigation on one line, ≤ 80 px. One label per intent.
 - No two sections share a layout family; bento cells = content count, with varied materials.
-- Max one small uppercase eyebrow per three sections. No split headers, no scroll cues.
+- Mono kickers (`01 / vision`) allowed as the page's rhythm; nothing else uppercase. No split headers, no scroll cues.
 - Mobile collapse declared per section; no horizontal page scroll.
 
 ## Copy <!-- src: design-taste-frontend#4-9-content-density -->
@@ -31,8 +33,9 @@ structure, not its look); the game keeps the oasis.
 - Re-read every string in all three languages before shipping; figures and placeholders match.
 
 ## Product visuals <!-- src: design-taste-frontend#4-8-image-visual-asset-strategy -->
-No div-built fake screenshots. Show the real thing: the live kernel (in a worker), real screen
-captures of the app (webp, lazy), real components (Scene).
+No div-built fake screenshots. Show the real thing: the live kernel (in a worker) on both axes,
+real captures of the app. Drawings are dot-matrix scenes (`landing/scenes.ts`) that argue a point;
+the canvas never sits in layout flow (absolute, out of the grid) or it widens columns.
 
 ## Speed and access
 - Heavy work off the main thread (the showcase kernel runs in a Web Worker); below-the-fold

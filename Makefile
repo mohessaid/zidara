@@ -85,8 +85,10 @@ clean-containers:
 	docker ps -aq --filter label=org.zidara.test=1 | xargs -r docker rm -f > /dev/null
 
 # Running the server locally. The owner migrates and seeds; the server connects as zidara_app.
-DEV_OWNER := postgres://postgres:postgres@127.0.0.1:55432/zidara
-DEV_APP := postgres://zidara_app:app@127.0.0.1:55432/zidara
+# Our database's port on this machine; set ZIDARA_DB_PORT when another project holds 55432.
+export ZIDARA_DB_PORT ?= 55432
+DEV_OWNER := postgres://postgres:postgres@127.0.0.1:$(ZIDARA_DB_PORT)/zidara
+DEV_APP := postgres://zidara_app:app@127.0.0.1:$(ZIDARA_DB_PORT)/zidara
 DEV_SECRET := local-development-secret-not-for-production
 
 db-up:

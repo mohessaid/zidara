@@ -5,7 +5,7 @@ cd "$(dirname "$0")/../.."
 docker compose up -d --wait db > /dev/null
 psql() { docker compose exec -T db psql -q -v ON_ERROR_STOP=1 -U postgres "$@"; }
 psql -d postgres -c "drop database if exists zidara_load with (force)" -c "create database zidara_load"
-owner="postgres://postgres:postgres@127.0.0.1:55432/zidara_load"
+owner="postgres://postgres:postgres@127.0.0.1:${ZIDARA_DB_PORT:-55432}/zidara_load"
 secret="load-test-secret-not-for-production-use"
 cargo build -q --release -p zidara-server
 DATABASE_URL="$owner" ZIDARA_SECRET="$secret" target/release/zidara-server migrate
@@ -26,7 +26,7 @@ psql -d zidara_load -c "
   insert into memberships (user_id, cohort_id, role)
     select '00000000-0000-0000-0000-000000a60001', md5('load-class-' || c)::uuid, 'assessment_agent'
     from generate_series(1, 10) c;"
-DATABASE_URL="postgres://zidara_app:app@127.0.0.1:55432/zidara_load" ZIDARA_SECRET="$secret" ZIDARA_DEMO_LOGIN=1 \
+DATABASE_URL="postgres://zidara_app:app@127.0.0.1:${ZIDARA_DB_PORT:-55432}/zidara_load" ZIDARA_SECRET="$secret" ZIDARA_DEMO_LOGIN=1 \
   ZIDARA_ADDR=127.0.0.1:18090 taskset -c 0,1 target/release/zidara-server serve > /dev/null &
 server=$!
 trap 'kill $server 2> /dev/null || true; docker compose stop db > /dev/null' EXIT

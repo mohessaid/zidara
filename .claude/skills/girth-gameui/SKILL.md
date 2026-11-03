@@ -26,7 +26,8 @@ mascot or scenery. Every colour measured: text 4.5:1, control edges (`--edge`) 3
 ## Tells of a generated design <!-- src: frontend-design#process--plan--review-against-the-brief--build--critique, design-taste-frontend#0-d-anti-default-discipline -->
 Never spend free choices on defaults: the SaaS-card kit (identical rounded cards, one radius,
 the same soft grey shadow), white page + cards, all-caps eyebrows, meta joined with " · ",
-"→" on buttons, purple gradients, glassmorphism, infinite micro-loops everywhere, Inter.
+"→" on buttons, any gradient, badges and pill chips, glassmorphism, infinite micro-loops
+everywhere, Inter. A disabled button keeps a 3:1 dashed edge; every bar track a 3:1 edge.
 Plan first (4–6 named hex colours, type roles, ASCII layout, principles), then review the plan:
 any part you would produce for any similar brief gets revised before code.
 

@@ -141,5 +141,5 @@
   .result { text-align: center; }
   .result .big { font-size: 56px; margin: 0; }
   .headline { font-size: 24px; font-weight: 700; margin: 0.25rem 0; }
-  select { min-height: 48px; border: 2px solid var(--ink); border-radius: var(--radius-studio); padding: 0 0.5rem; margin-inline-start: 0.5rem; }
+  select { min-height: 48px; background: var(--paper); color: var(--ink); border: 2px solid var(--ink); border-radius: var(--radius-studio); padding: 0 0.5rem; margin-inline-start: 0.5rem; }
 </style>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#09090b" />
+    <meta name="theme-color" content="#ffffff" />
     <meta name="description" content="Zidara is the adaptable learning engine: one tested kernel, any teaching framework, any experience, and AI agents that act only inside rules people approve." />
     <title>Zidara · the adaptable learning engine for the AI era</title>
     <link rel="canonical" href="https://zidara.ta9in.com/" />
@@ -15,8 +15,8 @@
     <meta name="twitter:card" content="summary_large_image" />
     <style>
       /* No font-family here: it would beat the app's own face on :root (it did, until 2 November). */
-      /* The splash is the front page's dark ground (ADR 0016); the app's own sheet sets each screen's. */
-      body { margin: 0; background: #09090b; color: #f5f5f4; }
+      /* The splash is the page's white ground and the name in words (ADR 0017): no logo. */
+      body { margin: 0; background: #ffffff; color: #0f0f10; }
       .splash { min-height: 100vh; display: grid; place-content: center; justify-items: center; gap: 0.5rem; font-size: 28px; font-weight: 700; }
     </style>
   </head>
@@ -24,7 +24,6 @@
     <div id="app">
       <!-- Painted before any JavaScript runs; the app replaces it on mount. -->
       <div class="splash">
-        <img src="/icon.svg" width="96" height="96" alt="" />
         <p lang="en">zidara</p>
       </div>
     </div>

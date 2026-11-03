@@ -27,6 +27,23 @@ test("the front page, measured in English and Arabic, light and dark", async ({ 
   await expectAccessible(page, "front page, Arabic");
 });
 
+test("the front page draws no gradients and no logo", async ({ page }) => {
+  // The owner's call (2026-11-03): gradients and badges read as AI-made, and the page carries no logo.
+  await page.goto("/");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await wholePage(page);
+  const found = await page.evaluate(() =>
+    [...document.querySelectorAll(".landing *")].flatMap((el) => {
+      const cs = getComputedStyle(el);
+      const hits = [cs.backgroundImage, cs.borderImageSource, cs.maskImage].filter((v) => v.includes("gradient"));
+      const pseudo = ["::before", "::after"].filter((p) => getComputedStyle(el, p).backgroundImage.includes("gradient"));
+      return hits.length || pseudo.length ? [`${el.tagName.toLowerCase()}.${[...el.classList].join(".")}`] : [];
+    }),
+  );
+  expect(found).toEqual([]);
+  await expect(page.locator(".landing .mark")).toHaveCount(0);
+});
+
 test("every learner screen, measured: cards, path, each step, right and wrong, the end", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await arabic(page);
@@ -97,7 +114,9 @@ test("the measure itself catches faint text, faint edges, fades and gradients", 
       <button style="border:2px solid #e4e4e7;background:#fff;color:#000">faint edge</button>
       <p style="color:#000;opacity:.3">faded words</p>
       <div style="background:linear-gradient(#fff,#111)"><span style="color:#000">words on a gradient</span></div>
-      <button style="border:0;background:none;color:#000">plain text button</button>`;
+      <button style="border:0;background:none;color:#000">plain text button</button>
+      <button disabled style="border:0;box-shadow:none;background:#f4f4f5;color:#55555d">grey disabled</button>
+      <div data-meter style="height:12px;background:#f4f4f5"></div>`;
     document.body.prepend(box);
   });
   const found = (await lowContrast(page)).join("\n");
@@ -106,4 +125,6 @@ test("the measure itself catches faint text, faint edges, fades and gradients", 
   expect(found).toContain("faded words");
   expect(found).toContain("words on a gradient");
   expect(found).not.toContain("plain text button");
+  expect(found).toContain("edge button \"grey disabled\"");
+  expect(found).toContain("edge div");
 });

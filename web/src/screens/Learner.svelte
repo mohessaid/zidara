@@ -110,7 +110,7 @@
   .title { flex: 1; font-size: 18px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; }
   .pill { padding: 4px; display: flex; align-items: center; gap: 4px; border-radius: 14px; }
   .hud { display: flex; gap: 6px; }
-  .chip { display: flex; align-items: center; gap: 4px; font: 700 16px/1 var(--display); padding: 8px 10px; border-radius: 999px; background: var(--paper-2); }
+  .chip { display: flex; align-items: center; gap: 4px; font: 700 16px/1 var(--display); padding: 8px 4px; }
   .flame { color: var(--try-ink); }
   .gem { color: var(--accent-ink); }
   .menu { position: sticky; top: 66px; z-index: 4; max-width: 600px; margin: 8px auto; display: grid; gap: 12px; border: 2px solid var(--line); box-shadow: 0 12px 32px rgb(15 15 16 / 0.12); }

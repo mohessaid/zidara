@@ -71,7 +71,7 @@
         {#each studio.outcomes as o (o.outcome)}
           <li>
             <span class="title">{o.outcome} · {o.title}</span>
-            <span class="bar" role="img" aria-label={t(app.locale, "studio.achieved", { n: o.achieved, of: o.of })}>
+            <span class="bar meter-track" data-meter role="img" aria-label={t(app.locale, "studio.achieved", { n: o.achieved, of: o.of })}>
               <span class="fill" style="inline-size: {o.of === 0 ? 0 : (100 * o.achieved) / o.of}%"></span>
             </span>
             <span>{t(app.locale, "studio.achieved", { n: o.achieved, of: o.of })}</span>
@@ -144,13 +144,9 @@
   .studio :global(.card) { border-radius: var(--radius-studio); }
   .bars { list-style: none; padding: 0; display: grid; gap: 0.5rem; }
   .bars li { display: grid; grid-template-columns: minmax(10rem, 1fr) 2fr auto auto; gap: 0.5rem; align-items: center; }
-  .bar {
-    block-size: 12px; border-radius: 6px; overflow: hidden; background-color: var(--locked-fill);
-    background-image: radial-gradient(circle, var(--locked-edge) 1.5px, transparent 1.9px); background-size: 10px 12px;
-  }
-  .fill { display: block; block-size: 100%; background-color: var(--accent); background-image: radial-gradient(circle, rgb(255 255 255 / 0.45) 1.5px, transparent 1.9px); background-size: 10px 12px; }
+  .bar { block-size: 14px; }
   .proposal { border-top: 1px solid var(--line); padding-top: 0.5rem; }
   blockquote { margin: 0.5rem 0; padding: 0.5rem 1rem; border-inline-start: 4px solid var(--ink); background: var(--paper); }
   .agent { color: var(--agent); }
-  select { min-height: 48px; border-radius: var(--radius-studio); border: 2px solid var(--ink); padding: 0 0.5rem; }
+  select { min-height: 48px; border-radius: var(--radius-studio); border: 2px solid var(--ink); padding: 0 0.5rem; background: var(--paper); color: var(--ink); }
 </style>

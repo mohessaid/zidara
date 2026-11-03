@@ -4,6 +4,39 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-03 — Light, plain, and the two places my contrast check could not see
+
+**What happened.** The owner did not like the dark front page's colours: make it light, drop
+the logo, no gradients and no badges ("obvious that's ai"). And in the demo, "the colors are
+still sometimes background like foreground so you don't see shit", although our measured
+contrast check had just passed on every screen.
+
+**The problem.** I walked both lessons and the studio again, in screenshots, on a touch phone
+in light and dark. The check had two blind spots, both of my own making. It skipped disabled
+controls because WCAG exempts them, so a grey Check on a grey face on white read as nothing.
+And it never looked at progress tracks: the empty part of the lesson bar, the course meter and
+the class bars was #f4f4f5 on white, 1.1:1. A passing check is evidence about what the check
+looks at, and nothing more.
+
+**What we did.** The test came first: `lowContrast` now measures disabled controls and every
+`[role=progressbar]`, `progress`, `meter` and `[data-meter]`, and the planted-mistake test
+gained a grey disabled button and a faint track. Three screens failed, then we fixed them.
+Disabled buttons keep a dashed 3.4:1 edge, and every bar has a white track with a 3.4:1 edge.
+The saffron Enter and Start buttons became ink (saffron on white is 1.8:1). The sync badge and
+point chips became plain words, and the studio's dotted gradient bars became plain meters. The
+front page moved to the demo's light tokens (ADR 0017). Saffron now appears only as one flat
+highlighter in the headline and in the drawings. The logo, the hero badge, the glow, the
+gradient frames, the pills and the status chips are gone. A new test fails on any gradient or
+logo on the page. The four screenshots and the share image were recaptured.
+
+**The numbers.** Static suite 8/8, including the new guard. Every text on every screen is at
+least 4.5:1 and every drawn edge at least 3:1, as measured.
+
+**The lesson.** When the owner says they cannot see something and the check says fine, believe
+the owner and go and look. Then make the check look there too.
+
+---
+
 ## 2026-11-03 — A third look, and contrast I had not measured
 
 **What happened.** The owner looked at the dot-matrix restyle and said it was better but the demo

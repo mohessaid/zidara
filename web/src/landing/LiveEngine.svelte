@@ -159,42 +159,39 @@
 </figure>
 
 <style>
-  /* A hairline frame lit from one corner in the accent (ADR 0016), not a block of colour. */
-  .console { margin: 0; padding: 1px; border-radius: 20px; background: linear-gradient(150deg, var(--l-accent), var(--l-line) 38%, var(--l-line) 70%, color-mix(in srgb, var(--l-accent) 50%, var(--l-line))); position: relative; box-shadow: 0 40px 90px -50px rgb(247 182 60 / 0.35); }
-  .screen { background: var(--l-surface); border-radius: 19px 19px 0 0; padding: 16px 18px 18px; text-align: start; }
+  /* A plain white window with one grey edge and a soft shadow (ADR 0017): no gradient frame. */
+  .console { margin: 0; border: 1px solid var(--l-raise); border-radius: 20px; background: var(--l-bg); position: relative; box-shadow: 0 30px 70px -40px rgb(15 15 16 / 0.3); overflow: hidden; }
+  .screen { background: var(--l-bg); padding: 16px 18px 18px; text-align: start; }
   .bar { display: flex; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--l-line); }
   .lights { display: inline-flex; gap: 6px; }
-  .lights i { width: 10px; height: 10px; border-radius: 50%; background: var(--l-line); }
-  .lights i:first-child { background: #ef6a5b; }
-  .lights i:nth-child(2) { background: #f2be4b; }
-  .lights i:nth-child(3) { background: #5cc46a; }
+  .lights i { width: 10px; height: 10px; border-radius: 50%; background: var(--l-raise); }
   .label { margin: 0; font: 500 13px/1 var(--l-mono); color: var(--l-muted); }
   .live-tag { margin-inline-start: auto; display: inline-flex; gap: 8px; align-items: center; font: 500 12.5px/1 var(--l-mono); color: var(--l-muted); }
-  .pulse { width: 8px; height: 8px; border-radius: 50%; background: #2fb463; box-shadow: 0 0 0 3px color-mix(in srgb, #2fb463 28%, transparent); }
+  .pulse { width: 8px; height: 8px; border-radius: 50%; background: #17773f; }
 
   .controls { display: grid; gap: 10px; margin: 14px 0 6px; }
   .axis { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
   .axis-name { margin: 0; min-width: 7.5em; font: 500 12.5px/1.2 var(--l-mono); color: var(--l-muted); text-transform: uppercase; letter-spacing: 0.04em; }
-  .tabs { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 12px; background: var(--l-tint); }
+  .tabs { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; border-radius: 12px; background: var(--l-surface); }
   .tabs button {
     min-height: 40px; border: 0; border-radius: 9px; padding: 0 12px; background: transparent; color: var(--l-ink);
     font: inherit; font-weight: 500; font-size: 14.5px; cursor: pointer; transition: background-color 160ms ease, color 160ms ease, transform 120ms ease;
   }
-  .tabs button:hover { background: var(--l-surface); }
+  .tabs button:hover { background: var(--l-raise); }
   .tabs button:active { transform: scale(0.97); }
-  .tabs button.on { background: var(--l-accent); color: var(--l-on-accent); }
+  .tabs button.on { background: var(--l-ink); color: #fff; }
   .story { margin: 10px 0 12px; color: var(--l-muted); font-size: 15px; line-height: 1.55; }
   .stage { min-height: 268px; }
   .muted { color: var(--l-muted); font-weight: 400; }
 
   /* The children's path. */
   .path { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-  .stone { display: flex; gap: 14px; align-items: center; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--l-line); background: var(--l-bg); }
+  .stone { display: flex; gap: 14px; align-items: center; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--l-raise); background: var(--l-bg); }
   .dot { width: 38px; height: 38px; flex: none; display: grid; place-items: center; border-radius: 50%; font-weight: 700; color: #fff; background: var(--c); }
   .text { display: grid; gap: 1px; font-size: 15px; }
   .status { font-size: 14px; }
   .achieved { --c: var(--l-accent); }
-  .stone.achieved { border-color: color-mix(in srgb, var(--l-accent) 45%, var(--l-line)); background: color-mix(in srgb, var(--l-accent) 8%, var(--l-bg)); }
+  .stone.achieved { border-color: var(--l-ink); }
   .in_progress { --c: #0b7285; }
   .not_started { --c: #1d7a45; }
   .needs_support { --c: #b4471f; }
@@ -208,25 +205,27 @@
   .grid thead th { font: 500 12px/1 var(--l-mono); color: var(--l-muted); text-transform: uppercase; letter-spacing: 0.04em; }
   .grid tbody th { font-weight: 500; }
   .code { font: 600 12.5px/1 var(--l-mono); color: var(--l-accent-ink); margin-inline-end: 4px; }
-  .chip { display: inline-block; padding: 3px 8px; border-radius: 6px; background: color-mix(in srgb, var(--c) 14%, var(--l-surface)); border: 1px solid color-mix(in srgb, var(--c) 40%, var(--l-line)); font-size: 13.5px; }
+  /* The state in words, after a small square of its colour: no badge. */
+  .chip { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
+  .chip::before { content: ""; width: 10px; height: 10px; border-radius: 2px; background: var(--c); flex: none; }
   .num { font-variant-numeric: tabular-nums; font-family: var(--l-mono); }
 
   /* The teacher's studio. */
   .studio-head { margin: 0 0 8px; font: 500 12.5px/1.3 var(--l-mono); color: var(--l-muted); text-transform: uppercase; letter-spacing: 0.04em; }
   .studio ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-  .studio li { display: flex; gap: 10px; align-items: stretch; padding: 10px 12px; border-radius: 10px; background: var(--l-bg); border: 1px solid var(--l-line); font-size: 15px; }
+  .studio li { display: flex; gap: 10px; align-items: stretch; padding: 10px 12px; border-radius: 10px; background: var(--l-bg); border: 1px solid var(--l-raise); font-size: 15px; }
   .bar-mark { width: 4px; flex: none; border-radius: 2px; background: var(--c); }
 
   /* A text message for a basic phone. */
   .sms { max-width: 360px; }
   .sms-from { margin: 0 0 6px; font: 600 12px/1 var(--l-mono); color: var(--l-muted); letter-spacing: 0.08em; }
-  .bubble { margin: 0; padding: 12px 14px; border-radius: 16px 16px 16px 4px; background: var(--l-tint); font: 400 14.5px/1.55 var(--l-mono); }
+  .bubble { margin: 0; padding: 12px 14px; border-radius: 16px 16px 16px 4px; background: var(--l-surface); font: 400 14.5px/1.55 var(--l-mono); }
   .sms-note { margin: 8px 0 0; font-size: 13.5px; color: var(--l-muted); }
 
-  .verdict { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--l-tint); font-size: 15px; line-height: 1.5; }
+  .verdict { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--l-surface); font-size: 15px; line-height: 1.5; }
   .verdict.muted { color: var(--l-muted); }
   .skeleton li { height: 60px; border-radius: 12px; background: var(--l-tint); }
-  figcaption { margin: 0; padding: 12px 16px 14px; font: 500 13px/1.5 var(--l-mono); color: var(--l-muted); text-align: center; background: var(--l-surface); border-radius: 0 0 19px 19px; }
+  figcaption { margin: 0; padding: 12px 16px 14px; font: 500 13px/1.5 var(--l-mono); color: var(--l-muted); text-align: center; background: var(--l-surface); border-top: 1px solid var(--l-line); }
   @media (max-width: 720px) {
     .screen { padding: 14px; }
     .axis-name { min-width: 0; width: 100%; }

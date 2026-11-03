@@ -59,7 +59,7 @@
   <header class="course">
     <p class="unit-no">{t(app.locale, "path.unit", { n: 1 })}</p>
     <h2 id="unit-title">{app.pack?.title[app.locale] ?? ""}</h2>
-    <div class="meter" aria-hidden="true"><span style:width={`${(mastered / Math.max(1, view.outcomes.length)) * 100}%`}></span></div>
+    <div class="meter meter-track" data-meter aria-hidden="true"><span style:width={`${(mastered / Math.max(1, view.outcomes.length)) * 100}%`}></span></div>
     <p class="progress">{t(app.locale, "path.oasis", { n: mastered, of: view.outcomes.length })}</p>
   </header>
 
@@ -118,8 +118,8 @@
   .course { padding: 8px 0 4px; }
   .unit-no { margin: 0; font-size: 15px; font-weight: 500; color: var(--muted); }
   .course h2 { margin: 2px 0 14px; font-size: clamp(28px, 6vw, 38px); }
-  .meter { height: 10px; border-radius: 999px; background: var(--line); overflow: hidden; }
-  .meter span { display: block; height: 100%; border-radius: inherit; background: var(--achieved); transition: width 500ms cubic-bezier(.2,.8,.2,1); }
+  .meter { height: 14px; }
+  .meter span { transition: width 500ms cubic-bezier(.2,.8,.2,1); }
   .progress { margin: 8px 0 0; font-size: 15px; color: var(--muted); }
 
   .lens { margin: 20px 0 0; padding: 14px 16px; border-radius: var(--radius); border: 2px solid var(--line); background: var(--surface); }
@@ -165,7 +165,7 @@
   /* The level to play next: a card around the row, and a Start button inside it. */
   .next .node { padding: 12px; margin-inline: -12px; width: calc(100% + 24px); background: var(--surface); border: 2px solid var(--ink); box-shadow: 0 4px 0 var(--ink); }
   .next::before { inset-inline-start: 31px; }
-  .start { flex: none; padding: 10px 18px; border-radius: 12px; background: var(--accent); color: var(--on-accent); font-weight: 700; font-size: 16px; }
+  .start { flex: none; padding: 10px 18px; border-radius: 12px; background: var(--ink); color: #fff; font-weight: 700; font-size: 16px; }
   .next:not(:last-child)::before { top: 80px; }
   .goal .disc { font-size: 28px; filter: grayscale(1); opacity: 0.85; box-shadow: none; }
   .goal.won .disc { filter: none; opacity: 1; --disc: var(--accent-soft); --disc-edge: var(--accent); }

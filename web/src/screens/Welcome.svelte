@@ -6,7 +6,6 @@
   import { t, type Key } from "../lib/i18n/i18n.ts";
   import LanguagePicker from "../components/LanguagePicker.svelte";
   import CourseIcon from "../play/CourseIcon.svelte";
-  import Mark from "../landing/Mark.svelte";
   import { sound } from "../play/sound.svelte.ts";
 
   const COURSES = [
@@ -31,7 +30,7 @@
 </script>
 
 <div class="top">
-  <a class="logo" href="#top" lang="en"><Mark size={22} />zidara</a>
+  <a class="logo" href="#top" lang="en">zidara</a>
   <LanguagePicker />
 </div>
 
@@ -87,11 +86,12 @@
   .name { font: 700 20px/1.2 var(--display); }
   .blurb { font-size: 16px; font-weight: 400; line-height: 1.4; color: var(--muted); }
   .meta { font-size: 14px; font-weight: 500; color: var(--muted); }
-  .enter { flex: none; padding: 10px 18px; border-radius: 12px; background: var(--accent); color: var(--on-accent); font-weight: 700; font-size: 16px; }
+  .enter { flex: none; padding: 10px 18px; border-radius: 12px; background: var(--ink); color: #fff; font-weight: 700; font-size: 16px; }
   .busy { font-weight: 600; color: var(--achieved); }
   .alert { border-color: var(--needs-support); color: var(--needs-support); }
-  .points { list-style: none; padding: 0; margin: 28px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
-  .points li { padding: 6px 12px; border-radius: 999px; background: var(--paper-2); color: var(--muted); font-size: 15px; font-weight: 500; }
+  /* Three plain facts on one line, separated by dots: words, not badges. */
+  .points { list-style: none; padding: 0; margin: 28px 0 0; display: flex; flex-wrap: wrap; gap: 4px 0; color: var(--muted); font-size: 15px; font-weight: 500; }
+  .points li:not(:last-child)::after { content: "·"; margin: 0 10px; }
   .teachers { margin-top: 24px; }
   .teachers a { color: var(--ink); font-weight: 600; text-underline-offset: 3px; }
   @media (prefers-reduced-motion: no-preference) {

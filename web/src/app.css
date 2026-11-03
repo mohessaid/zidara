@@ -64,8 +64,6 @@
 }
 * { box-sizing: border-box; }
 body { margin: 0; min-height: 100vh; font-family: inherit; overflow-x: clip; background: var(--paper); color: var(--ink); }
-/* The front page keeps its dark ground under the page too, so an overscroll never flashes white. */
-body:has(.landing) { background: #09090b; }
 button, input, select, textarea { font: inherit; color: inherit; }
 /* Buttons: a flat face on a firm lip that it presses into, the way Brilliant's do. */
 button {
@@ -79,9 +77,13 @@ button.primary {
   background: var(--go); border-color: var(--go); box-shadow: 0 3px 0 var(--go-edge); color: #fff; font-size: 18px; font-weight: 700;
 }
 button.primary:hover:not(:disabled) { border-color: var(--go); background: #26262a; }
-button.blue { background: var(--accent); border-color: var(--accent); box-shadow: 0 3px 0 var(--accent-edge); color: var(--on-accent); font-weight: 700; }
-button:disabled { cursor: default; }
-button.primary:disabled { background: var(--paper-2); border-color: var(--paper-2); box-shadow: none; color: var(--muted); }
+/* A button that cannot be pressed yet still shows where it is: a dashed edge (3.4), muted words
+   (7.4), no lip. A grey face on a white ground read as nothing at all (owner, 2026-11-03). */
+button:disabled, button.primary:disabled { cursor: default; background: var(--paper); border: 2px dashed var(--edge); box-shadow: none; color: var(--muted); }
+/* Every bar that fills (lesson progress, the course meter, the class bars): a white track with a
+   3.4 edge, so the empty part is as visible as the full part. */
+.meter-track { display: block; background: var(--paper); border: 2px solid var(--edge); border-radius: 999px; overflow: hidden; }
+.meter-track > span { display: block; height: 100%; background: var(--achieved); border-radius: 999px; }
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 main { max-width: 960px; margin: 0 auto; padding: 1rem; }

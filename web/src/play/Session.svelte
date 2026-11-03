@@ -127,7 +127,7 @@
 <div class="session" role="dialog" aria-modal="true" aria-labelledby="step-title">
   <header class="bar">
     <button class="close" onclick={onclose} aria-label={t(app.locale, "session.close")}><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
-    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax={total} aria-valuenow={Math.min(done, total)}
+    <div class="progress meter-track" role="progressbar" aria-valuemin="0" aria-valuemax={total} aria-valuenow={Math.min(done, total)}
       aria-label={t(app.locale, "session.progress")}>
       <span style:width={`${(100 * Math.min(done, total)) / Math.max(total, 1)}%`}></span>
     </div>
@@ -215,8 +215,8 @@
   .close:hover, .mute:hover { background: var(--paper-2); }
   .close svg { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
   .close:active, .mute:active { transform: none; box-shadow: none; }
-  .progress { flex: 1; height: 12px; background: var(--paper-2); border-radius: 999px; overflow: hidden; }
-  .progress span { display: block; height: 100%; background: var(--achieved); border-radius: 999px; transition: width 450ms cubic-bezier(.2,.8,.2,1); }
+  .progress { flex: 1; height: 14px; }
+  .progress span { transition: width 450ms cubic-bezier(.2,.8,.2,1); }
   .combo { font-weight: 700; font-size: 16px; color: var(--try-ink); animation: pop 280ms cubic-bezier(.2,1.5,.4,1) both; }
   .step { flex: 1; width: 100%; max-width: 640px; margin: 0 auto; padding: 24px 16px 32px; animation: enter 280ms cubic-bezier(.2,.8,.2,1) both; }
   .kicker { margin: 0 0 6px; color: var(--muted); font-size: 15px; font-weight: 500; }

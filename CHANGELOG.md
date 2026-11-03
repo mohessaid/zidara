@@ -7,6 +7,18 @@ All notable changes to Zidara are recorded here. The format follows
 
 ### Added
 
+- The front page is light (ADR 0017), in the demo's own tokens: ink headings, white and grey
+  sections, saffron only as a highlighter. No logo, no gradients, no badges; a test fails on
+  any gradient or logo. Its screenshots and share image show the new look.
+- The contrast walk now measures disabled buttons and every progress bar's track too.
+
+### Fixed
+
+- In the demo, a disabled Check, the studio's Apply, and the empty part of every progress bar
+  were the colour of the ground behind them. Disabled buttons now keep a dashed edge and
+  every bar track a visible edge. The saffron Enter and Start buttons are ink, and the badges
+  ("Everything is saved", the point chips) are plain words.
+
 - A new face (ADR 0016). The front page is a dark, high-contrast stage: Alexandria headings,
   one saffron accent, a console in the hero where a request to Zidara is answered layer by
   layer, corner brackets travelling along the closing phrase, no numbered section labels. The

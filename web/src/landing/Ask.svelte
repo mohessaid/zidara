@@ -90,26 +90,26 @@
 
 <style>
   .ask {
-    margin: 0; width: min(560px, 100%); border: 1px solid var(--l-line); border-radius: 16px; overflow: hidden;
-    background: var(--l-surface); text-align: start; box-shadow: 0 30px 80px -40px rgb(0 0 0 / 0.8);
+    margin: 0; width: min(560px, 100%); border: 1px solid var(--l-raise); border-radius: 16px; overflow: hidden;
+    background: var(--l-bg); text-align: start; box-shadow: 0 24px 60px -36px rgb(15 15 16 / 0.28);
   }
-  .head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--l-line); }
+  .head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--l-line); background: var(--l-surface); }
   .dots { display: inline-flex; gap: 6px; }
-  .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--l-line-strong); }
+  .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--l-raise); }
   .name { flex: 1; text-align: center; font: 500 12px/1 var(--l-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--l-muted); }
-  .live { font: 500 12px/1 var(--l-mono); color: var(--l-accent); }
+  .live { font: 600 12px/1 var(--l-mono); color: var(--l-accent-ink); }
   .body { padding: 18px 20px 8px; min-height: 196px; }
   .q { margin: 0 0 14px; font-size: 16px; color: var(--l-ink); display: flex; gap: 10px; align-items: baseline; }
-  .caret { color: var(--l-accent); font-weight: 700; }
+  .caret { color: var(--l-ink); font-weight: 700; }
   :global([dir="rtl"]) .caret { transform: scaleX(-1); display: inline-block; }
-  .cursor { display: inline-block; width: 8px; height: 1.05em; margin-inline-start: 2px; background: var(--l-accent); vertical-align: text-bottom; animation: blink 900ms steps(1) infinite; }
+  .cursor { display: inline-block; width: 8px; height: 1.05em; margin-inline-start: 2px; background: var(--l-ink); vertical-align: text-bottom; animation: blink 900ms steps(1) infinite; }
   .a { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
   .a li { display: grid; grid-template-columns: 7.5rem 1fr; gap: 12px; font-size: 14.5px; line-height: 1.45; animation: line-in 320ms cubic-bezier(.16,1,.3,1) both; }
-  .k { font: 500 12px/1.9 var(--l-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--l-accent); }
-  .v { color: var(--l-muted); }
+  .k { font: 600 12px/1.9 var(--l-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--l-accent-ink); }
+  .v { color: var(--l-ink); }
   .pager { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border-top: 1px solid var(--l-line); }
   .pager button { min-height: 40px; min-width: 40px; border: 0; background: none; color: var(--l-muted); border-radius: 10px; cursor: pointer; font-size: 20px; }
-  .pager button:hover { color: var(--l-ink); background: var(--l-raise); }
+  .pager button:hover { color: var(--l-ink); background: var(--l-surface); }
   :global([dir="rtl"]) .chev { display: inline-block; transform: scaleX(-1); }
   .count { font: 500 12px/1 var(--l-mono); letter-spacing: 0.1em; color: var(--l-muted); }
   @keyframes blink { 50% { opacity: 0; } }

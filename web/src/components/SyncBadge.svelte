@@ -11,12 +11,13 @@
   );
 </script>
 
-<p class="badge" class:offline={!app.sync.online} role="status" data-testid="sync">
+<p class="sync" class:offline={!app.sync.online} role="status" data-testid="sync">
   {message}
   {#if app.sync.refused > 0}<span> · {t(app.locale, "sync.refused", { n: app.sync.refused })}</span>{/if}
 </p>
 
 <style>
-  .badge { margin: 0; font-size: 16px; padding: 0.25rem 0.75rem; border-radius: 999px; border: 2px solid var(--achieved); color: var(--achieved); }
-  .offline { border-color: var(--locked); color: var(--locked); }
+  /* A plain line of words, not a badge: green while saved, grey while offline. */
+  .sync { margin: 0; font-size: 15px; font-weight: 500; color: var(--achieved); }
+  .offline { color: var(--locked); }
 </style>

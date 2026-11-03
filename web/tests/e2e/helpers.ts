@@ -33,8 +33,10 @@ export async function expectAccessible(page: Page, screen: string) {
  *   of a gradient tried), 4.5:1, or 3:1 for large text (24 px, or 18.66 px bold);
  * - a control (button, input, select, textarea, radio, a link drawn as a button): if it draws a
  *   boundary (a border or a fill different from behind it), that boundary must reach 3:1. A
- *   faint outline is worse than none (WCAG 1.4.11; stricter on purpose). Disabled controls,
- *   which WCAG exempts, are skipped.
+ *   faint outline is worse than none (WCAG 1.4.11; stricter on purpose). Disabled controls
+ *   are measured too, though WCAG exempts them: a grey Check on a grey ground reads as nothing;
+ * - a meter (a progress bar, [data-meter]): its track must stand 3:1 from what is behind it, or
+ *   the empty part of the bar disappears.
  * Returns one line per failure.
  */
 export async function lowContrast(page: Page): Promise<string[]> {
@@ -109,13 +111,12 @@ export async function lowContrast(page: Page): Promise<string[]> {
       const words = (el.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, 40);
       return `${el.tagName.toLowerCase()}${cls ? "." + cls : ""} "${words}"`;
     };
-    const inert = (el: Element) => (el as HTMLButtonElement).disabled || el.closest("[disabled], [inert]") !== null;
     const out: string[] = [];
 
     for (const el of document.body.querySelectorAll("*")) {
       if (el.closest("svg, script, style, noscript, video, audio, canvas, img")) continue;
       const text = [...el.childNodes].some((c) => c.nodeType === 3 && c.textContent!.trim() !== "");
-      if (!text || !shown(el) || inert(el)) continue;
+      if (!text || !shown(el)) continue;
       const cs = getComputedStyle(el);
       const size = parseFloat(cs.fontSize);
       const need = size >= 24 || (size >= 18.66 && Number(cs.fontWeight) >= 700) ? 3 : 4.5;
@@ -130,9 +131,9 @@ export async function lowContrast(page: Page): Promise<string[]> {
       }
     }
 
-    const CONTROLS = "button, input, select, textarea, [role=radio], [role=tab], [role=switch], a";
+    const CONTROLS = "button, input, select, textarea, [role=radio], [role=tab], [role=switch], a, [role=progressbar], progress, meter, [data-meter]";
     for (const el of document.body.querySelectorAll(CONTROLS)) {
-      if (!shown(el) || inert(el) || el.closest("svg")) continue;
+      if (!shown(el) || el.closest("svg")) continue;
       const cs = getComputedStyle(el);
       const parents = behind(el, false);
       const fill = rgba(cs.backgroundColor);

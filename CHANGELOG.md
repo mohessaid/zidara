@@ -18,7 +18,7 @@ All notable changes to Zidara are recorded here. The format follows
 - After Check, the answers already given stayed solid tiles; for a moment they had taken the
   dashed edge meant for buttons not ready yet.
 - Zidara reads as what it is: an open-source learning engine for any language. The README,
-  the front page and the project skill no longer single out languages or regions ("right to
+  the front page, its share text and the project skill no longer single out languages or regions ("right to
   left from the start" says what matters), and the five whys use global figures. The
   competition, its deadline and the application material left the repository.
 - In the demo, a disabled Check, the studio's Apply, and the empty part of every progress bar

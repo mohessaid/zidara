@@ -45,7 +45,8 @@ fixes (TBT 170–340 ms), accessibility 100; on `#play`, 97 and 100. Long tasks 
 (the front page in light, dark and Arabic under axe, the live switch, the way into the game);
 demo build 3/3; the path still 60 fps, heap 4.3 MB. In the full gauntlet: `/` 95 (TBT 230 ms)
 and `#play` 96, both accessibility 100; 230/230 branches; 308 core and 115 server mutants,
-none missed.
+none missed. Deployed the same day to zidara.ta9in.com (web only, the old build kept as
+`web.prev`) and zidara.pages.dev; live smoke 4/4 and demo 3/3.
 
 **The lesson.** A pitch page is judged like the product: the proof in it must be real, sourced
 and fast. Measuring long tasks named the cost exactly, and the kernel's purity made the fix

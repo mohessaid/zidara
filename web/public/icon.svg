@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Zidara: the eight-pointed khatam in saffron on the front page's ground (ADR 0016). -->
-  <rect width="512" height="512" rx="112" fill="#09090b"/>
-  <rect x="148" y="148" width="216" height="216" fill="#f7b63c"/>
-  <rect x="148" y="148" width="216" height="216" fill="#f7b63c" transform="rotate(45 256 256)"/>
-</svg>

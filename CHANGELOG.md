@@ -17,6 +17,7 @@ All notable changes to Zidara are recorded here. The format follows
 
 - After Check, the answers already given stayed solid tiles; for a moment they had taken the
   dashed edge meant for buttons not ready yet.
+- The app icons and the favicon are the word "zidara" in ink on white; the star mark is gone.
 - Zidara reads as what it is: an open-source learning engine for any language. The README,
   the front page, its share text and the project skill no longer single out languages or regions ("right to
   left from the start" says what matters), and the five whys use global figures. The

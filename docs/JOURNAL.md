@@ -4,6 +4,27 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-05 — The name is the mark
+
+**What happened.** The owner: "for the logo just write zidara no logo". The page had shown only
+the word since ADR 0017, but the app icons and the PWA's `icon.svg` still carried the saffron
+eight-pointed star, and there was no favicon link at all.
+
+**What we did.** Rendered the three PNG icons as "zidara" in Alexandria 700, ink on white (the
+maskable one at 60% width so it stays inside the safe circle), deleted `icon.svg`, and linked the
+192 px icon as the favicon. The full gauntlet had passed on b0ac3d6 (d48c327 only changed share text):
+Lighthouse 90 and 95 performance, 100 accessibility, 230/230 branches, 423 mutants with none
+missed. GitHub `main` is at d48c327.
+
+**The mistake.** The first render came out in a serif: the font was loaded from a `file://`
+URL into a page with no origin, and it silently fell back. Inlined as a data URL, with a
+`document.fonts.check` that throws if the face is missing.
+
+**Lesson.** When a mark is removed, look for it everywhere it was copied: icons, manifest,
+splash, share image. A render that depends on a font should fail when the font fails.
+
+---
+
 ## 2026-11-03 — An open-source engine, not an entry, and not one region's
 
 **What happened.** The owner read the repository's GitHub About line, "Offline-first learning for

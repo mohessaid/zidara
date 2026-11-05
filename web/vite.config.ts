@@ -12,7 +12,8 @@ export default defineConfig({
       registerType: "autoUpdate",
       // Registered by main.ts once the page is idle, not on load (ADR 0015).
       injectRegister: false,
-      includeAssets: ["icon.svg"],
+      // The icons are the word "zidara" and nothing else (owner, 5 November).
+      includeAssets: ["icon-192.png"],
       manifest: {
         name: "Zidara",
         short_name: "Zidara",

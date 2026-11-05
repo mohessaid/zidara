@@ -152,33 +152,16 @@ renews its own certificate as for the other sites.
 The demo sign-in lets anyone act as anyone; it is for showing the prototype only. Real use
 needs OIDC sign-in, a privacy review, and the data-protection rules of the country of use.
 
-## The demo link
+## The browser-only build
 
 ```bash
 scripts/build-wasm.sh
 (cd web && pnpm install --frozen-lockfile && pnpm build:demo)   # web/dist-demo
 ```
 
-Serve `web/dist-demo` at the root of a domain with HTTPS. The service worker and the app
-expect to live at `/`, so use a host that serves a site at its root: Cloudflare Pages or
-Workers static assets, Netlify, or a GitHub Pages user site with a custom domain. A GitHub
-Pages project site lives under `/<repo>/` and would need the app rebuilt with that base path.
-The app has one page, so no routing rules are needed.
-
-Then run the demo's own story against it (the data stays in the test browser):
-
-```bash
-cd web && ZIDARA_URL=https://zidara.pages.dev pnpm demo     # 2 passed
-```
-
-The published demo is on Cloudflare Pages:
-
-```bash
-wrangler pages project create zidara --production-branch main --force   # once
-wrangler pages deploy web/dist-demo --project-name zidara --branch main
-```
-
-Since late 2026, `pages project create` hands new projects to Workers and fails for a folder
-of static files with "Missing entry-point to Worker script or to assets directory"; `--force`
-creates a classic Pages project, as wrangler's own notice says.
+`web/dist-demo` is the whole school running in the browser, as static files. It is not
+published: the one public address is https://zidara.ta9in.com (the owner dropped the
+zidara.pages.dev copy on 5 November 2026). To serve it anyway, put it at the root of a domain
+with HTTPS (the service worker expects `/`) and test it with
+`cd web && ZIDARA_URL=<url> pnpm demo`.
 

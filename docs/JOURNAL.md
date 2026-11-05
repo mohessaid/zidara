@@ -20,6 +20,11 @@ missed. GitHub `main` is at d48c327.
 URL into a page with no origin, and it silently fell back. Inlined as a data URL, with a
 `document.fonts.check` that throws if the face is missing.
 
+**Then one address.** The owner dropped zidara.pages.dev: the README and `docs/deploy.md` no
+longer send anyone there (the browser-only build stays; its tests use it). The new web build
+went to s1 (`/opt/zidara/web`, the old one kept as `web.prev`; the directory is root's, so the
+swap needs `sudo`). Smoke on https://zidara.ta9in.com: 4 passed.
+
 **Lesson.** When a mark is removed, look for it everywhere it was copied: icons, manifest,
 splash, share image. A render that depends on a font should fail when the font fails.
 

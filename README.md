@@ -10,8 +10,6 @@ and runs on the server, in the offline web client and (by design) inside native 
   track. The real server (PostgreSQL, classes kept apart by the database, emptied every night).
 - **Teachers and live rounds:** the "demo classes" link at the bottom of the front page. Open
   it as Karim on a laptop and as Amina and Yacine on two phones for a live round.
-- **The same app with no server:** https://zidara.pages.dev runs the whole school inside your
-  browser and works offline after one visit.
 - **Code:** https://github.com/mohessaid/zidara
 
 ## What works today

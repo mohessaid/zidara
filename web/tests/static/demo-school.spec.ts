@@ -73,3 +73,14 @@ test("after one visit, the demo opens and works with no network", async ({ page,
   // The session's code, the toys and the sounds were cached on the first visit too.
   await playF1(page);
 });
+
+test("a teacher's unsaved choice of approach survives the studio's refresh", async ({ page }) => {
+  // The studio refreshes every 4.5 s; it used to put the select back to the class's approach,
+  // so a teacher who took a moment before pressing Apply lost the choice (found 5 November).
+  await signIn(page, "karim");
+  const approach = page.locator("form:has(button.primary) select").last();
+  await approach.selectOption("cambridge-style");
+  await page.waitForTimeout(6_000);
+  await expect(approach).toHaveValue("cambridge-style");
+  await expect(page.getByRole("button", { name: "طبّق" })).toBeEnabled();
+});

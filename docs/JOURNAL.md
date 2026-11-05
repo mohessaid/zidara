@@ -4,6 +4,24 @@ Newest first. Each entry: what happened, the problem, what we did, the numbers, 
 
 ---
 
+## 2026-11-05 — The film found a bug the tests could not
+
+**What happened.** Capturing the teacher's studio for the pitch film, a script picked
+Cambridge-style and Apply stayed disabled. The studio refreshes every 4.5 s, and each refresh
+copied the class's approach back into the select: a choice picked but not applied was undone.
+
+**Why the tests missed it.** Every test picks and presses Apply within a few milliseconds, never
+across a refresh. A person takes seconds; a script that pauses to take a screenshot does too.
+
+**What we did.** A test that picks, waits six seconds and expects the choice and an enabled
+Apply; it failed. The refresh now moves the select only when the class's approach itself
+changed. Static demo suite 9 passed, web unit 44 passed, svelte-check clean.
+
+**Lesson.** Polling state that overwrites what a person is editing is a bug a fast test never
+sees. Test edits across a refresh: wait longer than the interval.
+
+---
+
 ## 2026-11-05 — The name is the mark
 
 **What happened.** The owner: "for the logo just write zidara no logo". The page had shown only

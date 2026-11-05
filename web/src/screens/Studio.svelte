@@ -20,8 +20,11 @@
   async function refresh() {
     const cohort = app.cohort!.id;
     try {
+      const before = studio?.framework;
       [studio, people] = await Promise.all([app.api!.studio(cohort, app.locale), app.api!.roster(cohort)]);
-      framework = studio.framework;
+      // Follow the class's approach only when it changes, so a refresh never undoes a choice
+      // the teacher has picked but not applied yet.
+      if (studio.framework !== before) framework = studio.framework;
     } catch {
       app.sync.online = false;
     }

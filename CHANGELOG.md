@@ -14,6 +14,9 @@ All notable changes to Zidara are recorded here. The format follows
 - The contrast walk now measures disabled buttons and every progress bar's track too.
 
 ### Fixed
+- In the teacher's studio, a teaching approach picked but not yet applied no longer jumps back
+  to the class's current one when the studio refreshes (every 4.5 s), which also kept Apply
+  disabled.
 
 - After Check, the answers already given stayed solid tiles; for a moment they had taken the
   dashed edge meant for buttons not ready yet.
